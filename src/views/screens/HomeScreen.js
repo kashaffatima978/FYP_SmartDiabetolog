@@ -33,6 +33,7 @@ export default function HomeScreen({navigation, prop}){
 
             <View style={styles.smallMain}>
                 <View style={styles.small}>
+                    <Text>Calories Consumed</Text>
                 
                 </View>
                 <View style={styles.small}>
