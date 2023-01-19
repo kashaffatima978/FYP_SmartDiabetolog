@@ -2,6 +2,8 @@ import React,{useState} from "react";
 import {View,StyleSheet,Text, TextInput} from "react-native"; 
 import colors from "../../files/Colors"
 import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome5';
+// Icon = require('react-native-vector-icons')
 
 export  const Input=({label,iconName,errorMessage,password,inputBackground,textColor,multiline,...props})=>{
     const [isFocused,setIsFocused]=React.useState(false)

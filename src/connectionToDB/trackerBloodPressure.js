@@ -58,21 +58,52 @@ exports.viewBloodPressureRecord = async () => {
 
 //get a specific blood pressure instance
 exports.viewBloodPressureInstance = async (id) => {
-   
-    try {
+    return new Promise(async (resolve, reject) => {
+        console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-       const res = await axios.get(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+        const res = await axios.get(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
         )
-        const data=(res.data)
-        console.log(data)
-        if (data!==null) {
-            return (data)
-        }
-    }
-    catch (err) {
-        console.log(err);
-    }
+            .then((res) => { console.log(res.data); resolve(res.data) })
+
+            .catch((err) => { console.log("Error in viewBloodPressureInstance ", err); reject(err) })
+    })
+}
+
+
+//update a specific blood pressure instance
+exports.updateBloodPressureRecord = async (id,disystolic, systolic, description) => {
+    return new Promise(async (resolve, reject) => {
+        console.log(id, disystolic,systolic,description
+        )
+        const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
+        console.log("token in updatebloodpressure is", token)
+        axios.patch(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+            {
+                "disystolic": disystolic, "systolic": systolic, "description": description
+
+            },
+            { headers: { "Authorization": "Bearer " + token } },
+        )
+            .then((res) => { console.log(res.data); resolve(res.data) })
+            .catch((err) => { console.log("error in updateBloodPressureRecord ", err); reject(err) })
+    })
+}
+
+//delete a specific blood pressure instance
+exports.deleteBloodPressureInstance = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        console.log(id)
+        const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
+        const res = await axios.delete(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+            {
+                headers: { "Authorization": "Bearer " + token },
+            }
+        )
+            .then((res) => { console.log(res.data); resolve(res.data) })
+
+            .catch((err) => { console.log("Error in deleteBloodPressureInstance ", err); reject(err) })
+    })
 }

@@ -14,8 +14,8 @@ export default function MyDropDown({dropdownlist,title, selection}){
             style={styles.dropdown}
             data={dropdownlist} 
             onSelect={(selectedItem,index)=>{
-                // console.log(selectedItem,index)
-                selection(selectedItem);
+                 console.log(selectedItem,index)
+                //selection(selectedItem);
             }}
 
             buttonTextAfterSelection={(selectedItem,index)=>{

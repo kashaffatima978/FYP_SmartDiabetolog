@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from "react";
 import { View, Button, Text, StyleSheet, SafeAreaView, ScrollView, Keyboard, Alert, TouchableOpacity, Image, TextInput } from "react-native";
 import { MyButton } from "../components/button";
-import { getOTP,sendOTP,verifyUser } from "../connectionToDB/authentication"
-
+import { getOTP, sendOTP, verifyUser } from "../connectionToDB/authentication"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function EnterCode({ props, navigation }) {
-  const [time, setTime] = React.useState(60);
+  const [time, setTime] = React.useState(120);
   const timerRef = React.useRef(time);
   const [OTP, setOTP] = useState(
     {
@@ -17,11 +16,9 @@ export default function EnterCode({ props, navigation }) {
       four: ""
     }
   )
-  const [otpMatched,setOtpMatched]=useState(false)
+  const [otpMatched, setOtpMatched] = useState(false)
 
-  const sendOTPAgain=async()=>{
-    sendOTP()
-  }
+
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -39,46 +36,59 @@ export default function EnterCode({ props, navigation }) {
 
   //changes the user entered OTP code in state OTP
   const handleOnChange = (val, position) => {
-    setOTP((oldOTP)=>({...oldOTP,[position]:val}))
+    setOTP((oldOTP) => ({ ...oldOTP, [position]: val }))
     console.log("Now OTP is ")
     console.log(OTP)
   }
 
-  const submitOTP=async()=>{
-    const userOTP=JSON.stringify(`${OTP.one}${OTP.two}${OTP.three}${OTP.four}`)
-    console.log("User added OTP is ",userOTP)
+  //get otp again
+  const sendOTPAgain = () => {
+     AsyncStorage.getItem("@registerToken").then(res=>{
+      console.log("Again otp ",JSON.parse(res).token)
+      sendOTP(JSON.parse(res).token)
+     })
+    //sendOTP((JSON.parse(await AsyncStorage.getItem("@registerToken")).token))
+  }
+
+  const submitOTP = async () => {
+    const userOTP = JSON.stringify(`${OTP.one}${OTP.two}${OTP.three}${OTP.four}`)
+    console.log("User added OTP is ", userOTP)
     console.log(typeof userOTP)
-    const sendotp=await getOTP()
+    const sendotp = await getOTP()
     console.log("Sended OTP is ", sendotp)
     console.log(typeof sendotp)
-    if(sendotp!=="ERROR" && sendotp===userOTP){
-      alert("in")
-      await verifyUser()
+    if (sendotp === userOTP) {
+      console.log("otp matched")
       setOtpMatched(true)
-      alert("User SuccessFully Registered")
-      navigation.navigate("Login")
+      verifyUser()
+        .then((res) => {
+          console.log(res)
+          alert("User SuccessFully Registered")
+          navigation.navigate("Login")
+        })
+        .catch((err) => {
+          console.log("Error while verifying user", err)
+          Alert.alert("Error", "Connection Lost! Try Again")
+        })
     }
-
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Enter recieved code:</Text>
       <View style={styles.codeBox}>
-        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text,"one")}></TextInput>
-        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text,"two")}></TextInput>
-        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text,"three")}></TextInput>
-        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text,"four")}></TextInput>
+        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text, "one")}></TextInput>
+        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text, "two")}></TextInput>
+        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text, "three")}></TextInput>
+        <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text, "four")}></TextInput>
       </View>
       <View style={styles.timmer}>
         <Text style={styles.timmerText}> {time} seconds </Text>
       </View>
-      <MyButton title="Done" onPress={submitOTP} disabled={otpMatched?true:false} />
+      <MyButton title="Done" onPress={submitOTP} disabled={!otpMatched ? true : false} />
+      <MyButton title="Send code Again" onPress={sendOTPAgain} />
 
-      <TouchableOpacity onPress={sendOTPAgain} disabled={otpMatched?true:false}>
-        <Text style={{fontSize:16}} >Send code Again</Text>
-      </TouchableOpacity>
-     
+
     </SafeAreaView>
   )
 };
@@ -135,5 +145,3 @@ const styles = StyleSheet.create({
 
 
 });
-
-

@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from "react";
 import {View,StyleSheet,Text,Image, SafeAreaView, ScrollView,Button, TextInput, FlatList, TouchableOpacity, ImageBackground} from "react-native";
-import {viewBloodPressureRecord} from "../connectionToDB/tracker"
+import {viewBloodPressureRecord} from "../connectionToDB/trackerBloodPressure"
 
 export default ViewBloodPressure= function ({navigation}){
     const [mount,setMount]=useState(0)
@@ -59,7 +59,7 @@ export default ViewBloodPressure= function ({navigation}){
            
         <TouchableOpacity style={styles.addButton}
         onPress={()=>{
-            navigation.navigate("AddBloodPressure");
+            navigation.push("AddBloodPressure");
         }}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
@@ -160,4 +160,3 @@ const styles=StyleSheet.create({
         
     })
     
-

@@ -8,7 +8,15 @@ import AllergicReactionMain from "../screens/AllergicReactionMain";
 import MedicationMain from "../screens/MedicationMain";
 import TrackerScreen from "../screens/TrackerScreen";
 import DietFirstMain from "../screens/DietFirstMain";
+import StackNav from "./StackNav";
+import ViewBloodPressure from "../screens/ViewBloodPressure";
+import ViewBloodSugar from "../screens/ViewBloodSugar";
+import ViewCholesterol from "../screens/ViewCholesterol";
+import AddBloodPressure from "../screens/AddBloodPressure";
+import AddBloodSugar from "../screens/AddBloodSugar";
+import AddCholesterol from "../screens/AddCholesterol";
 // import DietChartMain from "../screens/DietChartMain";
+
 
 
 export default function TabNav() {
@@ -29,7 +37,7 @@ export default function TabNav() {
           else if (route.name === 'Tracker') {
             iconName = focused ? 'pulse' : 'pulse-outline';
           }
-          else if (route.name === 'Diet') {
+          else if (route.name === 'DietMain') {
             iconName = focused ? 'pizza' : 'pizza-outline';
           }
 
@@ -38,13 +46,28 @@ export default function TabNav() {
         },
         tabBarActiveTintColor: '#86C0DD',
         tabBarInactiveTintColor: 'gray',
-        headerShown: false
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+
       
       })}>
         <Tab.Screen name="Home" component={HomeScreen}  />
         <Tab.Screen name="Tracker" component={TrackerScreen} />
-        <Tab.Screen name="Diet" component={DietFirstMain} />
+        {/* <Tab.Screen name='StackNav' component={StackNav} options={{ headerTitle:'Home', tabBarItemStyle: { display: 'none' }}}/> */}
+        <Tab.Screen name="DietMain" component={DietFirstMain}  options={{headerTitle: 'Diet', tabBarLabel: 'Diet', }}/>
         <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Diet" component={DietChartMain} options={{ tabBarItemStyle: { display: 'none' }}} />
+        <Tab.Screen name="Snacks" component={SnacksPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="Lunch" component={LunchPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}} />
+        <Tab.Screen name="Dinner" component={DinnerPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="Breakfast" component={BreakfastPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="AddMeal" component={AddMeal}options={{headerShown: false,tabBarItemStyle: { display: 'none', }}} />
+
+        <Tab.Screen name="ViewBloodSugar" component={ViewBloodSugar} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="AddBloodSugar" component={AddBloodSugar} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="ViewBloodPressure" component={ViewBloodPressure} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="AddBloodPressure" component={AddBloodPressure} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        <Tab.Screen name="ViewCholesterol" component={ViewCholesterol} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>      
       </Tab.Navigator>
     );
   }

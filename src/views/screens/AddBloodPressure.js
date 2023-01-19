@@ -1,83 +1,145 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import React from "react-native";
-import {StyleSheet,SafeAreaView,View,Text,ScrollView,TouchableOpacity} from "react-native";
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Input } from "../components/input";
-import {addBloodPressureRecord} from "../connectionToDB/tracker"
-import {viewBloodPressureInstance} from "../connectionToDB/tracker"
+import { addBloodPressureRecord,viewBloodPressureInstance,updateBloodPressureRecord,deleteBloodPressureInstance } from "../connectionToDB/trackerBloodPressure";
 
-export default function AddBloodPressure({navigation,route}){
-    if(route.params!==undefined)
-   { const id=route.params.id
-    alert(route.params.id)
-    if(id!==null){
-        viewBloodPressureInstance()
-    }}
+export default function AddBloodPressure({ navigation, route }) {
     
 
+    const [existingItem, setExistingItem] = useState(null)
+    const [mount, setMount] = useState(0)
+    const loadDataOnlyOnce = async () => {
+        //alert("loadDataOnlyOnce");
+        if (route.params !== undefined) {
+            const id = route.params.id
+            // alert(route.params.id)
+            if (id !== undefined) {
+                viewBloodPressureInstance(id)
+                    .then((res) => {
+                        console.log("In ", res)
+                        setExistingItem( res );
+                        setInputList(() => {
+                            return {
 
-    const [inputList,setInputList]=useState({disystolic:"",systolic:"",description:""});
-    const save=()=>{
-        addBloodPressureRecord(inputList.disystolic,inputList.systolic,inputList.description)
+                               "disystolic": res.disystolic, "systolic": res.systolic, "description": res.description
+
+                            }
+                        });
+                        console.log("After setting existingItem= ", existingItem)
+
+                    })
+                    .catch((err) => { console.log("Error in AddBloodPressure uploading particular instance ", err) })
+            }
+        }
+
+    };
+    useEffect(() => {
+        if (mount === 0) {
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+    }, [mount]);
+
+
+
+
+    const [inputList, setInputList] = useState({ "disystolic": "", "systolic": "", "description": "" });
+    const save = () => {
+        addBloodPressureRecord(inputList.disystolic, inputList.systolic, inputList.description)
+        navigation.push("ViewBloodPressure")
+    }
+
+    const update=()=>{
+ console.log("JJJJJJJJJ")
+        updateBloodPressureRecord(route.params.id,inputList.disystolic, inputList.systolic, inputList.description)
+            .then((data) => { console.log("update", data),navigation.push("ViewBloodPressure") })
+            .catch((err) => { console.log("Error in update in add bloodpressure", err) })
+    }
+    const deleteItem=()=>{
+        deleteBloodPressureInstance(route.params.id)
+            .then((data) => { console.log("delete", data),navigation.push("ViewBloodPressure") })
+            .catch((err) => { console.log("Error in delete in add bloodpressure", err) })
     }
 
     //Method sets the state change in inputList
-    const handleOnTextChange=(newText,inputType)=>{
-    setInputList(prevInputListState=>({...prevInputListState,[inputType]:newText}));
-    console.log("InputList: ",inputList)
-};
-    return(
-    <SafeAreaView style={styles.container}>
-        <View style={styles.textView}>
-            <Text style={styles.text}>Add Blood Pressure</Text>
-        </View>
-
-        <ScrollView style={styles.container2}
-        showsVerticalScrollIndicator={false}>
-            <View style={styles.inputContainer}>
-            <Picker pickertitle="Select Time" pickermode="time"
-            textColor="#212529"
-            buttonColor="#6B705C"/>
+    const handleOnTextChange = (newText, inputType) => {
+        setInputList(prevInputListState => ({ ...prevInputListState, [inputType]: newText }));
+        console.log("InputList: ", inputList)
+    };
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.textView}>
+                <Text style={styles.text}>Add Blood Pressure</Text>
             </View>
 
-            <View style={styles.inputContainer}>
-                <Input label="Disystolic Pressure"
-                onChangeText={text=>handleOnTextChange(text,"disystolic")}
-                placeholder="Enter your disystolic pressure"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+            <ScrollView style={styles.container2}
+                showsVerticalScrollIndicator={false}>
+                {/* <View style={styles.inputContainer}>
+                    <Picker pickertitle="Select Time" pickermode="time"
+                        textColor="#212529"
+                        buttonColor="#6B705C" />
+                </View> */}
 
-            <View style={styles.inputContainer}>
-                <Input label="Systolic Pressure"
-                onChangeText={text=>handleOnTextChange(text,"systolic")}
-                placeholder="Enter your Systolic pressure"
-                multiline={false}
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+                <View style={styles.inputContainer}>
+                    <Input label="Disystolic Pressure"
+                    value={`${inputList.disystolic}`}
+                    maxlength={3}
+                        onChangeText={text => handleOnTextChange(text, "disystolic")}
+                        placeholder="Enter your disystolic pressure"
+                        inputBackground="white"
+                        textColor="black" />
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <Input label="Systolic Pressure"
+                     value={`${inputList.systolic}`}
+                     maxlength={3}
+                        onChangeText={text => handleOnTextChange(text, "systolic")}
+                        placeholder="Enter your Systolic pressure"
+                        multiline={false}
+                        inputBackground="white"
+                        textColor="black" />
+                </View>
 
 
-            <View style={styles.inputContainer}>
-            <Input label="Notes" 
-            onChangeText={text=>handleOnTextChange(text,"description")}
-                placeholder="Enter a Description" 
-                multiline={true}
-                inputBackground="white" 
-                textColor="black"
-               />
-            </View>
+                <View style={styles.inputContainer}>
+                    <Input label="Notes"
+                     value={`${inputList.description}`}
+                        onChangeText={text => handleOnTextChange(text, "description")}
+                        placeholder="Enter a Description"
+                        multiline={true}
+                        inputBackground="white"
+                        textColor="black"
+                    />
+                </View>
 
-            <TouchableOpacity style={styles.saveButtonContainer}
-            onPress={()=>{save()}}>
-                <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
 
-        </ScrollView>
+                {
 
-    </SafeAreaView>)
+existingItem === null ?
+    (<TouchableOpacity style={styles.saveButtonContainer} onPress={save}>
+        <Text style={styles.saveButtonText} >Save</Text>
+    </TouchableOpacity>) :
+    (<View>
+        <TouchableOpacity style={styles.saveButtonContainer}
+        onPress={()=>{update()}}>
+            <Text style={styles.saveButtonText}>Update</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButtonContainer}
+        onPress={()=>{deleteItem()}}>
+            <Text style={styles.saveButtonText}>Delete</Text>
+        </TouchableOpacity>
+    </View>
+    )
 
 }
 
+            </ScrollView>
+
+        </SafeAreaView>)
+
+}
 
 const styles=StyleSheet.create({
     container:{

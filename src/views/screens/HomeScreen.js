@@ -21,7 +21,7 @@ export default function HomeScreen({navigation, prop}){
                 showsText={true} 
                 progress={10} 
                 thickness={8} 
-                formatText={()=> `${bloodSugar}mg/dl`} 
+                formatText={()=> `${bloodSugar}mg`} 
                 style={styles.circle} 
                 textStyle={{color: 'white' }}
                 allowFontScaling={true}
@@ -32,23 +32,34 @@ export default function HomeScreen({navigation, prop}){
             </View>
 
             <View style={styles.smallMain}>
-                <View style={styles.small}>
-                    <Text>Calories Consumed</Text>
+                <View style={[styles.small,{backgroundColor:'#DDBEA9'}]}>
+                    <View style={{textAlign: "center", marginTop: 20,  flexDirection: "column", marginLeft: 25}}>
+                        <Text style={{fontSize:18, textAlign:"center", marginRight: 30}}>-</Text>
+                        <Text style={{fontSize:15}}>mg/dl</Text>
+                    </View>
+                </View>
+                
+                <View style={[styles.small,{backgroundColor:'#DBE987'}]}>
+                <View style={{textAlign: "center", marginTop: 20,  flexDirection: "column", marginLeft: 25}}>
+                        <Text style={{fontSize:18, textAlign:"center", marginRight: 30}}>-</Text>
+                        <Text style={{fontSize:15}}>mg/dl</Text>
+                    </View>
                 
                 </View>
-                <View style={styles.small}>
-                
+                <View style={[styles.small,{backgroundColor:'#F4DADA'}]}>
+                <View style={{textAlign: "center", marginTop: 20,  flexDirection: "column", marginLeft: 25}}>
+                        <Text style={{fontSize:18, textAlign:"center", marginRight: 30}}>-</Text>
+                        <Text style={{fontSize:15}}>mg/dl</Text>
+                    </View>
                 </View>
             </View>
 
-            <View style={styles.smallMain}>
-                <View style={styles.small}>
-                    
-                </View>
-                <View style={styles.small}>
+            <TouchableOpacity style={[styles.smallMain,{marginTop: 30}]} onPress={()=>{navigation.navigate('Tracker')}} >
                 
+                <View style={[styles.small,{ backgroundColor:'#D6D8F5'}]} >
+                <Text style={{textAlign: "center", textAlignVertical: "center", marginTop: 20,  fontSize: 40}}>+</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
             
             
         </SafeAreaView>
@@ -60,7 +71,6 @@ const styles=StyleSheet.create({
         width:"100%",
         height: "100%",
         backgroundColor: 'white'
-        // backgroundColor: 'green'
     },
     circleCon:{
         alignSelf: "center",
@@ -85,14 +95,17 @@ const styles=StyleSheet.create({
     smallMain:{width: '100%',
     marginTop: 20, 
 
-    height: 150, 
+    height: 100, 
     flexDirection: "row", 
     justifyContent: "space-evenly"},
 
     small:{
         backgroundColor: '#ADD8E6', 
-        width: 180, 
+        width: 90, 
         margin: 5, 
-        borderRadius: 15
+        borderRadius: 60,
+        elevation: 10
+      
+
     }
 })

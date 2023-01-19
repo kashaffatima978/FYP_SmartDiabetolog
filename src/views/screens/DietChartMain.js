@@ -64,7 +64,7 @@ export default DietChartMain = function ({navigation}) {
                   height: 100,
                   width: 130,
                   justifyContent: 'center',
-                  marginTop: 19,
+                  marginTop: 13,
                   marginLeft: 15,
                 }}
                 resizeMode="contain"
@@ -79,7 +79,7 @@ export default DietChartMain = function ({navigation}) {
                   height: 90,
                   width: 120,
                   justifyContent: 'center',
-                  marginTop: 19,
+                  marginTop: 13,
                   marginLeft: 15,
                   marginBottom: 10,
                 }}
@@ -97,7 +97,7 @@ export default DietChartMain = function ({navigation}) {
                   height: 100,
                   width: 130,
                   justifyContent: 'center',
-                  marginTop: 19,
+                  marginTop: 13,
                   marginLeft: 15,
                 }}
                 resizeMode="contain"
@@ -112,7 +112,7 @@ export default DietChartMain = function ({navigation}) {
                   height: 100,
                   width: 130,
                   justifyContent: 'center',
-                  marginTop: 19,
+                  marginTop: 13,
                   marginLeft: 15,
                 }}
                 resizeMode="contain"
@@ -140,17 +140,18 @@ const styles = StyleSheet.create({
     borderWidth:1,
     flex: 0.5,
     backgroundColor: 'white',
-    height: 80,
+    height: 50,
     borderRadius: 25,
     // paddingTop: 20,
     margin: 10,
     width: 370,
+    fontSize: 15
   },
   caloriesNumber: {
     color: 'black',
     textAlign: 'center',
     justifyContent: 'center',
-    fontSize: 40,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   calories: {
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: 'black',
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 18,
   },
   mealCategory: {
     flex: 1,
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   foodButton: {
     backgroundColor: 'white',
     width: 170,
-    height: 170,
+    height: 150,
     margin: 8,
     borderRadius: 25,
     padding: 5,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   },
   headImage:{
     width:"90%",
-    height: 120,
+    height: 100,
     alignSelf:"center",
     marginTop: 10
   },
@@ -216,8 +217,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
         fontStyle: "italic",
         textAlign: "center",
-        fontWeight: "bold",
+      
         color: 'black',
-        margin: 15
+        margin: 10
   }
 });

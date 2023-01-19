@@ -41,7 +41,7 @@ const Stack = createNativeStackNavigator();
 export default function StackNav(){
     return (
         <Stack.Navigator
-      screenOptions={{headerShown:false}} initialRouteName={'TabNav'}
+      screenOptions={{headerShown:false}} initialRouteName={'FirstScreen'}
       >
         <Stack.Screen name="TabNav" component={TabNav} />
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
@@ -51,7 +51,7 @@ export default function StackNav(){
         {/* <Stack.Screen name="Home" component={Home} /> */}
         <Stack.Screen name="Tracker" component={TrackerScreen} />
         <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
-        <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
+        {/* <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} /> */}
         <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
         <Stack.Screen name="AddBloodPressure" component={AddBloodPressure} />
         <Stack.Screen name="ViewCholesterol" component={ViewCholesterol} />

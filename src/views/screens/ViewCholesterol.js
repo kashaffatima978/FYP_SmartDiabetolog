@@ -1,7 +1,29 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import {View,StyleSheet, SafeAreaView,Text,FlatList,TouchableOpacity, ImageBackground} from "react-native";
-
+import {viewCholesterolRecord} from "../connectionToDB/trackerCholestrol"
 export default function ViewCholesterol({navigation}){
+    const [cholesterolRecord,setCholesterolRecord]=useState([])
+    const [mount,setMount]=useState(0)
+    const loadDataOnlyOnce = async() => {
+        // alert("loadDataOnlyOnce");
+        viewCholesterolRecord()
+         .then((res)=>{
+            console.log(res)
+            setCholesterolRecord(res)
+            console.log(cholesterolRecord)
+         })
+         .catch(err=>{console.log("Error in loadDataOnlyOnce in viewCholesterol ",err)})
+       
+        
+      };
+          useEffect(() => {
+            if(mount===0){
+              loadDataOnlyOnce(); 
+              setMount((oldVal)=>oldVal++);
+            }
+          },[mount]);
+    
+
     const data=[{ldl:123,hdl:125},{ldl:23,hdl:129},{ldl:223,hdl:15},{ldl:173,hdl:40},{ldl:145,hdl:165},{ldl:123,hdl:111}];
     return(
         <SafeAreaView style={styles.container}>
@@ -14,11 +36,11 @@ export default function ViewCholesterol({navigation}){
 
             <FlatList style={styles.flatlist}
             showsVerticalScrollIndicator={false}
-            data={data}
+            data={cholesterolRecord}
             renderItem={({item})=>{
                 return(
                    
-                    <TouchableOpacity style={styles.flatlistItemContainer}>
+                    <TouchableOpacity style={styles.flatlistItemContainer} onPress={()=>{navigation.navigate("AddCholesterol",{"id":item._id})}}>
                         <View style={styles.hdlContainer}>
                             <ImageBackground source={require("../../files/Images/Cholesterol.png")} resizeMode="cover"
                             style={{opacity:0.4}}>
@@ -37,7 +59,7 @@ export default function ViewCholesterol({navigation}){
 
         <TouchableOpacity style={styles.addButton}
         onPress={()=>{
-            navigation.navigate("AddCholesterol");
+            navigation.push("AddCholesterol");
         }}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>

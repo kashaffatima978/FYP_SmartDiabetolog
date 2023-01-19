@@ -1,12 +1,36 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {View,Text,SafeAreaView,StyleSheet, FlatList, Button, TouchableOpacity} from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
-
+import {viewBloodSugarRecord} from "../connectionToDB/trackerBloodSugar"
 
 
 export default ViewBloodSugar=({navigation})=>{
+    const [mount,setMount]=useState(0)
+    const [sugarData,setSugarData]=useState([]);//[{s:120,d:80},{s:133,d:90},{s:100,d:70},{s:120,d:99},{s:170,d:100}];
+
+    const loadDataOnlyOnce = async() => {
+       // alert("loadDataOnlyOnce");
+         viewBloodSugarRecord()
+         .then((res)=>{
+            console.log(res)
+            console.log(res[0])
+            setSugarData(res);
+            console.log(sugarData)
+         })
+         .catch(err=>{console.log("Error in loadDataOnlyOnce in viewBloodSugar ",err)})
+       
+        
+      };
+          useEffect(() => {
+            if(mount===0){
+              loadDataOnlyOnce(); 
+              setMount((oldVal)=>oldVal++);
+            }
+          },[mount]);
+    
+
     const data=[
         {
             id:1,
@@ -50,18 +74,18 @@ export default ViewBloodSugar=({navigation})=>{
 
         <FlatList 
         style={[generalStyles.spacing,styles.flatlist]}
-        data={data}
+        data={sugarData}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom:"15%" }}
         renderItem={({item})=>{
             return(
-                <TouchableOpacity style={styles.flatlistView}>
+                <TouchableOpacity style={styles.flatlistView} onPress={()=>{navigation.push("AddBloodSugar",{"id":item._id})}}>
                     <View style={styles.box1}>
-                        <Text style={styles.concentration}>{item.concentration}</Text>
+                        <Text style={styles.concentration}>{item.concentration} </Text>
                         
                     </View>
                     <View style={styles.box2}>
-                        <Text style={styles.time}>{item.time}</Text>
+                        <Text style={styles.time}>{item.creationTime}</Text>
                         <Text style={styles.event}>{item.event}</Text>
                     </View>          
                 </TouchableOpacity>
@@ -71,7 +95,7 @@ export default ViewBloodSugar=({navigation})=>{
         
         <TouchableOpacity style={styles.addButton}
         onPress={()=>{
-            navigation.navigate("AddBloodSugar");
+            navigation.push("AddBloodSugar");
         }}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
