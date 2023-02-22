@@ -62,22 +62,22 @@ const App: () => Node = () => {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="FirstScreen" screenOptions={{ headerStyle: {
+      <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerStyle: {
       backgroundColor: '#ADD8E6', 
       elevation: 5
 },}}>
 
-        <Drawer.Screen name="FirstScreen" component={FirstScreen} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
-        <Drawer.Screen name="Registration" component={Registeration} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
+        {/* <Drawer.Screen name="FirstScreen" component={FirstScreen} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
+        <Drawer.Screen name="Registration" component={Registeration} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/> */}
         <Drawer.Screen name="Login" component={LoginScreen} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="EnterCode" component={EnterCode} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="Home" component={TabNav}/>
-        <Drawer.Screen name="HomeScreen" component={HomeScreen} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
+        {/* <Drawer.Screen name="HomeScreen" component={HomeScreen} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/> */}
         {/* <Drawer.Screen name="StackNav" component={StackNav} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/> */}
         <Drawer.Screen name="Allergic Reaction" component={AllergicReactionMain}  options={{ headerShown:false}}/>
         <Drawer.Screen name="Medicine" component={MedicationMain}  options={{headerShown:false}}/>
         <Drawer.Screen name="Retinopathy" component={Retinopathy}  options={{headerShown:false}}/>
-        <Drawer.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
+        {/* <Drawer.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="AddFoodAllergicReactions" component={AddFoodAllergicReactions} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="FoodAllergicReactions" component={FoodAllergicReactions} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
@@ -91,7 +91,7 @@ const App: () => Node = () => {
         <Drawer.Screen name="ViewBloodPressure" component={ViewBloodPressure}  options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="AddBloodPressure" component={AddBloodPressure}  options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
         <Drawer.Screen name="ViewCholesterol" component={ViewCholesterol}  options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>
-        <Drawer.Screen name="AddCholesterol" component={AddCholesterol} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>      
+        <Drawer.Screen name="AddCholesterol" component={AddCholesterol} options={{ drawerItemStyle: { height: 0 }, headerShown:false}}/>       */}
       </Drawer.Navigator>
     </NavigationContainer>
   );

@@ -40,10 +40,9 @@ import TabNav from "./TabNav";
 const Stack = createNativeStackNavigator();
 export default function StackNav(){
     return (
-        <Stack.Navigator
-      screenOptions={{headerShown:false}} initialRouteName={'FirstScreen'}
+        <Stack.Navigator initialRouteName={'FirstScreen'}
       >
-        <Stack.Screen name="TabNav" component={TabNav} />
+        {/* <Stack.Screen name="TabNav" component={TabNav} /> */}
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="Registration" component={Registeration} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -51,7 +50,7 @@ export default function StackNav(){
         {/* <Stack.Screen name="Home" component={Home} /> */}
         <Stack.Screen name="Tracker" component={TrackerScreen} />
         <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
-        {/* <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} /> */}
+        <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
         <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
         <Stack.Screen name="AddBloodPressure" component={AddBloodPressure} />
         <Stack.Screen name="ViewCholesterol" component={ViewCholesterol} />
@@ -62,12 +61,12 @@ export default function StackNav(){
         <Stack.Screen name="Dinner" component={DinnerPage} />
         <Stack.Screen name="Breakfast" component={BreakfastPage} />
         <Stack.Screen name="AddMeal" component={AddMeal} />
-        {/* <Stack.Screen name="MedicationMain" component={MedicationMain}/> */}
+        <Stack.Screen name="MedicationMain" component={MedicationMain}/>
         <Stack.Screen name="OralMed" component={OralMed}/>
         <Stack.Screen name="AddOralMedicine" component={AddOralMedicine}/>
         <Stack.Screen name="InsulinMed" component={InsulinMed}/>
         <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine}/>
-        {/* <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain}/> */}
+        <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain}/>
         <Stack.Screen name="DietFirstMain" component={DietFirstMain}/>
         <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions}/>
         <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions}/>
@@ -75,7 +74,7 @@ export default function StackNav(){
         <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions}/>
         <Stack.Screen name="ForgetPassword" component={ForgetPassword}/>
         <Stack.Screen name="EnterCode" component={EnterCode}/>
-        {/* <Stack.Screen name="Retinopathy" component={Retinopathy}/> */}
+        <Stack.Screen name="Retinopathy" component={Retinopathy}/>
         <Stack.Screen name="Profile" component={Profile}/>
       </Stack.Navigator>
     )

@@ -57,7 +57,7 @@ export default function TabNav() {
         <Tab.Screen name="DietMain" component={DietFirstMain}  options={{headerTitle: 'Diet', tabBarLabel: 'Diet', }}/>
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name="Diet" component={DietChartMain} options={{ tabBarItemStyle: { display: 'none' }}} />
-        <Tab.Screen name="Snacks" component={SnacksPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
+        {/* <Tab.Screen name="Snacks" component={SnacksPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
         <Tab.Screen name="Lunch" component={LunchPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}} />
         <Tab.Screen name="Dinner" component={DinnerPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
         <Tab.Screen name="Breakfast" component={BreakfastPage} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
@@ -67,7 +67,7 @@ export default function TabNav() {
         <Tab.Screen name="AddBloodSugar" component={AddBloodSugar} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
         <Tab.Screen name="ViewBloodPressure" component={ViewBloodPressure} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
         <Tab.Screen name="AddBloodPressure" component={AddBloodPressure} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>
-        <Tab.Screen name="ViewCholesterol" component={ViewCholesterol} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>      
+        <Tab.Screen name="ViewCholesterol" component={ViewCholesterol} options={{headerShown: false, tabBarItemStyle: { display: 'none', }}}/>       */}
       </Tab.Navigator>
     );
   }
