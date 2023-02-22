@@ -14,7 +14,7 @@ export  const Input=({label,iconName,errorMessage,password,inputBackground,textC
             <View style={[styles.Inputcontainer,{ height:(multi)?100:50,alignItems:(multi)?"flex-start":"center"},
             {paddingVertical:multi?"2%":0},
                 {borderColor:errorMessage?colors.red:isFocused?colors.headingBlue:colors.darkGreyBlue}
-                ,{backgroundColor:(inputBackground)?inputBackground:colors.backgroundBlue}
+                ,{backgroundColor:(inputBackground)?inputBackground:"#b8bedd"}
                 ]}>
                     
                 <Icon name={iconName} style={styles.iconStyle}></Icon>

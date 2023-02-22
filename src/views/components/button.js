@@ -21,7 +21,7 @@ const styles=StyleSheet.create({
         // justifyContent:"center",
         // alignItems:"center",
         // marginVertical:15
-        backgroundColor: "#86C0DD",
+        backgroundColor: "#6A6DB0",
         width: 300,
         height: 50,
         borderRadius: 10,

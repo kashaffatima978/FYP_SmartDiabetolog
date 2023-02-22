@@ -1,33 +1,58 @@
 import {React, useState, useEffect} from "react";
-import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity, Image, Animated, Easing  } from "react-native";
+import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity, Image, Animated, Easing, TouchableWithoutFeedback  } from "react-native";
 import { Input } from "../components/input";
 import NewDropDown from "../components/NewDropDown"
 import NewPicker from "../components/NewPicker";
 import * as Progress from 'react-native-progress';
 import { CircularProgress } from 'react-native-circular-progress';
 import DailyInputs from "../components/DailyInputs";
-import { FlatList } from "react-native-gesture-handler";
+import NavBar from "../components/NavBar";
+import SpinListButton from "../components/SpinListButton";
+import { Modal} from 'react-native-paper';
 
 
 
 
 export default function HomeScreen({navigation, prop}){
+    const [visible, setVisible] =useState(false);
     const [name, setName] = useState('Fatima');
-    const [bloodSugar, setBloodSugar]= useState(250);
+    const [bloodSugar, setBloodSugar]= useState(100);
+    const [ldl, setldl]= useState(60);
+    const [hdl, sethdl]= useState(70);
+    const [sbp, setsbp]= useState(80);
+    const [dbp, setdbp]= useState(120);
+    const [profile, setprofile]= useState(''); 
+
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
-    const [bloodPressure, setBloodPressure]= useState(60);
     const animatedProgress = new Animated.Value((bloodSugar/500)*100);
+
+
+    ///for modal
+    
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+    const containerStyle = {backgroundColor: 'white', padding: 20};
 
     useEffect(() => {
         Animated.timing(animatedProgress, {
-        toValue: animatedProgress,
-        duration: 3000,
+        toValue: 1,
+        duration: 5000,
         useNativeDriver: true,
-        easing: Easing.linear,
+
         }).start();
     }, [animatedProgress]);
+
+    
     return(
         <SafeAreaView style={styles.container}>
+
+            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                <Text>Example Modal.  Click outside this area to dismiss.</Text>
+            </Modal>
+            <TouchableWithoutFeedback onPress={showModal}>
+                <NavBar name ={name} profile={profile} />
+            </TouchableWithoutFeedback>
+            
             <View style={styles.con}>
                 <AnimatedCircularProgress
                     size={200}
@@ -53,19 +78,14 @@ export default function HomeScreen({navigation, prop}){
                 <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16}}>Daily Inputs</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <DailyInputs colorbg="#FCE0D7" dataUnit={'mg/dl'} dataType="Blood Sugar" data={bloodSugar} icon={require('../../../assets/Images/bloodsugar_icon.png')} dataColor="#9d8189"/>
-                <DailyInputs colorbg="#fad2e1" dataUnit={'mg/dl'} dataType="Systolic BP" data={bloodSugar} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#e56866"/>
-                <DailyInputs colorbg="#dee2ff" dataUnit={'mg/dl'} dataType="Diasystolic BP" data={bloodSugar} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#8e9aaf"/>
-                <DailyInputs colorbg="#c8e7ff" dataUnit={'mg/dl'} dataType="LDL chlolestrol" data={bloodSugar} icon={require('../../../assets/Images/ldl-icon.png')} dataColor="#618985"/>
-                <DailyInputs colorbg="#c9e4de" dataUnit={'mg/dl'} dataType="HDL chlolestrol" data={bloodSugar} icon={require('../../../assets/Images/hdl-icon.png')} dataColor="#09814a"/>
-                
-            
+                <DailyInputs colorbg="#fad2e1" dataUnit={'mg/dl'} dataType="Systolic BP" data={sbp} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#e56866"/>
+                <DailyInputs colorbg="#dee2ff" dataUnit={'mg/dl'} dataType="Diasystolic BP" data={dbp} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#8e9aaf"/>
+                <DailyInputs colorbg="#c8e7ff" dataUnit={'mg/dl'} dataType="LDL chlolestrol" data={ldl} icon={require('../../../assets/Images/ldl-icon.png')} dataColor="#618985"/>
+                <DailyInputs colorbg="#c9e4de" dataUnit={'mg/dl'} dataType="HDL chlolestrol" data={hdl} icon={require('../../../assets/Images/hdl-icon.png')} dataColor="#09814a"/>
             </ScrollView>
         </View>
 
-
-
-
-            
+        <SpinListButton />
         </SafeAreaView>
     )
 };
@@ -76,7 +96,7 @@ const styles=StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         // backgroundColor: '#fff',mar
-        marginTop: 20
+        marginTop: 30
       },
       
     container:{

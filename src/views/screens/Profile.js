@@ -4,9 +4,12 @@ import colors from '../../files/Colors';
 import { getProfileInformation, editProfileInformation, deleteAccount } from "../connectionToDB/profile"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { ScrollView } from 'react-native-gesture-handler';
-
+import { Appbar, Avatar } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default Profile = function ({navigation}) {
+  const [profile, setProfile] = useState('')
+
   const [mount, setMount] = useState(0)
   const loadDataOnlyOnce = async () => {
     getProfileInformation()
@@ -72,16 +75,11 @@ export default Profile = function ({navigation}) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
-      <Image style={styles.image} source={require('../../../assets/Images/profile.jpg')} />
+      {
+        profile!=''?<Avatar.Image style={styles.image} size={50} source={profile} />:<Avatar.Text style={styles.image} backgroundColor='#bdb2ff' size={150} label={'F'} />
+       }
 
-      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly'}}>
-      <TouchableOpacity style={styles.button}
-          onPress={() => { logout() }}><Text style={styles.buttonText}>logout</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}
-          onPress={() => { deleteItem() }}><Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
+      
       <View style={styles.inputCont}>
         <TextInput style={styles.input} value={inputList.name} placeholder='Username' onChangeText={text => handleOnTextChange(text, "name")} />
         <TextInput style={styles.input} value={inputList.email} placeholder='Email' onChangeText={text => handleOnTextChange(text, "email")} />
@@ -89,41 +87,51 @@ export default Profile = function ({navigation}) {
         <TextInput style={styles.input} value={`${inputList.heightFeet}`} placeholder='Height in Feet' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightFeet")} />
         <TextInput style={styles.input} value={`${inputList.heightInches}`} placeholder='Height in Inches' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightInches")} />
         <TextInput style={styles.input} value={`${inputList.diabetesType}`} placeholder='Diabetes Type' onChangeText={text => handleOnTextChange("Type 1", "diabetesType")} />
-        <TouchableOpacity style={styles.button}
-          onPress={() => { update() }}><Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
         
+        
+      </View>
+      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+          <TouchableOpacity style={styles.button}
+              onPress={() => { update() }}>
+                <Text style={styles.buttonText}>Edit  <Icon name="edit" size={15}  /></Text>
+                
+            </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.button}
+              onPress={() => { logout() }}><Text style={styles.buttonText}>logout</Text>
+            </TouchableOpacity>
+          <TouchableOpacity style={styles.button}
+              onPress={() => { deleteItem() }}><Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 70,
     alignSelf: 'center',
-    marginTop: 55
+    marginTop: 30
   },
   inputCont: {
     marginTop: 30,
     padding: 5,
-    
+
   },
   input: {
     width: '90%',
-    backgroundColor: '#ADD8E6',
+    backgroundColor: '#b8bedd',
     margin: 10,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderRadius: 10,
+    padding: 10
   },
   button: {
 
-    backgroundColor: "#86C0DD",
+    backgroundColor: "#6A6DB0",
     width: 110,
     height: 40,
     textAlign: "center",
     justifyContent: "center",
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     borderRadius: 10,
     marginTop: 19
   },

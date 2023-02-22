@@ -125,7 +125,7 @@ export const Registeration = function ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar backgroundColor="#495057" barStyle="light-content"></StatusBar>
+            <StatusBar backgroundColor="#6A6DB0" barStyle="light-content"></StatusBar>
             <Loader visible={loader} />
             <ScrollView style={styles.scrollViewContainer}
                 showsVerticalScrollIndicator={false}>

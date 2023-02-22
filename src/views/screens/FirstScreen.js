@@ -53,12 +53,12 @@ const styles=StyleSheet.create({
         fontSize: 30,
         fontStyle: "italic",
         textAlign: "center",
-        color: 'black',
+        color: '#6A6DB0',
     },
 
     button:{
         flex:0.2,
-        backgroundColor: "#86C0DD",
+        backgroundColor: "#6A6DB0",
         width: 350,
         borderRadius: 10,
         marginTop: 20,
