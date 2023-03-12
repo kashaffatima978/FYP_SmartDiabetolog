@@ -6,13 +6,10 @@ import Card from "../components/cards";
 
 export default function TrackerScreen({navigation}){
     return(
-        <SafeAreaView style={generalStyles.container}>
+
         <View style={styles.container}>
 
             <View style={styles.titleContainer}>
-                <Image 
-                 source={require("../../../assets/Images/trackerHead.jpg")} 
-                style={styles.trackerImage} resizeMode="contain"/>
                 <Text style={styles.titleHeading}>Tracker</Text>
               
             </View>
@@ -39,56 +36,39 @@ export default function TrackerScreen({navigation}){
             </ScrollView>
 
         </View>
-        </SafeAreaView>
+
     )
 
 }
 
 const styles=StyleSheet.create({
     container:{
-        // height:"100%",
-        // width:"100%",
         flex:1,
         backgroundColor: "white"
     },
     titleContainer:{
-        height:"25%",
-        width:"100%",
+        height:"10%",
         display:"flex",
-        flexDirection:"column",
-        justifyContent:"space-around",
-        borderRadius:50
+        marginBottom: 30,
+        backgroundColor: "#6A6DB0",
+        
     },
-trackerImage:{
-    width:"100%",
-    height:"80%", 
 
-    alignSelf: "center"
- 
-},
 titleHeading:{
-    
-    // fontSize:60,
-    // fontWeight:"bold",
-    // color:colors.darkGreyBlue,
-    // alignSelf:"center",
-    // position:"relative",
-    fontSize: 30,
-        fontStyle: "italic",
-        textAlign: "center",
-        fontWeight: "bold",
-        color: 'black',
-        margin: 15
 
- 
+    fontSize: 30,
+        textAlign: "center",
+        color: 'white',
+        margin: 15
 
 },
 scroll:{
     height:"80%",
     width:"100%",
 },
-card:{
-    
+cardStyle:{
+    margin: 15,
+    backgroundColor: 'green'
 }
 })
 

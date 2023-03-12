@@ -5,8 +5,6 @@ import colors from "../../files/Colors";
 
 
 const Card=({title,imageSource,color})=>{
-
-    
     const source=imageSource;
     return(
         <View style={[styles.cardView]}>
@@ -20,12 +18,13 @@ const styles=StyleSheet.create({
     cardView:{
         flex:1,
         flexDirection:"column",
-        borderColor:'#86C0DD',
+        borderColor:'#6A6DB0',
         borderWidth:2,
         height:150,
-        width:"100%",
-        marginTop:10,
-        marginBottom:10
+        // width:"100%",
+        // marginTop:10,
+        // marginBottom:10
+        margin: 15
     },
     image:{
         height:"80%",

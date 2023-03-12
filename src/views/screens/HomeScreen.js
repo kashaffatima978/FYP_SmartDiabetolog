@@ -13,7 +13,7 @@ import { Modal} from 'react-native-paper';
 export default function HomeScreen({navigation, prop}){
     const [visible, setVisible] =useState(false);
     const [name, setName] = useState('Fatima');
-    const [bloodSugar, setBloodSugar]= useState(60);
+    const [bloodSugar, setBloodSugar]= useState(120);
     const [ldl, setldl]= useState(60);
     const [hdl, sethdl]= useState(70);
     const [sbp, setsbp]= useState(80);
@@ -61,7 +61,7 @@ export default function HomeScreen({navigation, prop}){
                     lineCap="round"
                 >
                     {() => (
-                    ((bloodSugar >= 80)||(bloodSugar <130))?
+                    ((bloodSugar >= 80)&&(bloodSugar <130))?
                         <Image
                             style={styles.image}
                             source={require('../../../assets/Images/normal.png')}
@@ -110,16 +110,51 @@ export default function HomeScreen({navigation, prop}){
 
         </View>
         <View style={{marginTop: 16, padding: 20}}>
-                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Heath care</Text>
+                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Life style</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
-                    <View style={styles.smallBoxes}>
-                        <Text style={styles.boxText}>Diet Plan</Text>
-                    </View>
+                    <Pressable style={styles.smallBoxes} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#09814a'}]}>Diet</Text>
+                    </Pressable>
 
-                    <View style={[styles.smallBoxes,{backgroundColor: '#c8e7ff'}]}>
-                        <Text style={styles.boxText}>Exercise Plan</Text>
-                    </View>
+                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#c8e7ff'}]} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#618985'}]}>Exercise</Text>
+                    </Pressable>
+
+                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#FAD2E1'}]} onPress={()=>{navigation.navigate('Retinopathy')}}>
+                        <Text style={[styles.boxText,{color: '#f08080'}]}>Retinopathy</Text>
+                    </Pressable>
+                </ScrollView>
+        </View>
+
+
+        <View style={{marginTop: 16, padding: 20}}>
+                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Health care</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    
+                    <Pressable style={[styles.smallBoxes, {backgroundColor:"#e3d5ca"}]} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#A4907C'}]}>Medication</Text>
+                    </Pressable>
+
+                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#CDDAFD'}]} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#8e9aaf'}]}>Allergies</Text>
+                    </Pressable>
+
+                </ScrollView>
+        </View>
+
+        <View style={{marginTop: 16, padding: 20}}>
+                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Awareness</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    
+                    <Pressable style={[styles.smallBoxes, {backgroundColor:"#FCE0D7"}]} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#9d8189'}]}>Blogs</Text>
+                    </Pressable>
+
+                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#d0f4ba'}]} onPress={()=>{navigation.navigate('Diet')}}>
+                        <Text style={[styles.boxText,{color: '#a3b18a'}]}>Videos</Text>
+                    </Pressable>
+
                 </ScrollView>
         </View>
 
@@ -159,13 +194,15 @@ const styles=StyleSheet.create({
     {
         backgroundColor: '#c9e4de', 
         width: 150, 
-        height: 100, 
+        height:100, 
         borderRadius: 20, 
-        margin: 10,
+        marginTop: 20, 
+        padding: 10,
+        marginRight: 15,
         justifyContent: "center"
     },
     boxText:{
-        textAlign: "center"
-
+        textAlign: "center",
+        fontSize:15,
     }
 })
