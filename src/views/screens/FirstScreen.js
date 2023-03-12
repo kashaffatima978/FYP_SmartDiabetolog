@@ -50,10 +50,11 @@ const styles=StyleSheet.create({
     },
     heading:{
         flex: 0.1,
-        fontSize: 30,
+        fontSize: 35,
         fontStyle: "italic",
         textAlign: "center",
-        color: '#6A6DB0',
+        color: 'black',
+       
     },
 
     button:{

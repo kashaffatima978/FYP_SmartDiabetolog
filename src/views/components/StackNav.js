@@ -43,7 +43,7 @@ import TabNav from "./TabNav";
 export default function StackNav(){
   const Stack = createNativeStackNavigator();
     return (
-      <Stack.Navigator  initialRouteName={'Home'} screenOptions={ {headerShown: false}}>
+      <Stack.Navigator  initialRouteName={'FirstScreen'} screenOptions={ {headerShown: false}}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="Registration" component={Registeration} />
         <Stack.Screen name="Login" component={LoginScreen} />

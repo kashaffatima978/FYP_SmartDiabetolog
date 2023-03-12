@@ -10,7 +10,7 @@ export default NavBar = function (props) {
  
   const [profile, setprofile]= useState(props.profile); 
   return (
-    <Appbar.Header style={{height: 80 , backgroundColor:"#6A6DB0" , elevation: 5, paddingRight: 10}} >
+    <Appbar.Header style={{height: 80 , backgroundColor:"#6A6DB0" , elevation: 5, paddingRight: 10, width: '100%'}} >
        <Appbar.Content color='white' title={`Hi ${props.name} !`} subtitle={'Good Morning'} />
        {
         profile!=''?

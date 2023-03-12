@@ -57,7 +57,6 @@ const styles=StyleSheet.create({
         display:"flex",
         flexDirection:"column",
         justifyContent:"space-around",
-
         borderRadius:50
     },
 trackerImage:{
