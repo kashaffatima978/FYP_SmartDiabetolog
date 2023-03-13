@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
+const ip="http://192.168.170.35"
 
 //method to add blood sugar instance
 exports.addBloodSugarRecord = async (concentration, unit, description, event, creationDate, creationTime) => {
@@ -8,7 +9,7 @@ exports.addBloodSugarRecord = async (concentration, unit, description, event, cr
         console.log(concentration, unit, description, event, creationDate, creationTime)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in addbloddSugar is", token)
-        axios.post("http://10.0.2.2:3000/bloodsugar",
+        axios.post(`${ip}:3000/bloodsugar`,
             {
                 "concentration": concentration,
                 "unit": unit,
@@ -34,7 +35,7 @@ exports.viewBloodSugarRecord = () => {
     console.log("today date is ", date)
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/bloodsugar/${date}`,
+        const res = await axios.get(`${ip}:3000/bloodsugar/${date}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             })
@@ -49,7 +50,7 @@ exports.viewBloodSugarInstance = async (id) => {
         console.log(id)
 
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/bloodsugar/instance/${id}`,
+        const res = await axios.get(`${ip}:3000/bloodsugar/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
@@ -66,7 +67,7 @@ exports.updateBloodSugarRecord = async (id,concentration, unit, description, eve
         console.log(id,concentration, unit, description, event, creationDate, creationTime)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in updatebloddSugar is", token)
-        axios.patch(`http://10.0.2.2:3000/bloodsugar/instance/${id}`,
+        axios.patch(`${ip}:3000/bloodsugar/instance/${id}`,
             {
                 "concentration": concentration,
                 "unit": unit,
@@ -87,7 +88,7 @@ exports.deleteBloodSugarInstance = async (id) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.delete(`http://10.0.2.2:3000/bloodsugar/instance/${id}`,
+        const res = await axios.delete(`${ip}:3000/bloodsugar/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }

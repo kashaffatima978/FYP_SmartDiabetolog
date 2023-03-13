@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
+const ip="http://192.168.170.35"
 
 //method to add cholesterol instance
 exports.addCholesterolRecord = async (hdl, ldl, triglycerides, description) => {
@@ -8,7 +9,7 @@ exports.addCholesterolRecord = async (hdl, ldl, triglycerides, description) => {
         console.log(hdl, ldl, triglycerides, description)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in addCholesterol is", token)
-        axios.post("http://10.0.2.2:3000/cholesterol",
+        axios.post(`${ip}:3000/cholesterol`,
             {
                 "hdl": hdl,
                 "ldl": ldl,
@@ -32,7 +33,7 @@ exports.viewCholesterolRecord = () => {
     console.log("year is ", year)
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/cholesterol/${year}-01-01/${year}-12-31`,
+        const res = await axios.get(`${ip}:3000/cholesterol/${year}-01-01/${year}-12-31`,
             {
                 headers: { "Authorization": "Bearer " + token },
             })
@@ -46,7 +47,7 @@ exports.viewCholesterolInstance = async (id) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/cholesterol/instance/${id}`,
+        const res = await axios.get(`${ip}:3000/cholesterol/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
@@ -63,7 +64,7 @@ exports.updateCholesterolRecord = async (id,hdl, ldl, triglycerides, description
         console.log(id,hdl, ldl, triglycerides, description)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in updatecholesterol is", token)
-        axios.patch(`http://10.0.2.2:3000/cholesterol/instance/${id}`,
+        axios.patch(`${ip}:3000/cholesterol/instance/${id}`,
             {
                 "hdl": hdl,
                 "ldl": ldl,
@@ -82,7 +83,7 @@ exports.deleteCholesterolInstance = async (id) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.delete(`http://10.0.2.2:3000/cholesterol/instance/${id}`,
+        const res = await axios.delete(`${ip}:3000/cholesterol/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
