@@ -10,6 +10,8 @@ const Waist="WAIST"
 const Legs="LEGS"
 const Chest="CHEST"
 const Cardio="CARDIO"
+const ExerciseToday="EXERCISETODAY"
+const ExerciseRecord="RECORD"
 
 
 //action
@@ -71,11 +73,24 @@ export const setCardio = () => {
     )
 }
 
+export const setExerciseToday = () => {
+    return (
+        { type: ExerciseToday }
+    )
+}
+
+export const setExerciseRecord = () => {
+    return (
+        { type: ExerciseRecord }
+    )
+}
+
+
 //back,arms,shoulders,waist,legs,chest,cardio
 
 //reducer function which tells what happened and what to do now
 
-export const initialstate = { authenticated: false, mode: "Light", neck:false ,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,cardio:false }
+export const initialstate = {record:[true,false,true,true,true,false,true,true,true,false,true,true,true,true],authenticated: false, mode: "Light", neck:false ,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,cardio:false,todayExerciseDone:false }
 const reducerFunction = (state = initialstate, action) => {
     if (action.type === "Authenticate")
         return ({ ...state, authenticated: !state.authenticated });
@@ -108,6 +123,12 @@ const reducerFunction = (state = initialstate, action) => {
     }
     else if (action.type === "CARDIO") {
         return ({  ...state, cardio: !state.cardio});
+    }
+    else if (action.type === "EXERCISETODAY") {
+        return ({  ...state, todayExerciseDone: !state.todayExerciseDone});
+    }
+    else if (action.type === "RECORD") {
+        return ({  ...state, record: [...state.record,state.todayExerciseDone]});
     }
 }
 

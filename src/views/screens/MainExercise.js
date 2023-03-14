@@ -3,6 +3,8 @@ import { View, Text, Button, SafeAreaView, StatusBar, ScrollView, StyleSheet, To
 import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {  store } from "../../redux/reduxActions";
+
 
 export default function MainExercisePage({navigation}) {
 
@@ -31,18 +33,30 @@ export default function MainExercisePage({navigation}) {
                         days.map((val, index) => {
                             return (
                                 <TouchableOpacity key={index} disabled={date.getDate() != val + 1 ? true : false} style={[styles.button, { backgroundColor: date.getDate() > val + 1 ? "#8E91BD" : "#6A6DB0" }]}
-                                    onPress={() => { }}>
+                                    onPress={() => { console.log(store.getState())}}>
                                     <View style={{ height: 50, justifyContent: "center", alignItems: "center" ,flexDirection:"row"}}>
                                         <Text style={[styles.text1]}>Day {val + 1}</Text>
+                                        {date.getDate() > val + 1 ? 
+                                        ( !store.getState()? 
+                                        <Text>SKIP</Text>:
+                                        <Text>{store.getState().record[val]?"DONE":"SKIP"}</Text> )
+                                        :
+                                        null
+                                    }
                                         {
-                                            date.getDate() == val + 1 ?
+                                            (date.getDate() == val + 1)?
+                                                (!(!store.getState() ? false:store.getState().todayExerciseDone ) ?
                                                 (<TouchableOpacity style={{backgroundColor:"#282A71",width:"20%",height:"80%",alignItems:"center",justifyContent:"center",marginLeft:"10%"}}
-                                                    onPress={() => { }}>
+                                                    onPress={() => {navigation.navigate("MainExerciseStartPage",{"day":val+1}) }}>
                                                     <View style={{ height: 50, justifyContent: "center", alignItems: "center" }}>
-                                                        <Text style={[styles.text1,{color:"white"}]}>START</Text>
+                                                        <Text style={[styles.text1,{color:"white"}]}>
+                                                            START 
+                                                        </Text>
 
                                                     </View>
-                                                </TouchableOpacity>)
+                                                </TouchableOpacity>):
+                                                <Icon name="check-square-o" style={styles.iconStyle}></Icon>
+                                                )
                                                 : null
                                         }
 
