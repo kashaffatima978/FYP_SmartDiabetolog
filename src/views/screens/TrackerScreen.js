@@ -3,17 +3,14 @@ import {View,Image,Text, Button,SafeAreaView,StatusBar,ScrollView,StyleSheet, To
 import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Card from "../components/cards";
+import { Heading } from "../components/Heading";
+
 
 export default function TrackerScreen({navigation}){
     return(
 
         <View style={styles.container}>
-
-            <View style={styles.titleContainer}>
-                <Text style={styles.titleHeading}>Tracker</Text>
-              
-            </View>
-
+            <Heading name="Tracker"/>
             <ScrollView style={styles.scroll}>
                 <TouchableOpacity onPress={()=>{
                     navigation.navigate("ViewBloodSugar")
@@ -46,22 +43,7 @@ const styles=StyleSheet.create({
         flex:1,
         backgroundColor: "white"
     },
-    titleContainer:{
-        height:"10%",
-        display:"flex",
-        marginBottom: 30,
-        backgroundColor: "#6A6DB0",
-        
-    },
 
-titleHeading:{
-
-    fontSize: 30,
-        textAlign: "center",
-        color: 'white',
-        margin: 15
-
-},
 scroll:{
     height:"80%",
     width:"100%",

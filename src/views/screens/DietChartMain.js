@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import colors from "../../files/Colors";
+import { CircularProgress } from 'react-native-circular-progress';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,9 +13,11 @@ import {
   Touchable,
   Modal,
   TouchableOpacity,
+  Animated
 } from 'react-native';
 
 import PageHeading from "../components/PageHeading"
+import { Heading } from '../components/Heading';
 
 
 export default DietChartMain = function ({navigation}) {
@@ -30,29 +33,49 @@ export default DietChartMain = function ({navigation}) {
   const dinnerOpen = () => {
     navigation.navigate('Dinner');
   };
+  const[consumedCalories, setCosumedCalories]= useState(500)
+  const[totalCalories, setTotalCalories]= useState(1200)
+   
+  const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
+  const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
+
+    useEffect(() => {
+        Animated.timing(animatedProgress, {
+        toValue: 1,
+        duration: 5000,
+        useNativeDriver: true,
+
+        }).start();
+    }, [animatedProgress, consumedCalories]);
+
+
+
   return (
     <SafeAreaView style={styles.safeAreaCont}>
-      <Image style={styles.headImage} resizeMode={"contain"} source={require('../../../assets/head3.jpg')}/>
-      <Text style={styles.heading}>Diet Chart</Text>
-      <View style={styles.dietInfo}>
-        <Text style={styles.caloriesNumber}>560</Text>
-        <Text style={styles.calories}>calories consumed</Text>
-
-        <View style={styles.mainSmal}>
-          <View style={styles.smallCon}>
-            <Text style={styles.caloriesInfo}>40g</Text>
-            <Text style={styles.smallConTag}>Protein</Text>
-          </View>
-          <View style={styles.smallCon}>
-            <Text style={styles.caloriesInfo}>17g</Text>
-            <Text style={styles.smallConTag}>Fats</Text>
-          </View>
-          <View style={styles.smallCon}>
-            <Text style={styles.caloriesInfo}>18g</Text>
-            <Text style={styles.smallConTag}>Carbs</Text>
-          </View>
-        </View>
-      </View>
+      <Heading name="Diet Plan"/>
+      {/* <Image style={styles.headImage} resizeMode={"contain"} source={require('../../../assets/head3.jpg')}/> */}
+      <View style={styles.con}>
+                <AnimatedCircularProgress
+                    size={200}
+                    width={8}
+                    fill={animatedProgress}
+                    tintColor="#6A6DB0"
+                    backgroundColor="#E2E4FF"
+                    rotation={0}
+                    lineCap="round"
+                >
+                    {() => (
+                    
+                        <Image
+                            style={styles.image}
+                            source={require('../../../assets/Images/breakfast.jpg')}
+                            resizeMode="center"
+                            style={{width: 150, height:150}}
+                        />
+                    )}
+                </AnimatedCircularProgress>
+                <Text style={styles.text}>Calories: {consumedCalories} kcl / {totalCalories} kcl</Text> 
+            </View>
 
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.mealCategory}>
@@ -131,6 +154,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  text:{
+    textAlign: "center",
+    marginTop: 15,
+    fontWeight: 'bold',
+ 
+ },
+  con: {
+    // flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: '#fff',mar
+    marginTop: 30
+  },
+  
   scrollContainer: {
     flex: 1,
     paddingLeft: 10,
