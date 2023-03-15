@@ -16,20 +16,15 @@ export default BreakfastPage = function ({navigation}) {
   };
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.firstCon}>
+      {/* <View style={styles.firstCon}>
         <Image
           style={styles.mainImage}
           resizeMode="contain"
           source={require('../../../assets/Images/breakfast.jpg')}
         />
-      </View>
+      </View> */}
       <View style={styles.secondCon}>
-        <Text style={styles.mainHeading}>Breakfast</Text>
-
         <View style={styles.mealView}>
-          {/* <TouchableOpacity style={styles.buttonADD} onPress={addMealOpen}>
-            <Text style={styles.buttonTextADD}>Add Meal</Text>
-          </TouchableOpacity> */}
           <ScrollView>
             <MealCard
               image={require('../../../assets/Images/recipe.jpg')}
@@ -46,9 +41,9 @@ export default BreakfastPage = function ({navigation}) {
         </View>
         
       </View>
-      <TouchableOpacity style={styles.addButton} onPress={addMealOpen}>
+      {/* <TouchableOpacity style={styles.addButton} onPress={addMealOpen}>
             <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -67,8 +62,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   mainImage: {
-    height: 180,
-    width: 390,
+    height: 100,
+    width: 100,
+    alignSelf: 'center'
   },
   secondCon: {
     flex: 1,

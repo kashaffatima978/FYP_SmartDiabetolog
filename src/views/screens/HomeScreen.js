@@ -41,14 +41,16 @@ export default function HomeScreen({navigation, prop}){
 
     
     return(
+        <View>
+        <Pressable onPress={showModal}>
+                <NavBar name ={name} profile={profile}/>
+            </Pressable>
         <ScrollView style={styles.container}>
 
             <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                 <Text>Example Modal.  Click outside this area to dismiss.</Text>
             </Modal>
-            <Pressable onPress={showModal}>
-                <NavBar name ={name} profile={profile}/>
-            </Pressable>
+            
             
             <View style={styles.con}>
                 <AnimatedCircularProgress
@@ -143,7 +145,7 @@ export default function HomeScreen({navigation, prop}){
                 </ScrollView>
         </View>
 
-        <View style={{marginTop: 16, padding: 20}}>
+        <View style={{marginTop: 16, padding: 20, marginBottom: 100}}>
                 <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Awareness</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
@@ -159,6 +161,7 @@ export default function HomeScreen({navigation, prop}){
         </View>
 
         </ScrollView>
+        </View>
     )
 };
 

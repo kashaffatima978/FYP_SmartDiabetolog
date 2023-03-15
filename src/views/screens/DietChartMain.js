@@ -18,23 +18,25 @@ import {
 
 import PageHeading from "../components/PageHeading"
 import { Heading } from '../components/Heading';
+import axios from 'axios';
+// import PageScroll from '../components/PageScroll';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import MealCard from '../components/MealDishCard';
+import Fab from '../components/Fab';
+
+
 
 
 export default DietChartMain = function ({navigation}) {
-  const BreakfastOpen = () => {
-    navigation.navigate('Breakfast');
-  };
-  const lunchOpen = () => {
-    navigation.navigate('Lunch');
-  };
-  const snacksOpen = () => {
-    navigation.navigate('Snacks');
-  };
-  const dinnerOpen = () => {
-    navigation.navigate('Dinner');
-  };
+  const Tab = createMaterialTopTabNavigator();
   const[consumedCalories, setCosumedCalories]= useState(500)
   const[totalCalories, setTotalCalories]= useState(1200)
+  const[breakfast, setBreakfast]= useState([])
+  const[snack1, setSnack1]= useState([])
+  const[lunch, setLunch]= useState([])
+  const[snack2, setSnack2]= useState([])
+  const[dinner, setDinner]= useState([])
+  const[gotDiet, setGotDiet]= useState(false)
    
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
   const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
@@ -48,12 +50,32 @@ export default DietChartMain = function ({navigation}) {
         }).start();
     }, [animatedProgress, consumedCalories]);
 
+    
+    useEffect(()=>{
+      if(gotDiet==false){
+        axios.post('http://192.168.1.10:8000/dietPlan', totalCalories)
+        .then((response)=>{
+          setBreakfast(response.data.breakfast)
+          setSnack1(response.data.snack1)
+          setLunch(response.data.lunch)
+          setSnack2(response.data.snack2)
+          setDinner(response.data.dinner)
+          setGotDiet(true)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+      }
+    },[])
 
+    const addMeal = ()=>{
+      navigation.navigate('AddMeal')
+    }
 
   return (
     <SafeAreaView style={styles.safeAreaCont}>
       <Heading name="Diet Plan"/>
-      {/* <Image style={styles.headImage} resizeMode={"contain"} source={require('../../../assets/head3.jpg')}/> */}
+
       <View style={styles.con}>
                 <AnimatedCircularProgress
                     size={200}
@@ -75,77 +97,45 @@ export default DietChartMain = function ({navigation}) {
                     )}
                 </AnimatedCircularProgress>
                 <Text style={styles.text}>Calories: {consumedCalories} kcl / {totalCalories} kcl</Text> 
+               
             </View>
+            
+            <Tab.Navigator >
+              <Tab.Screen name="breakfast" component={()=>{
+                return(
+                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
+                    <MealCard title ={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]}/>
+                  </View>
+                )  
+              }} />
 
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.mealCategory}>
-          <View style={styles.rowMealCategory}>
-            {/* BREAKFASR BUTTON */}
-            <TouchableOpacity style={styles.foodButton} onPress={BreakfastOpen}>
-              <Image
-                style={{
-                  height: 100,
-                  width: 130,
-                  justifyContent: 'center',
-                  marginTop: 13,
-                  marginLeft: 15,
-                }}
-                resizeMode="contain"
-                source={require('../../../assets/Images/breakfast.jpg')}
-              />
-              <Text style={styles.Foodtext}>breakfast</Text>
-            </TouchableOpacity>
-            {/* LUNCH BUTTON */}
-            <TouchableOpacity style={styles.foodButton} onPress={lunchOpen}>
-              <Image
-                style={{
-                  height: 90,
-                  width: 120,
-                  justifyContent: 'center',
-                  marginTop: 13,
-                  marginLeft: 15,
-                  marginBottom: 10,
-                }}
-                resizeMode="contain"
-                source={require('../../../assets/Images/luchF.jpg.png')}
-              />
-              <Text style={styles.Foodtext}>Lunch</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rowMealCategory}>
-            {/* SNACKS BUTTON */}
-            <TouchableOpacity style={styles.foodButton} onPress={snacksOpen}>
-              <Image
-                style={{
-                  height: 100,
-                  width: 130,
-                  justifyContent: 'center',
-                  marginTop: 13,
-                  marginLeft: 15,
-                }}
-                resizeMode="contain"
-                source={require('../../../assets/Images/snacks.jpg')}
-              />
-              <Text style={styles.Foodtext}>Snacks</Text>
-            </TouchableOpacity>
-            {/* DINNER BUTTON */}
-            <TouchableOpacity style={styles.foodButton} onPress={dinnerOpen}>
-              <Image
-                style={{
-                  height: 100,
-                  width: 130,
-                  justifyContent: 'center',
-                  marginTop: 13,
-                  marginLeft: 15,
-                }}
-                resizeMode="contain"
-                source={require('../../../assets/Images/dinner.jpg.png')}
-              />
-              <Text style={styles.Foodtext}>Dinner</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+            <Tab.Screen name="lunch" component={()=>{
+                return(
+                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
+                    <MealCard title ={lunch[0]}  image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]}/>
+                  </View>
+                )  
+              }} />
+
+            <Tab.Screen name="snacks" component={()=>{
+                return(
+                  <ScrollView style={{backgroundColor: '#E2E4FF', flex:1}}>
+                    <MealCard title ={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]}/>
+                    <MealCard title ={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]}/>
+                  </ScrollView>
+                )  
+              }} />
+
+            <Tab.Screen name="dinner" component={()=>{
+                return(
+                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
+                    <MealCard title ={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]}/>
+                  </View>
+                )  
+              }} />
+            </Tab.Navigator >
+    
+            <Fab onPress={addMeal}/>
     </SafeAreaView>
   );
 };
@@ -156,8 +146,9 @@ const styles = StyleSheet.create({
   },
   text:{
     textAlign: "center",
-    marginTop: 15,
+    // marginTop: 15,
     fontWeight: 'bold',
+    fontSize: 15
  
  },
   con: {
@@ -165,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#fff',mar
-    marginTop: 30
+    // marginTop: 10
   },
   
   scrollContainer: {
