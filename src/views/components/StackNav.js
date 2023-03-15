@@ -37,18 +37,27 @@ import ViewBloodSugar from "../screens/ViewBloodSugar";
 import ViewCholesterol from "../screens/ViewCholesterol";
 import Retinopathy from "../screens/Retinopathy";
 import TabNav from "./TabNav";
-
+import MainExercisePage from "../screens/MainExercise";
+import ExerciseSetting from "../screens/ExerciseSetting";
+import MainExerciseStartPage from "../screens/MainExerciseStartPage";
+import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
 
 
 export default function StackNav(){
   const Stack = createNativeStackNavigator();
     return (
       <Stack.Navigator  initialRouteName={'FirstScreen'} screenOptions={ {headerShown: false}}>
+      {/* <Stack.Navigator initialRouteName="FirstScreen"  screenOptions={ {headerShown: false}}> */}
+        <Stack.Screen  name="MainExercisePage" component={MainExercisePage} />
+        <Stack.Screen  name="ExerciseSetting" component={ExerciseSetting} />
+        <Stack.Screen  name="MainExerciseStartPage" component={MainExerciseStartPage} />
+        <Stack.Screen  name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
-        <Stack.Screen name="Registration" component={Registeration} />
+        <Stack.Screen  name="Registration" component={Registeration} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Loading" component={Loading}/>
         <Stack.Screen name="Home" component={TabNav} />
+        
         {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
         <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
         <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />

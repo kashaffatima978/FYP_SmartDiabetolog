@@ -1,22 +1,28 @@
 import React,{useEffect,useState} from "react";
 import {View,StyleSheet,Text,Image, SafeAreaView, ScrollView,Button, TextInput, FlatList, TouchableOpacity, ImageBackground} from "react-native";
 import {viewBloodPressureRecord} from "../connectionToDB/trackerBloodPressure"
+import Loader from '../components/loader';
 
 export default ViewBloodPressure= function ({navigation}){
     const [mount,setMount]=useState(0)
     const [data,setData]=useState([]);//[{s:120,d:80},{s:133,d:90},{s:100,d:70},{s:120,d:99},{s:170,d:100}];
 
+    const [loader,setLoader]=useState(false)
     const loadDataOnlyOnce = async() => {
-       // alert("loadDataOnlyOnce");
-         const d= await viewBloodPressureRecord();
+       // alert("loadDataOnlyOnce"); 
+       const d= await viewBloodPressureRecord();
+       setTimeout(()=>{setLoader(false)},1000)   
         console.log(d)
         console.log(d[0])
         setData(d);
         
+        
       };
       
           useEffect(() => {
+          
             if(mount===0){
+                setLoader(true)
               loadDataOnlyOnce(); 
               setMount((oldVal)=>oldVal++);
             }
@@ -25,6 +31,7 @@ export default ViewBloodPressure= function ({navigation}){
 
     return(
         <SafeAreaView style={styles.container1}>
+            <Loader visible={loader}></Loader>
            <View style={styles.textView}>
                 <Text style={styles.text}>
                     Blood Pressure
@@ -38,7 +45,7 @@ export default ViewBloodPressure= function ({navigation}){
                 return(
                    
                     <TouchableOpacity style={styles.instanceContainer}
-                    onPress={()=>{navigation.navigate("AddBloodPressure",{"id":item._id})}}>
+                    onPress={()=>{navigation.replace("AddBloodPressure",{"id":item._id})}}>
                          <ImageBackground source={require("../../files/Images/bp.jpg")} style={styles.instanceImage}>
                         
      
@@ -59,7 +66,7 @@ export default ViewBloodPressure= function ({navigation}){
            
         <TouchableOpacity style={styles.addButton}
         onPress={()=>{
-            navigation.push("AddBloodPressure");
+            navigation.replace("AddBloodPressure");
         }}>
             <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>

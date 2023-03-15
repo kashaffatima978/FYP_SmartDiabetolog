@@ -6,9 +6,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { ScrollView } from 'react-native-gesture-handler';
 import { Appbar, Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Loader from '../components/loader';
 
 export default Profile = function ({navigation}) {
   const [profile, setProfile] = useState('')
+  const [loader,setLoader]=useState(false)
 
   const [mount, setMount] = useState(0)
   const loadDataOnlyOnce = async () => {
@@ -54,7 +56,7 @@ export default Profile = function ({navigation}) {
 
   const update = () => {
     editProfileInformation(inputList.name, inputList.email, inputList.weight, inputList.heightFeet, inputList.heightInches, inputList.diabetesType)
-      .then((data) => { console.log("abc", data) ;navigation.push("Profile")})
+      .then((data) => { console.log("abc", data) ;navigation.navigate("Profile")})
       .catch((err) => { console.log("Error in update in profile", err) })
   }
 
@@ -75,8 +77,9 @@ export default Profile = function ({navigation}) {
 
   return (
     <ScrollView style={{ flex: 1 }}>
+      <Loader visible={loader} name="Updating...." />
       {
-        profile!=''?<Avatar.Image style={styles.image} size={50} source={profile} />:<Avatar.Text style={styles.image} backgroundColor='#bdb2ff' size={150} label={'F'} />
+        profile!=''?<Avatar.Image style={styles.image} size={50} source={profile} />:<Avatar.Text style={styles.image} backgroundColor='#bdb2ff' size={150} label={(inputList.name).charAt(0)} />
        }
 
       
@@ -92,7 +95,7 @@ export default Profile = function ({navigation}) {
       </View>
       <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <TouchableOpacity style={styles.button}
-              onPress={() => { update() }}>
+              onPress={()=>{ update();setLoader(true); setTimeout(()=>{setLoader(false) },2000) }}>
                 <Text style={styles.buttonText}>Edit  <Icon name="edit" size={15}  /></Text>
                 
             </TouchableOpacity>

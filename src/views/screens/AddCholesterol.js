@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Input } from "../components/input";
-import {addCholesterolRecord,viewCholesterolInstance,deleteCholesterolInstance,updateCholesterolRecord } from "../connectionToDB/trackerCholestrol";
-
+import { addCholesterolRecord, viewCholesterolInstance, deleteCholesterolInstance, updateCholesterolRecord } from "../connectionToDB/trackerCholestrol";
+import Loader from '../components/loader';
 export default function AddCholesterol({ navigation, route }) {
 
     const [existingItem, setExistingItem] = useState(null)
+    const [loader, setLoader] = useState(false)
     const [mount, setMount] = useState(0)
     const loadDataOnlyOnce = async () => {
         // alert("loadDataOnlyOnce");
@@ -13,8 +14,10 @@ export default function AddCholesterol({ navigation, route }) {
             const id = route.params.id
             // alert(route.params.id)
             if (id !== undefined) {
+                setLoader(true)
                 viewCholesterolInstance(id)
                     .then((res) => {
+                        setTimeout(() => { setLoader(false) }, 1000)
                         console.log("In ", res)
                         setExistingItem(() => { return res });
                         setInputList(() => {
@@ -60,23 +63,24 @@ export default function AddCholesterol({ navigation, route }) {
 
     const save = () => {
         addCholesterolRecord(inputList.hdl, inputList.ldl, inputList.triglycerides, inputList.description)
-            .then((data) => { console.log("abc", data),navigation.push("ViewCholesterol") })
+            .then((data) => { console.log("abc", data), navigation.replace("ViewCholesterol") })
             .catch((err) => { console.log("Error in save in add cholesterol", err) })
     }
 
-    const update=()=>{
-        updateCholesterolRecord(route.params.id,inputList.hdl, inputList.ldl, inputList.triglycerides, inputList.description)
-            .then((data) => { console.log("update", data),navigation.push("ViewCholesterol") })
+    const update = () => {
+        updateCholesterolRecord(route.params.id, inputList.hdl, inputList.ldl, inputList.triglycerides, inputList.description)
+            .then((data) => { console.log("update", data), navigation.replace("ViewCholesterol") })
             .catch((err) => { console.log("Error in update in add cholesterol", err) })
     }
-    const deleteItem=()=>{
+    const deleteItem = () => {
         deleteCholesterolInstance(route.params.id)
-            .then((data) => { console.log("delete", data),navigation.push("ViewCholesterol") })
+            .then((data) => { console.log("delete", data), navigation.replace("ViewCholesterol") })
             .catch((err) => { console.log("Error in delete in add cholesterol", err) })
     }
 
     return (
         <SafeAreaView style={styles.container}>
+            <Loader visible={loader}></Loader>
             <View style={styles.textView}>
                 <Text style={styles.text}>Add Cholesterol</Text>
             </View>
@@ -139,11 +143,11 @@ export default function AddCholesterol({ navigation, route }) {
                         </TouchableOpacity>) :
                         (<View>
                             <TouchableOpacity style={styles.saveButtonContainer}
-                            onPress={()=>{update()}}>
+                                onPress={() => { update() }}>
                                 <Text style={styles.saveButtonText}>Update</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.saveButtonContainer}
-                            onPress={()=>{deleteItem()}}>
+                                onPress={() => { deleteItem() }}>
                                 <Text style={styles.saveButtonText}>Delete</Text>
                             </TouchableOpacity>
                         </View>

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView } from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
@@ -7,11 +7,13 @@ import { Input } from "../components/input";
 import MyDropDown from "../components/dropdown";
 import Picker from "../components/picker";
 import { MyButton } from "../components/button";
-import { addBloodSugarRecord, viewBloodSugarInstance,updateBloodSugarRecord,deleteBloodSugarInstance } from "../connectionToDB/trackerBloodSugar"
+import { addBloodSugarRecord, viewBloodSugarInstance, updateBloodSugarRecord, deleteBloodSugarInstance } from "../connectionToDB/trackerBloodSugar"
 import SelectDropdown from "react-native-select-dropdown";
+import Loader from '../components/loader';
 
 export default AddBloodSugar = function ({ navigation, route }) {
     const [mgUnit, setMgUnit] = useState("mg/dL");
+    const [loader, setLoader] = useState(false)
     const [inputList, setInputList] = useState({
         "concentration": "",
         "unit": "",
@@ -21,69 +23,73 @@ export default AddBloodSugar = function ({ navigation, route }) {
         "creationTime": ""
     });
     const [existingItem, setExistingItem] = useState(null)
-    const [mount,setMount]=useState(0)
-    const loadDataOnlyOnce = async() => {
-       // alert("loadDataOnlyOnce");
+    const [mount, setMount] = useState(0)
+    const loadDataOnlyOnce = async () => {
+        // alert("loadDataOnlyOnce");
         if (route.params !== undefined) {
+            setLoader(true)
             const id = route.params.id
-           // alert(route.params.id)
+            // alert(route.params.id)
             if (id !== undefined) {
                 viewBloodSugarInstance(id)
-                    .then((res) => { 
-                        console.log("In ",res)
+                    .then((res) => {
+                        setTimeout(() => { setLoader(false) }, 1000)
+                        console.log("In ", res)
                         setExistingItem(res);
-                        setInputList(()=>{return{
-                            "concentration": res.concentration,
-                            "unit": res.unit,
-                            "description": res.description,
-                            "event": res.event,
-                            "creationDate": res.creationDate,
-                            "creationTime": res.creationTime
-                        }});
-                        console.log("After setting existingItem= ",existingItem)
-                    
+                        setInputList(() => {
+                            return {
+                                "concentration": res.concentration,
+                                "unit": res.unit,
+                                "description": res.description,
+                                "event": res.event,
+                                "creationDate": res.creationDate,
+                                "creationTime": res.creationTime
+                            }
+                        });
+                        console.log("After setting existingItem= ", existingItem)
+
                     })
                     .catch((err) => { console.log("Error in AddBloodSugar uploading particular instance ", err) })
             }
         }
-        
-      };
-          useEffect(() => {
-            if(mount===0){
-              loadDataOnlyOnce(); 
-              setMount((oldVal)=>oldVal++);
-            }
-            const date = `${(new Date()).getDate()}-${(new Date()).getMonth() + 1}-${(new Date()).getFullYear()}`
-            const time = `${(new Date()).getHours()}:${(new Date()).getMinutes()}`
-             handleOnTextChange(date, "creationDate")
-            handleOnTextChange(time, "creationTime")
-          },[mount]);
-    
-//FOR TESTING PURPOSE
-    const checkData = (con, description )=>{
+
+    };
+    useEffect(() => {
+        if (mount === 0) {
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+        const date = `${(new Date()).getDate()}-${(new Date()).getMonth() + 1}-${(new Date()).getFullYear()}`
+        const time = `${(new Date()).getHours()}:${(new Date()).getMinutes()}`
+        handleOnTextChange(date, "creationDate")
+        handleOnTextChange(time, "creationTime")
+    }, [mount]);
+
+    //FOR TESTING PURPOSE
+    const checkData = (con, description) => {
         return {
             "concentration": res.concentration,
             "description": res.description,
         }
     }
-  
-  
+
+
     const save = () => {
         // alert(date)
         // alert(time)
         addBloodSugarRecord(inputList.concentration, inputList.unit, inputList.description, inputList.event, inputList.creationDate, inputList.creationTime)
-            .then((data) => { console.log("abc", data) ; navigation.push("ViewBloodSugar")})
+            .then((data) => { console.log("abc", data); navigation.replace("ViewBloodSugar") })
             .catch((err) => { console.log("Error in save in add blood sugar", err) })
     }
 
-    const update=()=>{
-        updateBloodSugarRecord(route.params.id,inputList.concentration, inputList.unit, inputList.description, inputList.event, inputList.creationDate, inputList.creationTime)
-            .then((data) => { console.log("update", data) ;navigation.push("ViewBloodSugar")})
+    const update = () => {
+        updateBloodSugarRecord(route.params.id, inputList.concentration, inputList.unit, inputList.description, inputList.event, inputList.creationDate, inputList.creationTime)
+            .then((data) => { console.log("update", data); navigation.replace("ViewBloodSugar") })
             .catch((err) => { console.log("Error in update in add blood sugar", err) })
     }
-    const deleteItem=()=>{
+    const deleteItem = () => {
         deleteBloodSugarInstance(route.params.id)
-            .then((data) => { console.log("delete", data) ;navigation.push("ViewBloodSugar")})
+            .then((data) => { console.log("delete", data); navigation.replace("ViewBloodSugar") })
             .catch((err) => { console.log("Error in delete in add blood sugar", err) })
     }
 
@@ -95,6 +101,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
 
     return (
         <SafeAreaView style={generalStyles.container}>
+            <Loader visible={loader}></Loader>
             <MainHeading heading="Add Blood Sugar" />
             <ScrollView style={[generalStyles.spacing, styles.scroll]} showsVerticalScrollIndicator={false}>
 
@@ -109,10 +116,10 @@ export default AddBloodSugar = function ({ navigation, route }) {
                 /> */}
 
                 <Input label="Blood Sugar Concentration"
-                value={`${inputList.concentration}`}
+                    value={`${inputList.concentration}`}
                     placeholder="Enter Blood Sugar Concentration"
                     keyboardType={'numeric'} maxLength={3}
-                  
+
                     onChangeText={text => handleOnTextChange(text, "concentration")}
                 />
 
@@ -182,7 +189,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
                                 fontWeight: "bold"
                             }
                         }
-                        defaultButtonText={`${existingItem!==null?existingItem.event:"Select an Event"}`}
+                        defaultButtonText={`${existingItem !== null ? existingItem.event : "Select an Event"}`}
 
                         dropdownIconPosition="right"
                         dropdownStyle={{ backgroundColor: "white" }}
@@ -196,23 +203,23 @@ export default AddBloodSugar = function ({ navigation, route }) {
 
 
                 <Input label="Notes"
-                value={inputList.description}
+                    value={inputList.description}
                     placeholder="Enter a Description"
                     onChangeText={text => handleOnTextChange(text, "description")}
                     multiline={true}
                 />
 
-                
-                 {
-                   
-                existingItem===null? 
-                (<MyButton title="Save" onPress={() => { save() }} />):
-                (<View>
-                    <MyButton title="Update" onPress={() => { update() }} />
-                    <MyButton title="Delete" onPress={() => { deleteItem() }} />
-                </View>
-                )
-                    
+
+                {
+
+                    existingItem === null ?
+                        (<MyButton title="Save" onPress={() => { save() }} />) :
+                        (<View>
+                            <MyButton title="Update" onPress={() => { update() }} />
+                            <MyButton title="Delete" onPress={() => { deleteItem() }} />
+                        </View>
+                        )
+
                 }
 
 

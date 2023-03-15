@@ -1,5 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+const ip="http://192.168.1.10"
 
 
 //get a profile information of the user 
@@ -7,7 +8,7 @@ exports.getProfileInformation = async () => {
     return new Promise(async (resolve, reject) => {
 
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/profile`,
+        const res = await axios.get(`${ip}:3000/profile`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
@@ -23,7 +24,7 @@ exports.getProfileInformation = async () => {
 exports.editProfileInformation = async (name, email, weight, heightFeet, heightInches, diabetesType) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.patch(`http://10.0.2.2:3000/`,
+        const res = await axios.patch(`${ip}:3000/`,
             {
                 "name": name,
                 "email": email,
@@ -46,7 +47,7 @@ exports.editProfileInformation = async (name, email, weight, heightFeet, heightI
 exports.deleteAccount = async () => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.delete(`http://10.0.2.2:3000/`,
+        const res = await axios.delete(`${ip}:3000/`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }

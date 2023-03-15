@@ -67,20 +67,20 @@ export default function LoginScreen({ navigation }) {
     };
 
     const login = async () => {
-        // setLoader(true);
-        // signIn(inputList.email, inputList.password)
-        //     .then(() => {
-        //         setTimeout(()=>{
-        //             setLoader(false);
-        //             navigation.navigate("TabNav");
-        //         },3000)  
-        //     })
-        //     .catch((err) => { 
-        //         setLoader(false);
-        //         alert(err)
-        //        // Alert.alert("Error", "Something went wrong")
-        //     })
-        navigation.navigate("Home");
+        setLoader(true);
+        signIn(inputList.email, inputList.password)
+            .then(() => {
+                setTimeout(()=>{
+                    setLoader(false);
+                    navigation.navigate("Home");
+                },3000)  
+            })
+            .catch((err) => { 
+                setLoader(false);
+                alert(err)
+               // Alert.alert("Error", "Something went wrong")
+            })
+        
     }
 
 

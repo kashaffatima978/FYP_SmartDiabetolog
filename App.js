@@ -1,6 +1,7 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React from 'react';
-import type {Node} from 'react';
+import { Provider } from 'react-redux/es/exports';
+import { store } from './src/redux/reduxActions';
 import {
   SafeAreaView,
   ScrollView,
@@ -22,7 +23,7 @@ LogBox.ignoreAllLogs();
 
 
 
-const App: () => Node = () => {
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -30,9 +31,11 @@ const App: () => Node = () => {
   };
 
   return (
-    <NavigationContainer>
-      <StackNav/>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StackNav />
+      </NavigationContainer>
+    </Provider>
   );
 };
 

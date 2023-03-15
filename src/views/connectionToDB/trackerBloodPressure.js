@@ -1,13 +1,14 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
+const ip="http://192.168.1.10"
 
 //method to add blood pressure instance
 exports.addBloodPressureRecord = async (disystolic, systolic, description) => {
     try {
         console.log(disystolic, systolic, description)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.post("http://10.0.2.2:3000/bloodpressure",
+        const res = await axios.post(`${ip}:3000/bloodpressure`,
             {
                 "disystolic": disystolic,
                 "systolic": systolic,
@@ -37,7 +38,7 @@ exports.viewBloodPressureRecord = async () => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
        // alert(`${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}`)
         //alert(`${endWeek.getFullYear()}-${endWeek.getMonth() + 1}-${endWeek.getDate()}`)
-        const res = await axios.get(`http://10.0.2.2:3000/bloodpressure/${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}/${endWeek.getFullYear()}-${endWeek.getMonth() + 1}-${endWeek.getDate()}`,
+        const res = await axios.get(`${ip}:3000/bloodpressure/${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}/${endWeek.getFullYear()}-${endWeek.getMonth() + 1}-${endWeek.getDate()}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
@@ -61,7 +62,7 @@ exports.viewBloodPressureInstance = async (id) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.get(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+        const res = await axios.get(`${ip}:3000/bloodpressure/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
@@ -80,7 +81,7 @@ exports.updateBloodPressureRecord = async (id,disystolic, systolic, description)
         )
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in updatebloodpressure is", token)
-        axios.patch(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+        axios.patch(`${ip}:3000/bloodpressure/instance/${id}`,
             {
                 "disystolic": disystolic, "systolic": systolic, "description": description
 
@@ -97,7 +98,7 @@ exports.deleteBloodPressureInstance = async (id) => {
     return new Promise(async (resolve, reject) => {
         console.log(id)
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-        const res = await axios.delete(`http://10.0.2.2:3000/bloodpressure/instance/${id}`,
+        const res = await axios.delete(`${ip}:3000/bloodpressure/instance/${id}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }

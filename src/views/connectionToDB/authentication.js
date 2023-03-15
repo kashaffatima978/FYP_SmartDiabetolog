@@ -1,9 +1,10 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+const ip="http://192.168.1.10"
 
 exports.checkRoot = () => {
-       axios.get("http://10.0.2.2:3000/")
+       axios.get(`${ip}:3000/`)
               .then(res => { console.log(res.data) })
               .catch(err => { console.log(err) })
 }
@@ -11,7 +12,7 @@ exports.checkRoot = () => {
 
 exports.registeration = (name, email, password) => {
        return new Promise((resolve, reject) => {
-              axios.post("http://10.0.2.2:3000/register",
+              axios.post(`${ip}:3000/register`,
                      {
                             "name": name,
                             "email": email,
@@ -28,7 +29,7 @@ exports.registeration = (name, email, password) => {
                                           return resolve(token)
                                    }).catch((err) => {
                                           // console.log(err.response.status)
-                                          console.log("Error in registration " + err)
+                                          console.log("Error " + err)
                                           return reject(err)
                                    })
 
@@ -36,7 +37,7 @@ exports.registeration = (name, email, password) => {
                      })
                      .catch((err) => {
                             // console.log(err.response.status)
-                            console.log("Error in registration " + err)
+                            console.log("Error  " + err)
                             return reject(err)
                      })
 
@@ -46,7 +47,7 @@ exports.registeration = (name, email, password) => {
 exports.signIn = (email, password) => {
        return new Promise((resolve,reject)=>{
               var status = ""
-              axios.post("http://10.0.2.2:3000/login",
+              axios.post(`${ip}:3000/login`,
                      {
                             "email": email,
                             "password": password
@@ -117,7 +118,7 @@ exports.sendOTP = (token) => {
        console.log("In sendOTP")
        return new Promise((resolve, reject) => {
               console.log("token in otp ", token)
-              axios.get("http://10.0.2.2:3000/otp/sendemail",
+              axios.get(`${ip}:3000/otp/sendemail`,
                      { headers: { "Authorization": "Bearer " + token } })
                      .then((res) => {
                             console.log(res.data);
@@ -175,7 +176,7 @@ exports.verifyUser = async () => {
        return new Promise(async(resolve,reject)=>{
 
               const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
-       axios.patch("http://10.0.2.2:3000/",
+       axios.patch(`${ip}:3000/`,
               { "userVerified": "true" },
               { headers: { "Authorization": "Bearer " + token } })
               .then((res) => {

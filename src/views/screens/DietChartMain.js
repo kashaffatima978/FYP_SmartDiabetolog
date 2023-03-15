@@ -23,6 +23,8 @@ import axios from 'axios';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import MealCard from '../components/MealDishCard';
 import Fab from '../components/Fab';
+import Loader from '../components/loader';
+
 
 
 
@@ -37,6 +39,7 @@ export default DietChartMain = function ({navigation}) {
   const[snack2, setSnack2]= useState([])
   const[dinner, setDinner]= useState([])
   const[gotDiet, setGotDiet]= useState(false)
+  const[loader, setLoader]= useState(false)
    
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
   const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
@@ -53,6 +56,10 @@ export default DietChartMain = function ({navigation}) {
     
     useEffect(()=>{
       if(gotDiet==false){
+        setLoader(true)
+        setTimeout(()=>{
+          setLoader(false)
+        }, 4000)
         axios.post('http://192.168.1.10:8000/dietPlan', totalCalories)
         .then((response)=>{
           setBreakfast(response.data.breakfast)
@@ -61,6 +68,7 @@ export default DietChartMain = function ({navigation}) {
           setSnack2(response.data.snack2)
           setDinner(response.data.dinner)
           setGotDiet(true)
+          
       })
       .catch((err)=>{
         console.log(err)
@@ -74,6 +82,7 @@ export default DietChartMain = function ({navigation}) {
 
   return (
     <SafeAreaView style={styles.safeAreaCont}>
+      <Loader visible={loader}></Loader>
       <Heading name="Diet Plan"/>
 
       <View style={styles.con}>

@@ -119,7 +119,7 @@ export default function HomeScreen({navigation, prop}){
                         <Text style={[styles.boxText,{color: '#09814a'}]}>Diet</Text>
                     </Pressable>
 
-                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#c8e7ff'}]} onPress={()=>{navigation.navigate('Diet')}}>
+                    <Pressable style={[styles.smallBoxes,{backgroundColor: '#c8e7ff'}]} onPress={()=>{navigation.navigate('MainExercisePage')}}>
                         <Text style={[styles.boxText,{color: '#618985'}]}>Exercise</Text>
                     </Pressable>
 
@@ -134,7 +134,7 @@ export default function HomeScreen({navigation, prop}){
                 <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Health care</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
-                    <Pressable style={[styles.smallBoxes, {backgroundColor:"#e3d5ca"}]} onPress={()=>{navigation.navigate('Diet')}}>
+                    <Pressable style={[styles.smallBoxes, {backgroundColor:"#e3d5ca"}]} onPress={()=>{navigation.navigate('ExerciseActivityOrRest',{ "day": 16})}}>
                         <Text style={[styles.boxText,{color: '#A4907C'}]}>Medication</Text>
                     </Pressable>
 
