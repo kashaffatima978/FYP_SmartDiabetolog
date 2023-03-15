@@ -22,6 +22,10 @@ export default function MainExercisePage({navigation}) {
                 <Text style={{ color: "black", fontSize: 15 }}>
                     {months[month]}
                 </Text>
+                {/* <TouchableOpacity onPress={()=>navigation.navigate("ExerciseActivityOrRest",{"day":date.getDate()})}
+                style={{alignSelf:"flex-end",marginRight:"4%",backgroundColor:"#282A71",width:50,height:50,borderRadius:100,justifyContent:"center",alignItems:"center"}}>
+                    <Text>Activity</Text>
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={()=>navigation.navigate("ExerciseSetting")}
                 style={{alignSelf:"flex-end",marginRight:"4%",backgroundColor:"#282A71",width:50,height:50,borderRadius:100,justifyContent:"center",alignItems:"center"}}>
                     <Icon name="list" style={styles.iconStyle}></Icon>
@@ -43,8 +47,10 @@ export default function MainExercisePage({navigation}) {
                                         :
                                         null
                                     }
-                                        {
+                                        { 
                                             (date.getDate() == val + 1)?
+                                               ( date.getDay()===0?
+                                               <Text>REST</Text>:
                                                 (!(!store.getState() ? false:store.getState().todayExerciseDone ) ?
                                                 (<TouchableOpacity style={{backgroundColor:"#282A71",width:"20%",height:"80%",alignItems:"center",justifyContent:"center",marginLeft:"10%"}}
                                                     onPress={() => {navigation.navigate("MainExerciseStartPage",{"day":val+1}) }}>
@@ -56,7 +62,7 @@ export default function MainExercisePage({navigation}) {
                                                     </View>
                                                 </TouchableOpacity>):
                                                 <Icon name="check-square-o" style={styles.iconStyle}></Icon>
-                                                )
+                                                ))
                                                 : null
                                         }
 

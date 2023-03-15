@@ -2,13 +2,13 @@ import React from "react";
 import {View,Text,StyleSheet, useWindowDimensions, ActivityIndicator} from "react-native";
 import colors from "../../files/Colors";
 
-const Loader=({visible})=>{
+const Loader=({visible,name})=>{
     const {height,width}=useWindowDimensions()
     return (visible && 
     <View style={[styles.container,{height,width}]}>
         { <View style={styles.loader} >
             <ActivityIndicator size="large" color={colors.blue}/>
-            <Text style={styles.text}>Loading.....</Text>
+            <Text style={styles.text}>{(!name)?"Loading.....":name}</Text>
         </View> }
 
     </View>

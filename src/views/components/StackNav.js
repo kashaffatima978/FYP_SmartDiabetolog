@@ -40,15 +40,17 @@ import TabNav from "./TabNav";
 import MainExercisePage from "../screens/MainExercise";
 import ExerciseSetting from "../screens/ExerciseSetting";
 import MainExerciseStartPage from "../screens/MainExerciseStartPage";
+import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
 
 
 export default function StackNav(){
   const Stack = createNativeStackNavigator();
     return (
-      <Stack.Navigator   screenOptions={ {headerShown: false}}>
+      <Stack.Navigator initialRouteName="FirstScreen"  screenOptions={ {headerShown: false}}>
         <Stack.Screen  name="MainExercisePage" component={MainExercisePage} />
         <Stack.Screen  name="ExerciseSetting" component={ExerciseSetting} />
         <Stack.Screen  name="MainExerciseStartPage" component={MainExerciseStartPage} />
+        <Stack.Screen  name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen  name="Registration" component={Registeration} />
         <Stack.Screen name="Login" component={LoginScreen} />
