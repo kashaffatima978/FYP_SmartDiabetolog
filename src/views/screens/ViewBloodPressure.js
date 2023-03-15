@@ -2,6 +2,10 @@ import React,{useEffect,useState} from "react";
 import {View,StyleSheet,Text,Image, SafeAreaView, ScrollView,Button, TextInput, FlatList, TouchableOpacity, ImageBackground} from "react-native";
 import {viewBloodPressureRecord} from "../connectionToDB/trackerBloodPressure"
 import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import Fab from '../components/Fab';
+
 
 export default ViewBloodPressure= function ({navigation}){
     const [mount,setMount]=useState(0)
@@ -27,16 +31,12 @@ export default ViewBloodPressure= function ({navigation}){
               setMount((oldVal)=>oldVal++);
             }
           },[mount]);
-    
+          
 
     return(
         <SafeAreaView style={styles.container1}>
             <Loader visible={loader}></Loader>
-           <View style={styles.textView}>
-                <Text style={styles.text}>
-                    Blood Pressure
-                </Text>
-            </View>
+            <Heading name="Blood Pressure"/>
            
             <FlatList style={styles.scroll}
             showsVerticalScrollIndicator={false}
@@ -46,15 +46,21 @@ export default ViewBloodPressure= function ({navigation}){
                    
                     <TouchableOpacity style={styles.instanceContainer}
                     onPress={()=>{navigation.replace("AddBloodPressure",{"id":item._id})}}>
-                         <ImageBackground source={require("../../files/Images/bp.jpg")} style={styles.instanceImage}>
+                         {/* <ImageBackground source={require("../../files/Images/bp.jpg")} style={styles.instanceImage}> */}
                         
      
-                            <View style={styles.readingsContainer}>
+                            {/* <View style={styles.readingsContainer}>
                                 <Text style={styles.sText}>{item.systolic}</Text>
                                 <Text style={styles.dText}>{item.disystolic}</Text>
-                            </View>
+                            </View> */}
+                            <Card style={{ backgroundColor: '#E2E4FF'}}>
 
-                            </ImageBackground>  
+                                <Card.Content>
+                                <Title>Systolic BP: {item.systolic}</Title>
+                                <Title>Diasystolic BP: {item.disystolic}</Title>
+                                <Paragraph>Description: {item.description}</Paragraph>
+                                </Card.Content>
+                            </Card>
                     </TouchableOpacity>
                                  
                     )
@@ -64,12 +70,9 @@ export default ViewBloodPressure= function ({navigation}){
             </FlatList>
 
            
-        <TouchableOpacity style={styles.addButton}
-        onPress={()=>{
+        <Fab onPress={()=>{
             navigation.replace("AddBloodPressure");
-        }}>
-            <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
+        }}/>
             
         </SafeAreaView>
     );
@@ -79,11 +82,11 @@ const styles=StyleSheet.create({
     container1:{
         flex:1,
         
-        backgroundColor:"#343A40",
-        flexDirection:"column"
+        backgroundColor:"white",
+        // flexDirection:"column"
     },
     textView:{     
-        flex:0.1,
+        // flex:0.1,
         backgroundColor:"#C3C5BD",
         justifyContent:"center",
         alignItems:"center"
@@ -98,56 +101,10 @@ const styles=StyleSheet.create({
         backgroundColor:"white"
     },
     instanceContainer:{
-        margin:"7%",
-        height:200
+        // margin:"7%",
+        // height:200
+        margin: 10
     },
-    instanceImage:{
-        width:"100%",
-        height:"100%",
-        opacity:0.4,
-        backgroundColor:"#A1A497",
-        backgroundColor:'rgba(0,0,0,0.6)',
-        overflow:"hidden"
-    }, 
-    readingsContainer:
-    {
-        width:"100%",
-        height:"100%",
-        flexDirection:"row",
-        justifyContent:"center",
-        alignItems:"center",
-       
-      
-    },
-    sText:{
-        flex:1,
-        //height:"100%",
-        backgroundColor:"#A1A497",
-        height:"80%",
-        margin:"2%",
-        textAlignVertical:"center",
-        textAlign:"center",
-        borderWidth:4,
-        borderRadius:50,
-        fontSize:40,
-        fontWeight:"bold",
-        color:"black"
-        
-      
-    },
-    dText:{flex:1,
-        backgroundColor:"#A1A497",
-        height:"50%",
-        margin:"2%",
-        textAlignVertical:"center",
-        textAlign:"center",
-        borderWidth:4,
-        borderRadius:25,
-        fontSize:20,
-        fontWeight:"bold",
-        opacity:1,
-        color:"black"
-        },
         addButton:{
             position:"absolute",  
             bottom:"5%",

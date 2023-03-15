@@ -5,6 +5,9 @@ import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
 import { viewBloodSugarRecord } from "../connectionToDB/trackerBloodSugar"
 import Loader from '../components/loader';
+import {Heading} from '../components/Heading'
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import Fab from '../components/Fab';
 
 
 export default ViewBloodSugar = ({ navigation }) => {
@@ -35,47 +38,11 @@ export default ViewBloodSugar = ({ navigation }) => {
     }, [mount]);
 
 
-    const data = [
-        {
-            id: 1,
-            concentration: 120,
-            event: "day",
-            time: "10:00 am",
-            note: "abc"
-        },
-        {
-            id: 2,
-            concentration: 128,
-            event: "night",
-            time: "11:00 pm",
-            note: "xyz"
-        },
-        {
-            id: 3,
-            concentration: 128,
-            event: "night",
-            time: "11:00 pm",
-            note: "xyz"
-        },
-        {
-            id: 4,
-            concentration: 128,
-            event: "night",
-            time: "11:00 pm",
-            note: "xyz"
-        },
-        {
-            id: 5,
-            concentration: 128,
-            event: "night",
-            time: "11:00 pm",
-            note: "xyz"
-        },
-    ]
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1}}>
             <Loader visible={loader}></Loader>
-            <MainHeading heading="Blood Sugar" backgroundColor='#86C0DD' />
+            <Heading name="Blood Sugar"/>
+            
             <FlatList
                 style={[generalStyles.spacing, styles.flatlist]}
                 data={sugarData}
@@ -84,26 +51,31 @@ export default ViewBloodSugar = ({ navigation }) => {
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity style={styles.flatlistView} onPress={() => { navigation.replace("AddBloodSugar", { "id": item._id }) }}>
-                            <View style={styles.box1}>
+                            {/* <View style={styles.box1}>
                                 <Text style={styles.concentration}>{item.concentration} </Text>
 
                             </View>
                             <View style={styles.box2}>
                                 <Text style={styles.time}>{item.creationTime}</Text>
                                 <Text style={styles.event}>{item.event}</Text>
-                            </View>
+                            </View> */}
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10}}>
+
+                                <Card.Content>
+                                <Title>Blood sugar level: {item.concentration}</Title>
+                                {/* <Card.Title subtitle={item.event} /> */}
+                                <Paragraph>Event: {item.event}</Paragraph>
+                                <Paragraph>Description: {item.description}</Paragraph>
+                                </Card.Content>
+                                </Card>
                         </TouchableOpacity>
                     );
                 }}>
             </FlatList>
 
-            <TouchableOpacity style={styles.addButton}
-                onPress={() => {
-                    navigation.replace("AddBloodSugar");
-                }}>
-                <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
-
+            <Fab onPress={()=>{
+                navigation.replace("AddBloodSugar");
+            }}/>
 
             {/* <Button title="colors" onPress={()=>{navigation.navigate("ColorPalette")}}></Button> */}
         </SafeAreaView>
@@ -112,15 +84,15 @@ export default ViewBloodSugar = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     flatlist: {
-        height: "90%",
+        flex: 0.9,
         marginBottom: "2%",
     },
     flatlistView: {
-        borderWidth: 2,
-        flexDirection: "row",
-        margin: "1%",
-        height: 150,
-        borderColor: '#86C0DD'
+        // borderWidth: 2,
+        // flexDirection: "row",
+        // margin: "1%",
+        // height: 150,
+        // borderColor: '#86C0DD'
 
     },
     box1: {
