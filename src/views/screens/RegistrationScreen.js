@@ -9,13 +9,16 @@ import generalStyles from "../../files/generalStyle";
 import colors from "../../files/Colors";
 import { registeration, sendOTP } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { store } from "../../redux/reduxActions";
+import { useDispatch } from "react-redux/es/exports";
+import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders,setExerciseRecord } from "../../redux/reduxActions";
 
 
 
 
 
 export const Registeration = function ({ navigation }) {
-
+    const dispatch = useDispatch();
 
 
     // this state input keeps track of the data written inside the input
@@ -82,29 +85,47 @@ export const Registeration = function ({ navigation }) {
             .then((token) => {
                 console.log("returned token in register screen is ", token)
                 sendOTP(token)
-                .then(() => {
-                    setLoader(true);
-                    setTimeout(() => {
-                        setLoader(false);
-                        try {
-                            // AsyncStorage.setItem("user",JSON.stringify(inputList));
-                            navigation.navigate("EnterCode");
+                    .then(() => {
+                        setLoader(true);
+                        setTimeout(() => {
+                            setLoader(false);
+                            try {
+                                // set states 
+                                dispatch(setNeck())
+                                dispatch(setArms())
+                                dispatch(setLegs())
+                                dispatch(setShoulders())
+                                dispatch(setChest())
+                                dispatch(setCardio())
+                                dispatch(setBack())
+                                dispatch(setWaist())
+
+                                //todayExerciseDone is initially false already
+                                //now set record
+                                date=(new Date()).getDate()
+                               
+                                for(i=1; i<date;i++){
+                                    dispatch(setExerciseRecord())
+                                }
+                               
+                                console.log("state after the registeration is ", store.getState())
+                                navigation.navigate("EnterCode");
+                            }
+                            catch (error) {
+                                Alert.alert("Error", "Something went wrong")
+                            }
                         }
-                        catch (error) {
-                            Alert.alert("Error", "Something went wrong")
-                        }
+                            , 4000)
+                    })
+                    .catch((err) => {
+                        console.log("Error in register screen")
+                        console.log(err)
+                        alert("Network Error,Try Again")
                     }
-                        , 4000)
-                })
-                .catch((err)=>{
-                    console.log("Error in register screen")
-                console.log(err)
-                alert("Network Error,Try Again")    
-            }
-                
-                )
+
+                    )
             }).catch((err) => {
-                console.log("Error in register screen")
+                console.log("Eerror in register screen")
                 console.log(err)
             })
 

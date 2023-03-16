@@ -1,7 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
-const ip="http://192.168.1.10"
+import {IP} from "../../files/information"
+const ip=`http://${IP}`
 
 //method to add blood pressure instance
 exports.addBloodPressureRecord = async (disystolic, systolic, description) => {

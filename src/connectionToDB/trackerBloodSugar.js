@@ -1,8 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
-ip="http://192.168.170.35"
-
+import ip from "../files/information"
+ip=ip
 //method to add blood sugar instance
 exports.addBloodSugarRecord = async (concentration, unit, description, event, creationDate, creationTime) => {
     return new Promise(async (resolve, reject) => {

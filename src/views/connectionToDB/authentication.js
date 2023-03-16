@@ -1,7 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-const ip="http://192.168.1.10"
+import {IP} from "../../files/information"
+import setInitialStatesAfterRegisteration from "../../stateMAnagement/afterRegistering"
+const ip=`http://${IP}`
 
 exports.checkRoot = () => {
        axios.get(`${ip}:3000/`)
@@ -26,6 +28,8 @@ exports.registeration = (name, email, password) => {
                                    storeTokenInStorage(res.data.token).then((token) => {
                                           console.log(token)
                                           console.log("token in registeration is", token)
+                                          //state is set initially here
+                                          //setInitialStatesAfterRegisteration()
                                           return resolve(token)
                                    }).catch((err) => {
                                           // console.log(err.response.status)
