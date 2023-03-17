@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView , TextInput} from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
@@ -10,6 +10,9 @@ import { MyButton } from "../components/button";
 import { addBloodSugarRecord, viewBloodSugarInstance, updateBloodSugarRecord, deleteBloodSugarInstance } from "../connectionToDB/trackerBloodSugar"
 import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 
 export default AddBloodSugar = function ({ navigation, route }) {
     const [mgUnit, setMgUnit] = useState("mg/dL");
@@ -100,39 +103,29 @@ export default AddBloodSugar = function ({ navigation, route }) {
     };
 
     return (
-        <SafeAreaView style={generalStyles.container}>
+        <SafeAreaView style={{flex:1}}>
             <Loader visible={loader}></Loader>
-            <MainHeading heading="Add Blood Sugar" />
-            <ScrollView style={[generalStyles.spacing, styles.scroll]} showsVerticalScrollIndicator={false}>
-
-                {/* <Picker pickertitle="Select Time" pickermode="time" textColor='black' buttonColor='#86C0DD'
-                  onCancel={()=>{alert("cancel")}}
-                  onConfirm={(date)=>{
-                    setDate(date)
-                      alert(`${date.getHours()}`)
-                      //alert(typeof date)
-                 
-                  }}
-                /> */}
-
-                <Input label="Blood Sugar Concentration"
-                    value={`${inputList.concentration}`}
-                    placeholder="Enter Blood Sugar Concentration"
-                    keyboardType={'numeric'} maxLength={3}
-
-                    onChangeText={text => handleOnTextChange(text, "concentration")}
-                />
+            <Heading name="Add Blood Sugar" />
+            <ScrollView style={ styles.scroll} showsVerticalScrollIndicator={false}>
 
 
-                <View style={{ marginBottom: "1%" }}>
-                    <Text style={styles.text}>Select Concentration Unit</Text>
+            <View style={{flexDirection: 'row', marginTop: 20}}>
+                <Icon name="heartbeat" size={25} style={styles.icon}/>
+                <View style={{width: "85%"}}>
+                    <Text style={styles.label}>Blood Sugar Concentration</Text>
+                    <TextInput style={styles.input} value={`${inputList.concentration}`} keyboardType={'numeric'} maxLength={3} placeholder="Enter Blood Sugar Concentration" onChangeText={text => handleOnTextChange(text, "concentration")} />
+                </View>
+            </View>
+
+                <View style={{ marginTop: 40, marginLeft: 65}}>
+                    <Text style={[styles.label,{marginBottom: 15}]}>Select Concentration Unit</Text>
                     <View style={styles.unitContainer}>
                         <TouchableOpacity style={[styles.radioContainer]}
                             value={mgUnit} onPress={() => {
                                 setMgUnit("mmol/L")
                                 handleOnTextChange("mmol/L", "unit")
                             }}>
-                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mmol/L") ? colors.d2blue : colors.headingBlue }]}>
+                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mmol/L") ? "#32004f" : '#6A6DB0'}]}>
                                 <Text style={[styles.radioCircle]}>O</Text>
                             </View>
                             <Text style={styles.radioText}>mmol/L</Text>
@@ -144,24 +137,16 @@ export default AddBloodSugar = function ({ navigation, route }) {
                                 setMgUnit("mg/dL")
                                 handleOnTextChange("mg/dL", "unit")
                             }}>
-                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mg/dL") ? colors.d2blue : colors.headingBlue }]} >
+                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mg/dL") ? "#32004f" : '#6A6DB0' }]} >
                                 <Text style={styles.radioCircle}>O</Text>
                             </View>
                             <Text style={styles.radioText}>mg/dL</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/* 
-                <MyDropDown dropdownlist={["Before Breakfast", "After Breakfast", "Before Lunch",
-                    "After Lunch", "Before Dinner", "After Dinner", "Random"]}
-                    title="Event" buttonColor='#86C0DD' 
-                    onChange={(selectedItem)=>{
-                        alert(selectedItem)
-                       //selection(selectedItem);
-                   }}/> */}
 
-                <SafeAreaView style={styles.container}>
-                    <Text style={styles.text}> Event</Text>
+                <SafeAreaView style={[styles.container,{marginTop: 40, marginLeft: 50, marginRight: 28}]}>
+                    <Text style={[styles.label,{marginBottom: 15}]}> Event</Text>
                     <SelectDropdown
                         style={styles.dropdown}
                         data={["Before Breakfast", "After Breakfast", "Before Lunch",
@@ -179,12 +164,12 @@ export default AddBloodSugar = function ({ navigation, route }) {
                             return selectedItem;
                         }}
 
-                        buttonStyle={{ borderWidth: 1, color: "red", width: "100%", backgroundColor: '#86C0DD', height: 50 }}
+                        buttonStyle={{  color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
 
                         buttonTextStyle={
                             {
                                 fontSize: 14,
-                                color: colors.darkGreyBlue,
+                                color: 'black',
                                 textTransform: "capitalize",
                                 fontWeight: "bold"
                             }
@@ -193,23 +178,24 @@ export default AddBloodSugar = function ({ navigation, route }) {
 
                         dropdownIconPosition="right"
                         dropdownStyle={{ backgroundColor: "white" }}
-                        rowStyle={{ backgroundColor: colors.blue3, margin: 4 }}
+                        rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
                         rowTextStyle={{ color: colors.greyBlue }}
 
                     >
 
                     </SelectDropdown>
                 </SafeAreaView>
+                {/* sticky-note */}
 
-
-                <Input label="Notes"
-                    value={inputList.description}
-                    placeholder="Enter a Description"
-                    onChangeText={text => handleOnTextChange(text, "description")}
-                    multiline={true}
-                />
-
-
+                <View style={{flexDirection: 'row', marginTop: 40}}>
+                    <Icon name="sticky-note" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Notes</Text>
+                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                    </View>
+                </View>
+                
+                <View style={{marginTop: 40}}>
                 {
 
                     existingItem === null ?
@@ -221,6 +207,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
                         )
 
                 }
+                </View>
 
 
 
@@ -256,9 +243,9 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     radioButton: {
-        backgroundColor: 'buttonColor',
-        width: "20%",
-        height: "100%",
+        backgroundColor: '#6A6DB0',
+        width: "15%",
+        height: "90%",
         borderRadius: 100,
         flexDirection: "row",
         alignItems: "center",
@@ -266,6 +253,7 @@ const styles = StyleSheet.create({
         marginRight: "5%"
     },
     radioCircle: {
+        // backgroundColor: 'red'
     },
     text: {
 
@@ -273,6 +261,32 @@ const styles = StyleSheet.create({
         color: colors.greyBlue,
         textTransform: "capitalize",
         fontWeight: "bold"
-    }
+    },
+    icon:{
+        width: "13%",
+        height: 50,
+        backgroundColor: "#b8bedd",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+        borderRadius: 25,
+        textAlign: 'center',
+        margin: 5,
+        verticalAlign: 'middle'
+      }
+,input: {
+    width: '94%',
+    // backgroundColor: '#b8bedd',
+    // margin: 10,
+    // alignSelf: 'center',
+    // borderRadius: 10,
+    // padding: 10,
 
+    borderBottomWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    // elevation: 5,
+  },
 });

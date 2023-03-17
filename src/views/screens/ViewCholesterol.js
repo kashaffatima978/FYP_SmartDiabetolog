@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, SafeAreaView, Text, FlatList, TouchableOpacity, ImageBackground } from "react-native";
 import { viewCholesterolRecord } from "../connectionToDB/trackerCholestrol"
 import Loader from '../components/loader';
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import { Heading } from "../components/Heading";
+import Fab from '../components/Fab';
+
+
 export default function ViewCholesterol({ navigation }) {
     const [cholesterolRecord, setCholesterolRecord] = useState([])
     const [mount, setMount] = useState(0)
@@ -33,11 +38,7 @@ export default function ViewCholesterol({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <View style={styles.textView}>
-                <Text style={styles.text}>
-                    Cholesterol
-                </Text>
-            </View>
+            <Heading name="Cholestrol"/>
 
             <FlatList style={styles.flatlist}
                 showsVerticalScrollIndicator={false}
@@ -46,15 +47,29 @@ export default function ViewCholesterol({ navigation }) {
                     return (
 
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddCholesterol", { "id": item._id }) }}>
-                            <View style={styles.hdlContainer}>
-                                <ImageBackground source={require("../../files/Images/Cholesterol.png")} resizeMode="cover"
-                                    style={{ opacity: 0.4 }}>
-                                    <Text style={styles.hdlText}>{item.hdl}</Text>
-                                </ImageBackground>
-                            </View>
-                            <View style={styles.ldlContainer}>
-                                <Text style={styles.ldlText}>{item.ldl}</Text>
-                            </View>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10}}>
+                                <View style={{backgroundColor:'#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between'}}>
+                                    <Text style={styles.titleText}>Date: {(item.createdAt).slice(0,10)}</Text>
+                                    {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
+                                </View>
+                             
+
+                                <View style={{margin: 10}}>
+                                        <Card.Content>
+                                            {/* <Paragraph style={[styles.para,{fontWeight: "bold"}]}>Measured:</Paragraph> */}
+                                            <Paragraph style={styles.para}>LDL:{'\t'}{item.ldl} mmHg </Paragraph>
+                                            <Paragraph style={styles.para}>HDL:{'\t'}{item.hdl} mmHg</Paragraph>
+                                            <Paragraph style={styles.para}>Triglycerides:{'\t'}{item.triglycerides} mmHg</Paragraph>
+                                            {/* <Paragraph style={styles.para}></Paragraph> */}
+                                        </Card.Content>
+                                        <Card.Content style={{flexDirection: "row"}}>
+                                            <Paragraph style={[styles.para, {fontWeight: "bold"}]}>Notes: </Paragraph>
+                                            <Paragraph>{item.description}</Paragraph>
+                                            
+                                        
+                                        </Card.Content>
+                                    </View>
+                            </Card>
                         </TouchableOpacity>
 
                     )
@@ -62,12 +77,9 @@ export default function ViewCholesterol({ navigation }) {
             >
             </FlatList>
 
-            <TouchableOpacity style={styles.addButton}
-                onPress={() => {
-                    navigation.replace("AddCholesterol");
-                }}>
-                <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
+            <Fab onPress={()=>{
+                navigation.replace("AddCholesterol");
+            }}/>
 
 
         </SafeAreaView>
@@ -77,18 +89,18 @@ export default function ViewCholesterol({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#CB997E",
+        backgroundColor: "white",
         flexDirection: "column"
     },
     textView: {
         flex: 0.1,
-        backgroundColor: "#FFE8D6",
+        backgroundColor: "white",
         justifyContent: "center",
         alignItems: "center"
     },
     text: {
         fontSize: 25,
-        color: "#4A3C31",
+        color: "white",
         fontWeight: "bold"
     },
     flatlist: {
@@ -98,14 +110,14 @@ const styles = StyleSheet.create({
     flatlistItemContainer: {
         flexDirection: "column",
         alignItems: "flex-start",
-        backgroundColor: "#FFE8D6",
+        backgroundColor: "white",
         margin: "7%",
         height: 160
     },
     hdlContainer: {
         width: "60%",
         height: "60%",
-        backgroundColor: "#DDBEA9",
+        backgroundColor: "white",
         marginTop: "5%"
     },
     ldlContainer: {
@@ -149,6 +161,15 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: "bold",
         color: "#212529"
+    },
+    titleText:{
+        color: 'white',
+        fontSize: 15
+    },
+    para:{
+        fontSize: 16,
+        // fontWeight: "bold"
     }
+
 
 });

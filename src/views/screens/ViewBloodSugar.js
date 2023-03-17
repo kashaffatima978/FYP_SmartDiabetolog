@@ -51,23 +51,29 @@ export default ViewBloodSugar = ({ navigation }) => {
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity style={styles.flatlistView} onPress={() => { navigation.replace("AddBloodSugar", { "id": item._id }) }}>
-                            {/* <View style={styles.box1}>
-                                <Text style={styles.concentration}>{item.concentration} </Text>
-
-                            </View>
-                            <View style={styles.box2}>
-                                <Text style={styles.time}>{item.creationTime}</Text>
-                                <Text style={styles.event}>{item.event}</Text>
-                            </View> */}
+    
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10}}>
+                                <View style={{backgroundColor:'#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between'}}>
+                                    <Text style={styles.titleText}>Date: {item.creationDate}</Text>
+                                    <Text style={styles.titleText}>Time: {item.creationTime}</Text>
+                                </View>
+                             
 
-                                <Card.Content>
-                                <Title>Blood sugar level: {item.concentration}</Title>
-                                {/* <Card.Title subtitle={item.event} /> */}
-                                <Paragraph>Event: {item.event}</Paragraph>
-                                <Paragraph>Description: {item.description}</Paragraph>
-                                </Card.Content>
-                                </Card>
+                                <View style={{margin: 10}}>
+                                    <Card.Content style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                        <Paragraph style={[styles.para,{fontWeight: "bold"}]}>Measured:</Paragraph>
+                                        <Paragraph style={styles.para}>{item.event} </Paragraph>
+                                        <Paragraph style={styles.para}>{item.concentration} {item.unit}</Paragraph>
+                                        {/* <Paragraph style={styles.para}></Paragraph> */}
+                                    </Card.Content>
+                                    <Card.Content style={{flexDirection: "row"}}>
+                                        <Paragraph style={[styles.para, {fontWeight: "bold"}]}>Notes: </Paragraph>
+                                        <Paragraph>{item.description}</Paragraph>
+                                        
+                                    
+                                    </Card.Content>
+                                </View>
+                            </Card>
                         </TouchableOpacity>
                     );
                 }}>
@@ -77,7 +83,6 @@ export default ViewBloodSugar = ({ navigation }) => {
                 navigation.replace("AddBloodSugar");
             }}/>
 
-            {/* <Button title="colors" onPress={()=>{navigation.navigate("ColorPalette")}}></Button> */}
         </SafeAreaView>
     )
 }
@@ -146,6 +151,14 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: "bold",
         color: colors.darkGreyBlue
+    },
+    titleText:{
+        color: 'white',
+        fontSize: 15
+    },
+    para:{
+        fontSize: 16,
+        // fontWeight: "bold"
     }
 
 });

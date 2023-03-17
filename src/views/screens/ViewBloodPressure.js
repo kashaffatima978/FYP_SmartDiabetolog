@@ -46,20 +46,27 @@ export default ViewBloodPressure= function ({navigation}){
                    
                     <TouchableOpacity style={styles.instanceContainer}
                     onPress={()=>{navigation.replace("AddBloodPressure",{"id":item._id})}}>
-                         {/* <ImageBackground source={require("../../files/Images/bp.jpg")} style={styles.instanceImage}> */}
-                        
-     
-                            {/* <View style={styles.readingsContainer}>
-                                <Text style={styles.sText}>{item.systolic}</Text>
-                                <Text style={styles.dText}>{item.disystolic}</Text>
-                            </View> */}
-                            <Card style={{ backgroundColor: '#E2E4FF'}}>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10}}>
+                                <View style={{backgroundColor:'#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between'}}>
+                                    <Text style={styles.titleText}>Date: {(item.createdAt).slice(0,10)}</Text>
+                                    {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
+                                </View>
+                             
 
-                                <Card.Content>
-                                <Title>Systolic BP: {item.systolic}</Title>
-                                <Title>Diasystolic BP: {item.disystolic}</Title>
-                                <Paragraph>Description: {item.description}</Paragraph>
-                                </Card.Content>
+                                <View style={{margin: 10}}>
+                                        <Card.Content>
+                                            {/* <Paragraph style={[styles.para,{fontWeight: "bold"}]}>Measured:</Paragraph> */}
+                                            <Paragraph style={styles.para}>Systolic BP:       {item.systolic} mmHg </Paragraph>
+                                            <Paragraph style={styles.para}>Diasystolic BP:  {item.disystolic} mmHg</Paragraph>
+                                            {/* <Paragraph style={styles.para}></Paragraph> */}
+                                        </Card.Content>
+                                        <Card.Content style={{flexDirection: "row"}}>
+                                            <Paragraph style={[styles.para, {fontWeight: "bold"}]}>Notes: </Paragraph>
+                                            <Paragraph>{item.description}</Paragraph>
+                                            
+                                        
+                                        </Card.Content>
+                                    </View>
                             </Card>
                     </TouchableOpacity>
                                  
@@ -120,6 +127,14 @@ const styles=StyleSheet.create({
             fontSize:40,
             fontWeight:"bold",
             color:"#212529"
+        }
+        ,titleText:{
+            color: 'white',
+            fontSize: 15
+        },
+        para:{
+            fontSize: 16,
+            // fontWeight: "bold"
         }
         
     })

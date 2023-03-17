@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { Input } from "../components/input";
 import { addCholesterolRecord, viewCholesterolInstance, deleteCholesterolInstance, updateCholesterolRecord } from "../connectionToDB/trackerCholestrol";
 import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 export default function AddCholesterol({ navigation, route }) {
 
     const [existingItem, setExistingItem] = useState(null)
@@ -81,58 +84,56 @@ export default function AddCholesterol({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <View style={styles.textView}>
-                <Text style={styles.text}>Add Cholesterol</Text>
-            </View>
-
+            <Heading name="Add Cholesterol"/>
+            {/* medkit */}
             <ScrollView style={styles.container2}
                 showsVerticalScrollIndicator={false}>
 
-
-                <View style={styles.inputContainer}>
-                    <Input label="LDL"
-                        placeholder="Enter your LDL reading"
-                        value={`${inputList.ldl}`}
-                        onChangeText={text => handleOnTextChange(text, "ldl")}
-                        inputBackground="white"
-                        keyboardType={"numeric"}
-                        maxLength={3}
-                        textColor="#4A3C31" />
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Input label="HDL"
-                        value={`${inputList.hdl}`}
-                        placeholder="Enter your HDL reading"
-                        onChangeText={text => handleOnTextChange(text, "hdl")}
-                        inputBackground="white"
-                        keyboardType={"numeric"}
-                        maxLength={3}
-                        textColor="#4A3C31" />
-                </View>
-
-                <View style={styles.inputContainer}>
-                    <Input label="Triglycerides"
-                        value={`${inputList.triglycerides}`}
-                        placeholder="Enter your Triglycerides reading"
-                        onChangeText={text => handleOnTextChange(text, "triglycerides")}
-                        inputBackground="white"
-                        keyboardType={"numeric"}
-                        maxLength={3}
-                        textColor="#4A3C31" />
+                <View style={{flexDirection: 'row', marginTop: 20}}>
+                    <Icon name="tint" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>LDL</Text>
+                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"}  value={`${inputList.ldl}`} multiline={true} placeholder="Enter your LDL reading" onChangeText={text => handleOnTextChange(text, "ldl")}/>
+                    </View>
                 </View>
 
 
-                <View style={styles.inputContainer}>
+                <View style={{flexDirection: 'row', marginTop: 40}}>
+                    <Icon name="tint" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>HDL</Text>
+                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"}  value={`${inputList.hdl}`} multiline={true} placeholder="Enter your HDL reading" onChangeText={text => handleOnTextChange(text, "hdl")}/>
+                    </View>
+                </View>
+
+
+                <View style={{flexDirection: 'row', marginTop: 40}}>
+                    <Icon name="notes-medical" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Triglycerides</Text>
+                        <TextInput style={styles.input} keyboardType={"numeric"}  value={`${inputList.triglycerides}`} multiline={true} placeholder="Enter your Triglycerides reading" onChangeText={text => handleOnTextChange(text, "triglycerides")}/>
+                    </View>
+                </View>
+
+                <View style={{flexDirection: 'row', marginTop: 40}}>
+                    <Icon name="sticky-note" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Notes</Text>
+                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                    </View>
+                </View>
+
+
+                {/* <View style={styles.inputContainer}>
                     <Input label="Notes"
-                        value={inputList.description}
+                        
                         placeholder="Enter a Description"
-                        onChangeText={text => handleOnTextChange(text, "description")}
+                        
                         multiline={true}
                         inputBackground="white"
                         textColor="#4A3C31"
                     />
-                </View>
+                </View> */}
 
 
                 {
@@ -164,7 +165,7 @@ export default function AddCholesterol({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#CB997E",
+        backgroundColor: "white",
         flexDirection: "column"
     },
     textView: {
@@ -190,20 +191,54 @@ const styles = StyleSheet.create({
         padding: "2%"
     },
     saveButtonContainer: {
-        marginVertical: "3%",
-        marginHorizontal: "3%",
-        backgroundColor: "#DDBEA9",
-        width: "30%",
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "flex-end",
-        borderRadius: 30,
+        backgroundColor: "#6A6DB0",
+        width: 250,
+        height: 50,
+        borderRadius: 25,
+        marginTop: 40,
+        padding: 10,
+        alignSelf: "center"
     },
     saveButtonText: {
-        color: "#4A3C31",
-        fontWeight: "bold",
-        fontSize: 16
-    }
+        fontSize: 15,
+        color: "white",
+        textAlign:"center",
+        textAlignVertical: "center",
+        padding: 5,
+    },
+    text: {
+
+        fontSize: 14,
+        color: 'black',
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    icon:{
+        width: "13%",
+        height: 50,
+        backgroundColor: "#b8bedd",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+        borderRadius: 25,
+        textAlign: 'center',
+        margin: 5,
+        verticalAlign: 'middle'
+      }
+,input: {
+    width: '94%',
+    // backgroundColor: '#b8bedd',
+    // margin: 10,
+    // alignSelf: 'center',
+    // borderRadius: 10,
+    // padding: 10,
+
+    borderBottomWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    // elevation: 5,
+  }
 
 })

@@ -60,7 +60,7 @@ export default DietChartMain = function ({navigation}) {
         setTimeout(()=>{
           setLoader(false)
         }, 4000)
-        axios.post(ip+':8000/dietPlan', totalCalories)
+        axios.post(ip+':8000/dietPlan', {'calories': totalCalories})
         .then((response)=>{
           setBreakfast(response.data.breakfast)
           setSnack1(response.data.snack1)

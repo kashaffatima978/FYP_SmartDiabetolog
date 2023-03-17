@@ -84,28 +84,63 @@ export default Profile = function ({navigation}) {
 
       
       <View style={styles.inputCont}>
-        <TextInput style={styles.input} value={inputList.name} placeholder='Username' onChangeText={text => handleOnTextChange(text, "name")} />
-        <TextInput style={styles.input} value={inputList.email} placeholder='Email' onChangeText={text => handleOnTextChange(text, "email")} />
-        <TextInput style={styles.input} value={`${inputList.weight}`} placeholder='Weight in kg' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "weight")} />
-        <TextInput style={styles.input} value={`${inputList.heightFeet}`} placeholder='Height in Feet' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightFeet")} />
-        <TextInput style={styles.input} value={`${inputList.heightInches}`} placeholder='Height in Inches' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightInches")} />
-        <TextInput style={styles.input} value={`${inputList.diabetesType}`} placeholder='Diabetes Type' onChangeText={text => handleOnTextChange("Type 1", "diabetesType")} />
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="user" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput style={styles.input} value={inputList.name} placeholder='Username' onChangeText={text => handleOnTextChange(text, "name")} />
+          </View>
+        </View>
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="envelope" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput style={styles.input} value={inputList.email} placeholder='Email' onChangeText={text => handleOnTextChange(text, "email")} />
+          </View>
+        </View>
+        
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="weight" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Weight</Text>
+            <TextInput style={styles.input} value={`${inputList.weight}`} placeholder='Weight in kg' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "weight")} />
+          </View>
+        </View>
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="ruler-vertical" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Height</Text>
+            <View style={{flexDirection: 'row'}}>
+              <TextInput style={[styles.input, {width: '25%', marginRight: 20, textAlign: 'center'}]} value={`${inputList.heightFeet}`} placeholder='Height in Feet' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightFeet")} />
+              <Text style={{marginTop: 15, marginRight: 20}}>ft</Text>
+              <TextInput style={[styles.input, {width: '25%', textAlign: 'center'}]} value={`${inputList.heightInches}`} placeholder='Height in Inches' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightInches")} />
+              <Text style={{marginTop: 15, marginRight: 20}}>in</Text>
+            </View>
+          </View>
+        </View>
+
+
+        
+        {/* <TextInput style={styles.input} value={`${inputList.diabetesType}`} placeholder='Diabetes Type' onChangeText={text => handleOnTextChange("Type 1", "diabetesType")} /> */}
         
         
       </View>
-      <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+      <View style={{width: '100%', flexDirection: 'row', marginTop: 30, justifyContent: 'space-between'}}>
           <TouchableOpacity style={styles.button}
               onPress={()=>{ update();setLoader(true); setTimeout(()=>{setLoader(false) },2000) }}>
                 <Text style={styles.buttonText}>Edit  <Icon name="edit" size={15}  /></Text>
-                
-            </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.button}
-              onPress={() => { logout() }}><Text style={styles.buttonText}>logout</Text>
             </TouchableOpacity>
           <TouchableOpacity style={styles.button}
-              onPress={() => { deleteItem() }}><Text style={styles.buttonText}>Delete</Text>
-          </TouchableOpacity> */}
+              onPress={() => { logout() }}><Text style={styles.buttonText}>Logout  <Icon name="sign-out-alt" size={15}/></Text>
+            </TouchableOpacity>
+          
       </View>
+      <TouchableOpacity style={[styles.button, {backgroundColor: 'lightred', marginTop: 10}]}
+              onPress={() => { deleteItem() }}><Text style={styles.buttonText}>Delete  <Icon name="trash-alt" size={15}/></Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -120,15 +155,23 @@ const styles = StyleSheet.create({
 
   },
   input: {
-    width: '90%',
-    backgroundColor: '#b8bedd',
-    margin: 10,
-    alignSelf: 'center',
-    borderRadius: 10,
-    padding: 10
+    width: '94%',
+    // backgroundColor: '#b8bedd',
+    // margin: 10,
+    // alignSelf: 'center',
+    // borderRadius: 10,
+    // padding: 10,
+
+    borderBottomWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    // elevation: 5,
   },
   button: {
-
+    margin: 20,
+    marginTop: 30,
     backgroundColor: "#6A6DB0",
     width: 110,
     height: 40,
@@ -143,6 +186,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  label:{
+    fontSize: 12,
 
+  },
+  icon:{
+    width: "15%",
+    height: 50,
+    backgroundColor: "#b8bedd",
+    justifyContent: 'center',
+    alignSelf: 'center',
+    padding: 10,
+    borderRadius: 25,
+    textAlign: 'center',
+    margin: 5,
+    verticalAlign: 'middle'
   }
 });

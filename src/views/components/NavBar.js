@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { Image, Platform, Text, TouchableWithoutFeedback} from 'react-native';
+import { View, Image, Platform, Pressable, Text, TouchableWithoutFeedback} from 'react-native';
 
 import { Appbar, Avatar , Modal} from 'react-native-paper';
+import NewDropDown from './NewDropDown';
+
+
 
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
@@ -18,7 +21,7 @@ export default NavBar = function (props) {
         :
         <Avatar.Text backgroundColor='#bdb2ff' size={50} label={props.name[0]} />
        }
-        
+      
         
     </Appbar.Header>
   );
