@@ -7,6 +7,7 @@ import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setExerciseRecord, setExerciseToday } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
+import { storeUserState } from "../connectionToDB/authentication"
 
 export default MainExerciseStartPage = ({ navigation, route }) => {
 
@@ -65,9 +66,24 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
         //         })},10)
        mytimeout= setTimeout(()=>{
         if (second === 1 && minutes == 0) {
+            //user done with exercise
+            //update redux state then save the state in database
             alert("Exercise Completed")
             dispatch(setExerciseToday())
             dispatch(setExerciseRecord())
+            storeUserState(store.getState())
+            .then((res) => {
+                console.log("now redux state is ",store.getState())
+                console.log(res)
+                console.log("User state SuccessFully stored after exercise being done")
+
+            })
+            .catch((err) => {
+                console.log("Error while state storing after exercise being done", err)
+                Alert.alert("Error", "Connection Lost! Try Again")
+            })
+            
+
             console.log("the state is  ", store.getState())
             clearTimeout(mytimeout);
             navigation.replace("MainExercisePage")

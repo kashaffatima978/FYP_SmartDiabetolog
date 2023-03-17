@@ -10,11 +10,18 @@ import PageHeading from "../components/PageHeading";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { title } from "process";
 import { signIn } from "../connectionToDB/authentication"
+import { getProfileInformation } from "../connectionToDB/profile"
+import { updateInitialState } from "../../redux/reduxActions";
+import { store } from "../../redux/reduxActions";
+import { useDispatch } from "react-redux/es/exports";
+import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord,setExerciseToday } from "../../redux/reduxActions";
+
+
 
 
 
 export default function LoginScreen({ navigation }) {
-
+    const dispatch = useDispatch()
     // this state input keeps track of the data written inside the input
     const [inputList, setInputList] = React.useState({
         email: "",
@@ -70,17 +77,67 @@ export default function LoginScreen({ navigation }) {
         setLoader(true);
         signIn(inputList.email, inputList.password)
             .then(() => {
-                setTimeout(()=>{
+                setTimeout(() => {
                     setLoader(false);
+                    //state loading from database
+                    //first get profile info from database
+                    getProfileInformation()
+                        .then((res) => {
+                            console.log("here", res)
+                            console.log("state got is ", res.userDetails.state)
+                            //now state storing
+                            //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 
+                            //,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,
+                            //cardio:false,todayExerciseDone:false }
+                            // set states 
+                            console.log("Before update after login the state is, ", store.getState())
+                            if (res.userDetails.state.neck) dispatch(setNeck())
+                            if (res.userDetails.state.arms) dispatch(setArms())
+                            if (res.userDetails.state.legs) dispatch(setLegs())
+                            if (res.userDetails.state.shoulders) dispatch(setShoulders())
+                            if (res.userDetails.state.chest) dispatch(setChest())
+                            if (res.userDetails.state.cardio) dispatch(setCardio())
+                            if (res.userDetails.state.back) dispatch(setBack())
+                            if (res.userDetails.state.waist) dispatch(setWaist())
+
+                            //todayExerciseDone is initially false already
+                            //now set record
+                            date = (new Date()).getDate()
+
+                            for (i = 0; i < res.userDetails.state.record.length; i++) {
+                                //if an instance for record is true
+                                if (res.userDetails.state.record[i]) {
+                                    dispatch(setExerciseToday())
+                                    dispatch(setExerciseRecord())
+                                    dispatch(setExerciseToday())
+                                }
+                                else {
+                                    dispatch(setExerciseRecord())
+                                }
+                            }
+                             //if today exercise is true then update the state todayExerciseDone
+                             if (res.userDetails.state.todayExerciseDone) {
+                                dispatch(setExerciseToday())
+                            }
+
+
+
+                            console.log("After update after login the state is, ", store.getState())
+
+                        })
+                        .catch(err => { console.log("Error in loading state in login screen", err) })
+
+
+
                     navigation.navigate("Home");
-                },3000)  
+                }, 3000)
             })
-            .catch((err) => { 
+            .catch((err) => {
                 setLoader(false);
                 alert(err)
-               // Alert.alert("Error", "Something went wrong")
+                // Alert.alert("Error", "Something went wrong")
             })
-        
+
     }
 
 

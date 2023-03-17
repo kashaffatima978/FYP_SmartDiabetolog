@@ -7,11 +7,11 @@ import { MainHeading } from "../components/mainHeading";
 import Loader from "../components/loader";
 import generalStyles from "../../files/generalStyle";
 import colors from "../../files/Colors";
-import { registeration, sendOTP } from "../connectionToDB/authentication"
+import { registeration, sendOTP,storeUserState } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
-import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders,setExerciseRecord } from "../../redux/reduxActions";
+import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord } from "../../redux/reduxActions";
 
 
 
@@ -102,13 +102,27 @@ export const Registeration = function ({ navigation }) {
 
                                 //todayExerciseDone is initially false already
                                 //now set record
-                                date=(new Date()).getDate()
-                               
-                                for(i=1; i<date;i++){
+                                date = (new Date()).getDate()
+                                console.log("date in registeration is", date)
+
+                                for (i = 1; i < date; i++) {
                                     dispatch(setExerciseRecord())
                                 }
-                               
+
                                 console.log("state after the registeration is ", store.getState())
+                                //now save the state to the database
+                                storeUserState(store.getState())
+                                    .then((res) => {
+                                        console.log(res)
+                                        console.log("User state SuccessFully stored after Registeration")
+
+                                    })
+                                    .catch((err) => {
+                                        console.log("Error while state storing after Registeration", err)
+                                        Alert.alert("Error", "Connection Lost! Try Again")
+                                    })
+
+
                                 navigation.navigate("EnterCode");
                             }
                             catch (error) {
