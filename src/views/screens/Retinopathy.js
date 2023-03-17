@@ -8,26 +8,14 @@ import { Heading } from "../components/Heading";
 import { set } from "react-native-reanimated";
 import axios from "axios";
 import RNFetchBlob from 'rn-fetch-blob';
+import {IP} from "../../files/information"
 
 export default function Retinopathy({navigation}){
     const [photo, setPhoto] = useState(null);
     const [result, setResult] = useState(null);
     const [confidence, setConfidence] = useState(null);
+    const ip = `http://${IP}`
 
-    const checkit = async () => {
-        const apiUrl = 'http://192.168.1.10:8000/check'; // replace with your API endpoint
-        const data = 'Hello, world!'; // string to send
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ data: data }), // send data as JSON
-        });
-        const responseJson = await response.json(); // parse response JSON
-        console.log(responseJson); // do something with response
-      };
 
     openLibrary= ()=> {
         const options:ImageLibraryOptions= {
@@ -49,7 +37,7 @@ export default function Retinopathy({navigation}){
                 const formData = new FormData();
                 setPhoto(response.assets[0].uri)
                 formData.append('file', { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type });
-                axios.post('http://192.168.1.10:8000/predictRetinopathy', formData, {
+                axios.post(ip+':8000/predictRetinopathy', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
