@@ -8,12 +8,15 @@ import { Heading } from "../components/Heading";
 import { set } from "react-native-reanimated";
 import axios from "axios";
 import RNFetchBlob from 'rn-fetch-blob';
+import {IP} from "../../files/information"
+
 
 export default function Retinopathy({navigation}){
     const [photo, setPhoto] = useState(null);
     const [result, setResult] = useState(null);
+    const [error, setError] = useState(null);
     const [confidence, setConfidence] = useState(null);
-    const ip = 'http://192.168.1.10'
+    const ip=`http://${IP}`
 
 
     openLibrary= ()=> {
@@ -61,6 +64,7 @@ export default function Retinopathy({navigation}){
                         setConfidence(response.data.confidence)
                     })
                     .catch((error) => {
+                        setError('Not a Fundus image')
                         console.error(error);
                     }
                 );
@@ -77,6 +81,7 @@ export default function Retinopathy({navigation}){
             <TouchableOpacity style={styles.button} onPress={openLibrary}>
                 <Text style= {styles.buttonText}>Upload Fundus Image</Text>
             </TouchableOpacity>
+            {(error!=null)?<Text>Error: {Error}</Text>:null}
             {(result!=null)?<View style={styles.Result}>
                 <Text style={[styles.ResultText,{fontWeight: "bold"}]}>{result}</Text>
                 <Text style={styles.ResultText}>Confidence: {(confidence*100).toFixed(0)}% </Text>

@@ -25,9 +25,9 @@ import MealCard from '../components/MealDishCard';
 import Fab from '../components/Fab';
 import Loader from '../components/loader';
 
+import {IP} from "../../files/information"
 
-
-
+  // http://192.168.1.10:8000
 
 export default DietChartMain = function ({navigation}) {
   const Tab = createMaterialTopTabNavigator();
@@ -40,7 +40,7 @@ export default DietChartMain = function ({navigation}) {
   const[dinner, setDinner]= useState([])
   const[gotDiet, setGotDiet]= useState(false)
   const[loader, setLoader]= useState(false)
-  const ip = 'http://192.168.1.10'
+  const ip=`http://${IP}`
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
   const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
 
