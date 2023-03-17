@@ -7,6 +7,7 @@ import {  store } from "../../redux/reduxActions";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setNeck,setArms,setLegs,setWaist,setCardio,setChest,setBack,setShoulders } from "../../redux/reduxActions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {storeUserState } from "../connectionToDB/authentication"
 
 
 export default ExerciseSetting = ({navigation}) => {
@@ -121,7 +122,21 @@ export default ExerciseSetting = ({navigation}) => {
                 </View>
 
 
-                <TouchableOpacity onPress={()=>{navigation.navigate("MainExercisePage")}}
+                <TouchableOpacity onPress={()=>{
+                    //first set the state then navigate
+                    storeUserState(store.getState())
+                    .then((res) => {
+                        console.log(res)
+                        console.log("User state SuccessFully stored after Exersise Setting changed")
+
+                    })
+                    .catch((err) => {
+                        console.log("Error while state storing after Exersise Setting changed", err)
+                        Alert.alert("Error", "Connection Lost! Try Again")
+                    })
+
+                    navigation.navigate("MainExercisePage")
+                }}
                 style={{alignSelf:"flex-end",marginRight:"4%",margin:"2%",backgroundColor:"#282A71",width:"20%",height:30,alignItems:"center",justifyContent:"center"}}>
                     <Text style={{fontWeight:"bold"}}>OK</Text>
                 </TouchableOpacity>

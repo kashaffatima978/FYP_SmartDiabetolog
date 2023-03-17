@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 // const ip = 'http://192.168.1.10'
 import {IP} from "../../files/information"
-import setInitialStatesAfterRegisteration from "../../stateMAnagement/afterRegistering"
+import { store } from "../../redux/reduxActions";
 const ip=`http://${IP}`
 
 exports.checkRoot = () => {
@@ -193,6 +193,29 @@ exports.verifyUser = async () => {
               })
               .catch((err) => {
                      console.log("Error: verifyUser= ", err)
+                     reject(err)
+              })
+       })
+       
+}
+
+//store the  user state
+exports.storeUserState = async (state) => {
+       return new Promise(async(resolve,reject)=>{
+
+              const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
+       axios.patch(`${ip}:3000/`,
+              { "state": state },
+              { headers: { "Authorization": "Bearer " + token } })
+              .then((res) => {
+                     if (res.data.status !== undefined) {
+                            console.log("changes successfully updated in user state");
+                            console.log(res.data)
+                            resolve(res.data)
+                     }
+              })
+              .catch((err) => {
+                     console.log("Error: storeUserState= ", err)
                      reject(err)
               })
        })

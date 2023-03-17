@@ -65,17 +65,15 @@ export default function HomeScreen({navigation, prop}){
                     {() => (
                     ((bloodSugar >= 80)&&(bloodSugar <130))?
                         <Image
-                            style={styles.image}
                             source={require('../../../assets/Images/normal.png')}
                             resizeMode="center"
-                            style={{width: 250, height:250}}
+                            style={[styles.image,{width: 250, height:250}]}
                         />
                         : 
                         <Image
-                            style={styles.image}
+                            style={[styles.image,{width: 200, height:200}]}
                             source={require('../../../assets/Images/pain.png')}
                             resizeMode="center"
-                            style={{width: 200, height:200}}
                         />
                     
                     )}
@@ -83,7 +81,7 @@ export default function HomeScreen({navigation, prop}){
                 <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text> 
             </View>
             <View style={{marginTop: 16, padding: 20}}>
-                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Daily Inputs</Text>
+                <Text style={[styles.text, {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}]}>Daily Inputs</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <Pressable onPress={()=>{navigation.navigate('Tracker')}}>
                     <View style={{
@@ -108,11 +106,12 @@ export default function HomeScreen({navigation, prop}){
                 <DailyInputs colorbg="#dee2ff" dataUnit={'mg/dl'} dataType="Diasystolic BP" data={dbp} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#8e9aaf"/>
                 <DailyInputs colorbg="#c8e7ff" dataUnit={'mg/dl'} dataType="LDL chlolestrol" data={ldl} icon={require('../../../assets/Images/ldl-icon.png')} dataColor="#618985"/>
                 <DailyInputs colorbg="#c9e4de" dataUnit={'mg/dl'} dataType="HDL chlolestrol" data={hdl} icon={require('../../../assets/Images/hdl-icon.png')} dataColor="#09814a"/>
+            
             </ScrollView>
 
         </View>
         <View style={{marginTop: 16, padding: 20}}>
-                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Life style</Text>
+                <Text style={[styles.text, {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}]}>Life style</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
                     <Pressable style={styles.smallBoxes} onPress={()=>{navigation.navigate('Diet')}}>
@@ -131,7 +130,7 @@ export default function HomeScreen({navigation, prop}){
 
 
         <View style={{marginTop: 16, padding: 20}}>
-                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Health care</Text>
+                <Text style={[styles.text, {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}]}>Health care</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
                     <Pressable style={[styles.smallBoxes, {backgroundColor:"#e3d5ca"}]} onPress={()=>{navigation.navigate('ExerciseActivityOrRest',{ "day": 16})}}>
@@ -146,7 +145,7 @@ export default function HomeScreen({navigation, prop}){
         </View>
 
         <View style={{marginTop: 16, padding: 20, marginBottom: 100}}>
-                <Text style={[styles.text], {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}}>Awareness</Text>
+                <Text style={[styles.text, {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}]}>Awareness</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     
                     <Pressable style={[styles.smallBoxes, {backgroundColor:"#FCE0D7"}]} onPress={()=>{navigation.navigate('Diet')}}>
