@@ -101,7 +101,7 @@ export default function LoginScreen({ navigation }) {
             <View style={{ marginHorizontal: "10%", flex: 1 }}>
                 <Input
                     label="Email"
-                    iconName="email-outline"
+                    iconName="envelope"
                     placeholder="Enter your email"
                     onChangeText={text => handleOnTextChange(text, "email")}
                     errorMessage={errorMessages.email}
@@ -111,7 +111,7 @@ export default function LoginScreen({ navigation }) {
 
                 <Input
                     label="password"
-                    iconName="lock-outline"
+                    iconName="lock"
                     placeholder="Enter your Password"
                     password
                     onChangeText={text => handleOnTextChange(text, "password")}

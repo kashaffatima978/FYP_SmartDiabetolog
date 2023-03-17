@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-const ip="http://192.168.1.10"
+const ip = 'http://192.168.1.10'
 
 exports.checkRoot = () => {
        axios.get(`${ip}:3000/`)

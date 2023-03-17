@@ -10,10 +10,6 @@ import colors from "../../files/Colors";
 import { registeration, sendOTP } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
-
-
 export const Registeration = function ({ navigation }) {
 
 
@@ -136,7 +132,7 @@ export const Registeration = function ({ navigation }) {
                     <Input
                         label="Name"
                         onChangeText={text => handleOnTextChange(text, "name")}
-                        iconName="account-o"
+                        iconName="user"
                         placeholder="Enter your full name"
                         errorMessage={errorMessages.name}
                         onFocus={() => { handleErrorMessage(null, "name") }}
@@ -144,7 +140,7 @@ export const Registeration = function ({ navigation }) {
                     />
                     <Input
                         label="Email"
-                        iconName="email-outline"
+                        iconName="envelope"
                         placeholder="Enter your email"
                         onChangeText={text => handleOnTextChange(text, "email")}
                         errorMessage={errorMessages.email}
@@ -152,7 +148,7 @@ export const Registeration = function ({ navigation }) {
                     />
                     <Input
                         label="password"
-                        iconName="lock-outline"
+                        iconName="lock"
                         placeholder="Enter your Password"
                         password
                         onChangeText={text => handleOnTextChange(text, "password")}
@@ -161,7 +157,7 @@ export const Registeration = function ({ navigation }) {
                     />
                     <Input
                         label="confirm password"
-                        iconName="lock-outline"
+                        iconName="lock"
                         placeholder="Enter your Password"
                         onChangeText={text => handleOnTextChange(text, "cpassword")}
                         password

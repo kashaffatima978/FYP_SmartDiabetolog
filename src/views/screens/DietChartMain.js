@@ -40,7 +40,7 @@ export default DietChartMain = function ({navigation}) {
   const[dinner, setDinner]= useState([])
   const[gotDiet, setGotDiet]= useState(false)
   const[loader, setLoader]= useState(false)
-   
+  const ip = 'http://192.168.1.10'
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
   const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
 
@@ -60,7 +60,7 @@ export default DietChartMain = function ({navigation}) {
         setTimeout(()=>{
           setLoader(false)
         }, 4000)
-        axios.post('http://192.168.1.10:8000/dietPlan', totalCalories)
+        axios.post(ip+':8000/dietPlan', totalCalories)
         .then((response)=>{
           setBreakfast(response.data.breakfast)
           setSnack1(response.data.snack1)
