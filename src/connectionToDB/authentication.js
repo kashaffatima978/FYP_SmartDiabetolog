@@ -1,7 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-ip="http://192.168.170.35"
+import ip from "../files/information"
+ip="192.168.170.35"
 
 exports.checkRoot = () => {
        axios.get(`${ip}:3000/`)
@@ -68,7 +69,7 @@ exports.signIn = (email, password) => {
                             }
                      })
                      .catch((err) => {
-                            console.log("Error signIn2: ", err)
+                            console.log("Error signIn222222222: ", err)
                             reject(err)
                      })
 

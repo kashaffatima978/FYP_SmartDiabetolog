@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = 'http://192.168.1.10'
+import {IP} from "../../files/information"
+const ip=`http://${IP}`
 
 
 //get a profile information of the user 
