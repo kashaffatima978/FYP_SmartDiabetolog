@@ -26,7 +26,6 @@ export default ExerciseActivityOrRest = ({ navigation, route }) => {
             if (second === 1 && minute == 0) {
                 alert("Activity Completed")
                 dispatch(setExerciseToday())
-                dispatch(setExerciseRecord())
                 console.log("the state is  ",store.getState())
                 clearTimeout(mytimeout);
                 navigation.replace("MainExercisePage")

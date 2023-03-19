@@ -129,19 +129,15 @@ export default function LoginScreen({ navigation }) {
                              if (res.userDetails.state.todayExerciseDone) {
                                 dispatch(setExerciseToday())
                             }
-
-                        
-
-
-
                             console.log("After update after login the state is, ", store.getState())
+                            navigation.navigate("Home");
 
                         })
                         .catch(err => { console.log("Error in loading state in login screen", err) })
 
 
 
-                    navigation.navigate("Home");
+                   
                 }, 3000)
             })
             .catch((err) => {
