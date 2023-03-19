@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appbar, Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Loader from '../components/loader';
+import SelectDropdown from "react-native-select-dropdown";
+
 
 export default Profile = function ({navigation}) {
   const [profile, setProfile] = useState('')
@@ -24,7 +26,9 @@ export default Profile = function ({navigation}) {
             "weight": res.userDetails.weight,
             "heightFeet": res.userDetails.heightFeet,
             "heightInches": res.userDetails.heightInches,
-            "diabetesType": res.userDetails.diabetesType
+            "diabetesType": res.userDetails.diabetesType,
+            "activityLevel": res.userDetails.activityLevel,
+            "gender": res.userDetails.gender
           }
         });
 
@@ -45,7 +49,9 @@ export default Profile = function ({navigation}) {
     "weight": "",
     "heightFeet": "",
     "heightInches": "",
-    "diabetesType": ""
+    "diabetesType": "",
+    "activityLevel":"",
+    "gender": ""
   });
 
   //Method sets the state change in inputList
@@ -55,7 +61,8 @@ export default Profile = function ({navigation}) {
   };
 
   const update = () => {
-    editProfileInformation(inputList.name, inputList.email, inputList.weight, inputList.heightFeet, inputList.heightInches, inputList.diabetesType)
+    editProfileInformation(inputList.name, inputList.email, inputList.weight, inputList.heightFeet, 
+      inputList.heightInches, inputList.diabetesType, inputList.activityLevel, inputList.gender)
       .then((data) => { console.log("abc", data) ;navigation.navigate("Profile")})
       .catch((err) => { console.log("Error in update in profile", err) })
   }
@@ -110,6 +117,94 @@ export default Profile = function ({navigation}) {
         </View>
 
         <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="venus-mars" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Gender</Text>
+            <SelectDropdown
+                        // style={{height: '5%'}}
+                        data={['Male',"Female"]}
+                        onSelect={(selectedItem, index) => {
+                            console.log(selectedItem, index)
+                            handleOnTextChange(selectedItem, "gender")
+                        }}
+
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem;
+
+                        }}
+                        rowTextForSelection={(selectedItem, index) => {
+                            return selectedItem;
+                        }}
+
+                        buttonStyle={{  color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                        buttonTextStyle={
+                            {
+                                fontSize: 12,
+                                color: 'black',
+                                textTransform: "capitalize",
+    
+                            }
+                        }
+                        // defaultButtonText={`${existingItem !== null ? existingItem.event : "Select an Event"}`}
+                        defaultButtonText={"select activity level"}
+                        dropdownIconPosition="right"
+                        dropdownStyle={{ backgroundColor: "white" }}
+                        rowStyle={{ backgroundColor: '#b8bedd', margin: 2 }}
+                        rowTextStyle={{ color: colors.greyBlue }}
+
+                    >
+
+                    </SelectDropdown>          
+             </View>
+        </View>
+
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="walking" size={25} style={styles.icon}/>
+          <View style={{width: "50%", marginTop: 5}}>
+            <Text style={styles.label}>Activity level</Text>
+            <SelectDropdown
+                        // style={{height: '5%'}}
+                        data={['Very Light','Light','Moderate','Heavy',
+                        'Very Heavy']}
+                        onSelect={(selectedItem, index) => {
+                            console.log(selectedItem, index)
+                            handleOnTextChange(selectedItem, "activityLevel")
+                        }}
+
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem;
+
+                        }}
+                        rowTextForSelection={(selectedItem, index) => {
+                            return selectedItem;
+                        }}
+
+                        buttonStyle={{  color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                        buttonTextStyle={
+                            {
+                                fontSize: 12,
+                                color: 'black',
+                                textTransform: "capitalize",
+    
+                            }
+                        }
+                        // defaultButtonText={`${existingItem !== null ? existingItem.event : "Select an Event"}`}
+                        defaultButtonText={"select activity level"}
+                        dropdownIconPosition="right"
+                        dropdownStyle={{ backgroundColor: "white" }}
+                        rowStyle={{ backgroundColor: '#b8bedd', margin: 2 }}
+                        rowTextStyle={{ color: colors.greyBlue }}
+
+                    >
+
+                    </SelectDropdown>
+          </View>
+        </View>
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
           <Icon name="ruler-vertical" size={25} style={styles.icon}/>
           <View style={{width: "85%"}}>
             <Text style={styles.label}>Height</Text>
@@ -128,7 +223,7 @@ export default Profile = function ({navigation}) {
         
         
       </View>
-      <View style={{width: '100%', flexDirection: 'row', marginTop: 30, justifyContent: 'space-between'}}>
+      <View style={{width: '100%', flexDirection: 'row', marginTop: 25, justifyContent: 'space-between'}}>
           <TouchableOpacity style={styles.button}
               onPress={()=>{ update();setLoader(true); setTimeout(()=>{setLoader(false) },2000) }}>
                 <Text style={styles.buttonText}>Edit  <Icon name="edit" size={15}  /></Text>
@@ -138,7 +233,7 @@ export default Profile = function ({navigation}) {
             </TouchableOpacity>
           
       </View>
-      <TouchableOpacity style={[styles.button, {backgroundColor: 'lightred', marginTop: 10}]}
+      <TouchableOpacity style={[styles.button, {backgroundColor: 'red', marginTop: 10}]}
               onPress={() => { deleteItem() }}><Text style={styles.buttonText}>Delete  <Icon name="trash-alt" size={15}/></Text>
       </TouchableOpacity>
     </ScrollView>

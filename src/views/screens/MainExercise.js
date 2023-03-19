@@ -1,21 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Button, SafeAreaView, StatusBar, ScrollView, StyleSheet, TouchableOpacity } from "react-native"
 import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {  store } from "../../redux/reduxActions";
-
+import {Heading } from '../components/Heading'
+import axios from "axios";
+import {IP} from "../../files/information"
 
 export default function MainExercisePage({navigation}) {
-
+    const ip=`http://${IP}`
     days = [...Array(31).keys()]
     month = (new Date()).getMonth()
     date = new Date()
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const[mount, setMount]= useState(0);
+    useEffect(()=>{
+        if(mount==0){
+            axios.post(ip+':8000/exercisePlan',{
+                "day":2,
+                "weight": 50,
+                "calories": 1200,
+                // "routine":[true,true,true,true,true,true,true,true]
+            })
+            .then((response)=>{
+                console.log(response)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        }
+    }, [])
+    
+
 
     return (
         <SafeAreaView >
+            <Heading name="Exercise plan"/>
             <View style={styles.infoView}>
+                
                 <Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>
                     Burn Calories and keep fit
                 </Text>
@@ -84,9 +107,11 @@ const styles = StyleSheet.create({
 
     infoView: {
         backgroundColor: "#DEE2E6",
-        height: "15%",
+        height: "12%",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: 'white',
+        padding: 5
     },
     text1: {
         fontSize: 20,
