@@ -221,3 +221,26 @@ exports.storeUserState = async (state) => {
        })
        
 }
+
+//store the  user state while registeration
+exports.storeUserStateWhileRegisteration = async (state) => {
+       return new Promise(async(resolve,reject)=>{
+
+              const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
+       axios.patch(`${ip}:3000/`,
+              { "state": state },
+              { headers: { "Authorization": "Bearer " + token } })
+              .then((res) => {
+                     if (res.data.status !== undefined) {
+                            console.log("changes successfully updated in user state");
+                            console.log(res.data)
+                            resolve(res.data)
+                     }
+              })
+              .catch((err) => {
+                     console.log("Error: storeUserState= ", err)
+                     reject(err)
+              })
+       })
+       
+}

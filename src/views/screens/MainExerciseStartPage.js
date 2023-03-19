@@ -70,7 +70,6 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
             //update redux state then save the state in database
             alert("Exercise Completed")
             dispatch(setExerciseToday())
-            dispatch(setExerciseRecord())
             storeUserState(store.getState())
             .then((res) => {
                 console.log("now redux state is ",store.getState())
