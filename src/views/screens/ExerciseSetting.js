@@ -112,7 +112,7 @@ export default ExerciseSetting = ({navigation}) => {
                 </View>
 
                 <View style={styles.container}>
-                    <Text style={styles.text}>Neck Routine {isWaistEnabled?"ON":"OFF"}</Text>
+                    <Text style={styles.text}>Waist Routine {isWaistEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
                         thumbColor={isWaistEnabled ? '#282A71' : '#f4f3f4'}

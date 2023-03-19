@@ -13,19 +13,26 @@ export default function MainExercisePage({navigation}) {
     days = [...Array(31).keys()]
     month = (new Date()).getMonth()
     date = new Date()
+    const [today,setToday]=useState(2)//new Date().getDay())
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const[mount, setMount]= useState(0);
+    const [exercises,setExersises]=useState([])
     
     useEffect(()=>{
         if(mount==0){
             axios.post(ip+':8000/exercisePlan',{
-                "day":1,
+                "day":2,
                 "weight": 50,
                 "calories": 1200,
-                "routine":["True","True","True","True","True","True","True","True"]
+                //[back,arms,shoulders,waist,legs,chest,cardio,neck]
+                "routine":[store.getState().back,store.getState().arms,store.getState().shoulders,store.getState().waist,store.getState().legs,store.getState().chest,store.getState().cardio,store.getState().neck]
             })
             .then((response)=>{
-                console.log("this is data ^^^^^^^&&&&&&&&&&&***************",response.data.res)
+                console.log("this is data ^^^^^^^&&&&&&&&&&&***************",JSON.parse(response.data.res))
+                setExersises(JSON.parse(response.data.res))
+                
+                console.log(new Date().getDay())
+                console.log("1st exercise is ",JSON.parse(response.data.res)[0])
             })
             .catch((err)=>{
                 console.log(err)
@@ -77,7 +84,17 @@ export default function MainExercisePage({navigation}) {
                                                <Text>REST</Text>:
                                                 (!(!store.getState() ? false:store.getState().todayExerciseDone ) ?
                                                 (<TouchableOpacity style={{backgroundColor:"#282A71",width:"20%",height:"80%",alignItems:"center",justifyContent:"center",marginLeft:"10%"}}
-                                                    onPress={() => {navigation.navigate("MainExerciseStartPage",{"day":val+1}) }}>
+                                                    onPress={
+                                                        () => {
+                                                        if( today==1 || today==3 || today==5 ){
+                                                        navigation.navigate("ExerciseActivityOrRest",{"day":val+1,"exercises":exercises}) 
+                                                        }
+                                                        if( today==2 || today==4  ){
+                                                            navigation.navigate("MainExerciseStartPage",{"day":val+1,"exercises":exercises}) 
+                                                            }
+                                                        
+                                                    }
+                                                        }>
                                                     <View style={{ height: 50, justifyContent: "center", alignItems: "center" }}>
                                                         <Text style={[styles.text1,{color:"white"}]}>
                                                             START 

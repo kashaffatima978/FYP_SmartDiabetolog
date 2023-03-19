@@ -14,7 +14,7 @@ import { getProfileInformation } from "../connectionToDB/profile"
 import { updateInitialState } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
-import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord,setExerciseToday,setBreakfastToday,setLunchToday,setSnackOneToday,setSnackTwoToday,setDinnerToday } from "../../redux/reduxActions";
+import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, setSnackOneToday, setSnackTwoToday, setDinnerToday } from "../../redux/reduxActions";
 
 
 
@@ -123,21 +123,25 @@ export default function LoginScreen({ navigation }) {
                                     dispatch(setExerciseRecord())
                                 }
                             }
-                            //if the gotten record does not have missed exercise days
 
-                             //if today exercise is true then update the state todayExerciseDone
-                             if (res.userDetails.state.todayExerciseDone) {
+                            //if today exercise is true then update the state todayExerciseDone
+                            if (res.userDetails.state.todayExerciseDone) {
                                 dispatch(setExerciseToday())
                             }
+
+
+
+
+
                             console.log("After update after login the state is, ", store.getState())
-                            navigation.navigate("Home");
+                            navigation.navigate("Home")
 
                         })
                         .catch(err => { console.log("Error in loading state in login screen", err) })
 
 
 
-                   
+
                 }, 3000)
             })
             .catch((err) => {

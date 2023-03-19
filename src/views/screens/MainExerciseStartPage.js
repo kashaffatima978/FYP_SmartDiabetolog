@@ -15,8 +15,14 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
-    const { day } = route.params
-    exercises = [['back', 'body weight', 'http://d205bpvrqc9yn1.cloudfront.net/1773.gif', 1773,
+    const  day  = route.params.day
+    const  exercises  = route.params.exercises
+    for (i=0; i<exercises.length; i++){
+        console.log(exercises[i])
+    }
+    
+    console.log("exercise in main routine is ",exercises)
+    exercisessss = [['back', 'body weight', 'http://d205bpvrqc9yn1.cloudfront.net/1773.gif', 1773,
         'one arm towel row', 'upper back', 20.0, 3, 0, 18, 5],
     ['upper arms', 'body weight', 'http://d205bpvrqc9yn1.cloudfront.net/0815.gif', 815,
         'triceps dips floor', 'triceps', 20.0, 3, 7, 17, 1],
@@ -44,26 +50,7 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
     const [exerciseRange, setExerciseRange] = useState(0)
     var mytimeout
     useEffect(() => {
-        //  mytimeout=setTimeout(()=>{
-        //     setSecond(old=>{ 
-        //         //if your minutes is 0 and exercise range is exercises.lenght-1 and second is also 1 then exercise is completed
-        //         if(minutes===1 && exerciseRange===exercises.length-1 && old===1 ){
-        //             alert("Exercise Completed")
-        //             dispatch(setExerciseToday())
-        //             dispatch(setExerciseRecord())
-        //             console.log("the todayExerciseDone is ",store.getState().todayExerciseDone)
-        //             navigation.replace("MainExercisePage")
-
-        //         } 
-        //         if(old>1){return old-1} 
-        //         else if(minutes!=0){ 
-        //             setMinutes(old=>{if(old>=1){return old-1}}); 
-        //             if(minutes%2==0 && exerciseRange<exercises.length){
-        //                 setExerciseRange(old=>old+1)
-        //             };
-        //             return 60} 
-
-        //         })},10)
+     
        mytimeout= setTimeout(()=>{
         if (second === 1 && minutes == 0) {
             //user done with exercise
@@ -98,7 +85,8 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
                 }
                 return old
             })
-            if (minutes % 2 == 0 && exerciseRange < exercises.length) {
+            if (minutes % 2 == 0 && exerciseRange < exercises.length && second==1) {
+                console.log(minutes)
                 setExerciseRange(old => old + 1)
             }
         }
@@ -144,12 +132,12 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
 
                     {minutes % 2 == 0 ?
                         <View style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "70%" }}>
-                            <Image style={{ width: "100%", height: "100%" }} source={{ uri: "http://d205bpvrqc9yn1.cloudfront.net/0119.gif" }} />
+                            <Image style={{ width: "100%", height: "100%" }} source={{ uri: exercises[exerciseRange][2] }} />
                         </View> :
                         <Text style={styles.rest}>REST</Text>
                     }
 
-                    <TouchableOpacity style={[styles.button, { height: 40 }]} onPress={() => { toggleModal(); clearTimeout(mytimeout);setMinutes(-1);navigation.replace("MainExerciseStartPage", { "day": day }) }}>
+                    <TouchableOpacity style={[styles.button, { height: 40 }]} onPress={() => { toggleModal(); clearTimeout(mytimeout);setMinutes(-1);navigation.replace("MainExercisePage") }}>
                         <Text>STOP</Text>
                     </TouchableOpacity>
 
