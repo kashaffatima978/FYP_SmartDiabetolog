@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import colors from "../../files/Colors";
 import { CircularProgress } from 'react-native-circular-progress';
+import { getProfileInformation } from "../connectionToDB/profile"
 import {
   SafeAreaView,
   ScrollView,
@@ -24,127 +25,210 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MealCard from '../components/MealDishCard';
 import Fab from '../components/Fab';
 import Loader from '../components/loader';
+import { IP } from "../../files/information"
+import { Button } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
+import { store } from "../../redux/reduxActions";
+import { useDispatch, useSelector } from "react-redux/es/exports";
+import { setBreakfastToday, setLunchToday, setDinnerToday, setSnackOneToday, setSnackTwoToday } from "../../redux/reduxActions";
+import getCalories from '../Counters/PerDay';
 
-import {IP} from "../../files/information"
+// import {IP} from "../../files/information"
 
-  // http://192.168.1.10:8000
 
-export default DietChartMain = function ({navigation}) {
+
+export default DietChartMain = function ({ navigation }) {
+  const dispatch = useDispatch()
   const Tab = createMaterialTopTabNavigator();
-  const[consumedCalories, setCosumedCalories]= useState(500)
-  const[totalCalories, setTotalCalories]= useState(1200)
-  const[breakfast, setBreakfast]= useState([])
-  const[snack1, setSnack1]= useState([])
-  const[lunch, setLunch]= useState([])
-  const[snack2, setSnack2]= useState([])
-  const[dinner, setDinner]= useState([])
-  const[gotDiet, setGotDiet]= useState(false)
-  const[loader, setLoader]= useState(false)
-  const ip=`http://${IP}`
+  const [consumedCalories, setCosumedCalories] = useState(500)
+  const [totalCalories, setTotalCalories] = useState(2000)
+  const [breakfast, setBreakfast] = useState([])
+  const [snack1, setSnack1] = useState([])
+  const [lunch, setLunch] = useState([])
+  const [snack2, setSnack2] = useState([])
+  const [dinner, setDinner] = useState([])
+  const [gotDiet, setGotDiet] = useState(false)
+  const [loader, setLoader] = useState(false)
+  const [isBreakfastEnabled, setIsBreakfastEnabled] = useState((!store.getState()) ? false : store.getState().todayBreakfastDone);
+  const [isLunchEnabled, setIsLunchEnabled] = useState((!store.getState()) ? false : store.getState().todayLunchDone);
+  const [isSnackOneEnabled, setIsSnackOneEnabled] = useState((!store.getState()) ? false : store.getState().todaySnackOneDone);
+  const [isSnackTwoEnabled, setIsSnackTwoEnabled] = useState((!store.getState()) ? false : store.getState().todaySnackTwoDone);
+  const [isDinnerEnabled, setIsDinnerEnabled] = useState((!store.getState()) ? false : store.getState().todayDinnerDone);
+  const [inputList, setInputList] = useState({
+    "weight": "",
+    "heightFeet": "",
+    "heightInches": "",
+    "activityLevel":"",
+    "gender": "",
+    "age":""
+  });
+
+  store.subscribe(() => {
+    setIsBreakfastEnabled((old) => { return (store.getState().todayBreakfastDone) })
+    setIsLunchEnabled((old) => { return (store.getState().todayLunchDone) })
+    setIsSnackOneEnabled((old) => { return (store.getState().todaySnackOneDone) })
+    setIsSnackTwoEnabled((old) => { return (store.getState().todaySnackTwoDone) })
+    setIsDinnerEnabled((old) => { return (store.getState().todayDinnerDone) })
+  })
+
+
+  const ip = `http://${IP}`
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
-  const animatedProgress = new Animated.Value((consumedCalories/totalCalories)*100);
+  const animatedProgress = new Animated.Value((consumedCalories / totalCalories) * 100);
 
-    useEffect(() => {
-        Animated.timing(animatedProgress, {
-        toValue: 1,
-        duration: 5000,
-        useNativeDriver: true,
+  useEffect(() => {
+    Animated.timing(animatedProgress, {
+      toValue: 1,
+      duration: 5000,
+      useNativeDriver: true,
 
-        }).start();
-    }, [animatedProgress, consumedCalories]);
+    }).start();
+  }, [animatedProgress, consumedCalories]);
 
-    
-    useEffect(()=>{
-      if(gotDiet==false){
-        setLoader(true)
-        setTimeout(()=>{
-          setLoader(false)
-        }, 4000)
-        axios.post(ip+':8000/dietPlan', {'calories': totalCalories})
-        .then((response)=>{
+ 
+  useEffect(async() => {
+
+    await getProfileInformation()
+      .then((res) => {
+        console.log("here", res)
+        setInputList(() => {
+          return {
+            "weight": res.userDetails.weight,
+            "heightFeet": res.userDetails.heightFeet,
+            "heightInches": res.userDetails.heightInches,
+            "activityLevel": res.userDetails.activityLevel,
+            "gender": res.userDetails.gender,
+            "age":  res.userDetails.age
+          }
+        });
+        // console.log("*******************************************",inputList.age);
+
+      })
+      .catch(err => { console.log("Error in profile screen", err) })
+      const height = `{${inputList.heightFeet}.${inputList.heightInches}}`
+      calory = getCalories(inputList.weight, false, inputList.gender, height, inputList.age, inputList.activityLevel);
+      console.log(calory)
+
+    if (gotDiet == false) {
+      setLoader(true)
+      setTimeout(() => {
+        setLoader(false)
+      }, 4000)
+      axios.post(ip + ':8000/dietPlan', { "calories": totalCalories })
+        .then((response) => {
           setBreakfast(response.data.breakfast)
           setSnack1(response.data.snack1)
           setLunch(response.data.lunch)
           setSnack2(response.data.snack2)
           setDinner(response.data.dinner)
           setGotDiet(true)
-          
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-      }
-    },[])
 
-    const addMeal = ()=>{
-      navigation.navigate('AddMeal')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
+  }, [])
+
+  const addMeal = () => {
+    navigation.navigate('AddMeal')
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaCont}>
       <Loader visible={loader}></Loader>
-      <Heading name="Diet Plan"/>
+      <Heading name="Diet Plan" />
 
       <View style={styles.con}>
-                <AnimatedCircularProgress
-                    size={200}
-                    width={8}
-                    fill={animatedProgress}
-                    tintColor="#6A6DB0"
-                    backgroundColor="#E2E4FF"
-                    rotation={0}
-                    lineCap="round"
-                >
-                    {() => (
-                    
-                        <Image
-                            style={styles.image}
-                            source={require('../../../assets/Images/breakfast.jpg')}
-                            resizeMode="center"
-                            style={{width: 150, height:150}}
-                        />
-                    )}
-                </AnimatedCircularProgress>
-                <Text style={styles.text}>Calories: {consumedCalories} kcl / {totalCalories} kcl</Text> 
-               
+        <AnimatedCircularProgress
+          size={200}
+          width={8}
+          fill={animatedProgress}
+          tintColor="#6A6DB0"
+          backgroundColor="#E2E4FF"
+          rotation={0}
+          lineCap="round"
+        >
+          {() => (
+
+            <Image
+              style={[styles.image, { width: 150, height: 150 }]}
+              source={require('../../../assets/Images/breakfast.jpg')}
+              resizeMode="center"
+
+            />
+          )}
+        </AnimatedCircularProgress>
+        <Text style={styles.text}>Calories: {consumedCalories} kcl / {totalCalories} kcl</Text>
+
+      </View>
+
+      <Tab.Navigator >
+        <Tab.Screen name="breakfast" component={() => {
+          return (
+            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
+              <FAB
+                disabled={isBreakfastEnabled ? true : false}
+                onPress={() => { dispatch(setBreakfastToday()); console.log(store.getState()) }}
+                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+                { backgroundColor: isBreakfastEnabled ? "gray" : "#6A6DB0" }]}
+                small icon="check" color='white' />
+              <MealCard style={{ zIndex: 1 }} title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
             </View>
-            
-            <Tab.Navigator >
-              <Tab.Screen name="breakfast" component={()=>{
-                return(
-                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
-                    <MealCard title ={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]}/>
-                  </View>
-                )  
-              }} />
+          )
+        }} />
 
-            <Tab.Screen name="lunch" component={()=>{
-                return(
-                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
-                    <MealCard title ={lunch[0]}  image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]}/>
-                  </View>
-                )  
-              }} />
+        <Tab.Screen name="lunch" component={() => {
+          return (
+            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+              <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
+              <FAB
+                disabled={isLunchEnabled ? true : false}
+                onPress={() => { dispatch(setLunchToday()); console.log(store.getState()) }}
+                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+                { backgroundColor: isLunchEnabled ? "gray" : "#6A6DB0" }]}
+                small icon="check" color='white' />
+            </View>
+          )
+        }} />
 
-            <Tab.Screen name="snacks" component={()=>{
-                return(
-                  <ScrollView style={{backgroundColor: '#E2E4FF', flex:1}}>
-                    <MealCard title ={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]}/>
-                    <MealCard title ={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]}/>
-                  </ScrollView>
-                )  
-              }} />
+        <Tab.Screen name="snacks" component={() => {
+          return (
+            <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+              <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
+              <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
+              <FAB
+                disabled={isSnackOneEnabled ? true : false}
+                onPress={() => { dispatch(setSnackOneToday()); console.log(store.getState()) }}
+                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+                { backgroundColor: isSnackOneEnabled ? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
+              <FAB
+                disabled={isSnackTwoEnabled ? true : false}
+                onPress={() => { dispatch(setSnackTwoToday()); console.log(store.getState()) }} 
+                style={[{ position: 'absolute', margin: 16, right: 0, bottom: "37%", backgroundColor: '#6A6DB0', zIndex: 10 },
+                 { backgroundColor: isSnackTwoEnabled? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
+            </ScrollView>
+          )
+        }} />
 
-            <Tab.Screen name="dinner" component={()=>{
-                return(
-                  <View style={{backgroundColor: '#E2E4FF', flex:1}}>
-                    <MealCard title ={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]}/>
-                  </View>
-                )  
-              }} />
-            </Tab.Navigator >
-    
-            <Fab onPress={addMeal}/>
+        <Tab.Screen name="dinner" component={() => {
+          return (
+            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+              <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
+              <FAB disabled={isDinnerEnabled ? true : false}
+                onPress={() => {
+                  dispatch(setDinnerToday()); console.log("state after changing setDinnerToday ",
+                    store.getState())
+                }}
+                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+                { backgroundColor: isDinnerEnabled ? "gray" : "#6A6DB0" }]}
+                small icon="check" color='white' />
+            </View>
+          )
+        }} />
+      </Tab.Navigator >
+
+      <Fab onPress={addMeal} />
     </SafeAreaView>
   );
 };
@@ -153,13 +237,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  text:{
+  text: {
     textAlign: "center",
     // marginTop: 15,
     fontWeight: 'bold',
+    color: "gray",
     fontSize: 15
- 
- },
+
+  },
   con: {
     // flex: 1,
     alignItems: 'center',
@@ -167,14 +252,14 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',mar
     // marginTop: 10
   },
-  
+
   scrollContainer: {
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
   },
   dietInfo: {
-    borderWidth:1,
+    borderWidth: 1,
     flex: 0.5,
     backgroundColor: 'white',
     height: 50,
@@ -238,24 +323,24 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 25,
     padding: 5,
-    borderWidth:1
+    borderWidth: 1
   },
   Foodtext: {
     fontSize: 20,
     textAlign: 'center',
   },
-  headImage:{
-    width:"90%",
+  headImage: {
+    width: "90%",
     height: 100,
-    alignSelf:"center",
+    alignSelf: "center",
     marginTop: 10
   },
-  heading:{
+  heading: {
     fontSize: 30,
-        fontStyle: "italic",
-        textAlign: "center",
-      
-        color: 'black',
-        margin: 10
+    fontStyle: "italic",
+    textAlign: "center",
+
+    color: 'black',
+    margin: 10
   }
 });

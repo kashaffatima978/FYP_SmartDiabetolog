@@ -10,13 +10,12 @@ import axios from "axios";
 import RNFetchBlob from 'rn-fetch-blob';
 import {IP} from "../../files/information"
 
-
 export default function Retinopathy({navigation}){
     const [photo, setPhoto] = useState(null);
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
     const [confidence, setConfidence] = useState(null);
-    const ip=`http://${IP}`
+    const ip = `http://${IP}`
 
 
     openLibrary= ()=> {

@@ -13,8 +13,8 @@ import SelectDropdown from "react-native-select-dropdown";
 export default Profile = function ({navigation}) {
   const [profile, setProfile] = useState('')
   const [loader,setLoader]=useState(false)
-
   const [mount, setMount] = useState(0)
+
   const loadDataOnlyOnce = async () => {
     getProfileInformation()
       .then((res) => {
@@ -28,21 +28,23 @@ export default Profile = function ({navigation}) {
             "heightInches": res.userDetails.heightInches,
             "diabetesType": res.userDetails.diabetesType,
             "activityLevel": res.userDetails.activityLevel,
-            "gender": res.userDetails.gender
+            "gender": res.userDetails.gender,
+            "age":  res.userDetails.age
           }
         });
+        console.log("*******************************************",inputList.age);
 
       })
       .catch(err => { console.log("Error in profile screen", err) })
-
-
   };
+
   useEffect(() => {
     if (mount === 0) {
       loadDataOnlyOnce();
       setMount((oldVal) => oldVal++);
     }
   }, [mount]);
+
   const [inputList, setInputList] = useState({
     "name": "",
     "email": "",
@@ -51,7 +53,8 @@ export default Profile = function ({navigation}) {
     "heightInches": "",
     "diabetesType": "",
     "activityLevel":"",
-    "gender": ""
+    "gender": "",
+    "age":""
   });
 
   //Method sets the state change in inputList
@@ -60,15 +63,16 @@ export default Profile = function ({navigation}) {
     console.log("InputList: ", inputList)
   };
 
+  
+
   const update = () => {
     editProfileInformation(inputList.name, inputList.email, inputList.weight, inputList.heightFeet, 
-      inputList.heightInches, inputList.diabetesType, inputList.activityLevel, inputList.gender)
+      inputList.heightInches, inputList.diabetesType, inputList.activityLevel, inputList.gender,  inputList.age )
       .then((data) => { console.log("abc", data) ;navigation.navigate("Profile")})
       .catch((err) => { console.log("Error in update in profile", err) })
   }
 
   const logout = () => {
-
     AsyncStorage.setItem("@token", "").then(async () => {
       navigation.push("Login")
     }).catch((err) => {
@@ -76,6 +80,7 @@ export default Profile = function ({navigation}) {
     })
 
   }
+
   const deleteItem = () => {
     deleteAccount()
       .then((data) => { console.log("abc", data) ;navigation.push("Registration")})
@@ -106,6 +111,14 @@ export default Profile = function ({navigation}) {
             <TextInput style={styles.input} value={inputList.email} placeholder='Email' onChangeText={text => handleOnTextChange(text, "email")} />
           </View>
         </View>
+
+        <View style={{flexDirection: 'row', marginTop: 20}}>
+          <Icon name="user-edit" size={25} style={styles.icon}/>
+          <View style={{width: "85%"}}>
+            <Text style={styles.label}>Age</Text>
+            <TextInput style={styles.input} value={`${inputList.age}`}  keyboardType='numeric' placeholder='Age' onChangeText={text => handleOnTextChange(text, "age")} />
+          </View>
+        </View>
         
 
         <View style={{flexDirection: 'row', marginTop: 20}}>
@@ -118,7 +131,7 @@ export default Profile = function ({navigation}) {
 
         <View style={{flexDirection: 'row', marginTop: 20}}>
           <Icon name="venus-mars" size={25} style={styles.icon}/>
-          <View style={{width: "85%"}}>
+          <View style={{width: "50%"}}>
             <Text style={styles.label}>Gender</Text>
             <SelectDropdown
                         // style={{height: '5%'}}
@@ -147,7 +160,7 @@ export default Profile = function ({navigation}) {
                             }
                         }
                         // defaultButtonText={`${existingItem !== null ? existingItem.event : "Select an Event"}`}
-                        defaultButtonText={"select activity level"}
+                        defaultButtonText={(inputList.gender!="")? inputList.gender: 'Select gender'}
                         dropdownIconPosition="right"
                         dropdownStyle={{ backgroundColor: "white" }}
                         rowStyle={{ backgroundColor: '#b8bedd', margin: 2 }}
@@ -192,7 +205,8 @@ export default Profile = function ({navigation}) {
                             }
                         }
                         // defaultButtonText={`${existingItem !== null ? existingItem.event : "Select an Event"}`}
-                        defaultButtonText={"select activity level"}
+                        // defaultButtonText={"select activity level"}
+                        defaultButtonText={(inputList.activityLevel!="")? inputList.activityLevel: 'select activity level'}
                         dropdownIconPosition="right"
                         dropdownStyle={{ backgroundColor: "white" }}
                         rowStyle={{ backgroundColor: '#b8bedd', margin: 2 }}
@@ -251,18 +265,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '94%',
-    // backgroundColor: '#b8bedd',
-    // margin: 10,
-    // alignSelf: 'center',
-    // borderRadius: 10,
-    // padding: 10,
-
+    color: 'grey',
     borderBottomWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity:  0.4,
     shadowRadius: 3,
-    // elevation: 5,
   },
   button: {
     margin: 20,

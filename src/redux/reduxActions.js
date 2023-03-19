@@ -11,6 +11,11 @@ const Legs="LEGS"
 const Chest="CHEST"
 const Cardio="CARDIO"
 const ExerciseToday="EXERCISETODAY"
+const BreakfastToday="BREAKFASTTODAY"
+const LunchToday="LUNCHTODAY"
+const DinnerToday="DINNERTODAY"
+const Snack1Today="SNACKONETODAY"
+const Snack2Today="SNACKTWOTODAY"
 const ExerciseRecord="RECORD"
 
 
@@ -79,6 +84,36 @@ export const setExerciseToday = () => {
     )
 }
 
+export const setBreakfastToday = () => {
+    return (
+        { type: BreakfastToday }
+    )
+}
+
+export const setLunchToday = () => {
+    return (
+        { type: LunchToday }
+    )
+}
+
+export const setDinnerToday = () => {
+    return (
+        { type: DinnerToday }
+    )
+}
+
+export const setSnackOneToday = () => {
+    return (
+        { type: Snack1Today }
+    )
+}
+
+export const setSnackTwoToday = () => {
+    return (
+        { type: Snack2Today }
+    )
+}
+
 export const setExerciseRecord = () => {
     return (
         { type: ExerciseRecord }
@@ -90,7 +125,7 @@ export const setExerciseRecord = () => {
 
 //reducer function which tells what happened and what to do now
 //[true,false,true,true,true,false,true,true,true,false,true,true,true,true]
-export const initialstate = {record:[],authenticated: false, mode: "Light", neck:false ,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,cardio:false,todayExerciseDone:false }
+export const initialstate = {record:[],authenticated: false, mode: "Light", neck:false ,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,cardio:false,todayExerciseDone:false,todayBreakfastDone:false,todayLunchDone:false, todayDinnerDone:false, todaySnackOneDone:false, todaySnackTwoDone:false }
 
 const reducerFunction = (state = initialstate, action) => {
     if (action.type === "Authenticate")
@@ -127,6 +162,21 @@ const reducerFunction = (state = initialstate, action) => {
     }
     else if (action.type === "EXERCISETODAY") {
         return ({  ...state, todayExerciseDone: !state.todayExerciseDone});
+    }
+    else if (action.type === "BREAKFASTTODAY") {
+        return ({  ...state, todayBreakfastDone: !state.todayBreakfastDone});
+    }
+    else if (action.type === "LUNCHTODAY") {
+        return ({  ...state, todayLunchDone: !state.todayLunchDone});
+    }
+    else if (action.type === "SNACKONETODAY") {
+        return ({  ...state, todaySnackOneDone: !state.todaySnackOneDone});
+    }
+    else if (action.type === "SNACKTWOTODAY") {
+        return ({  ...state, todaySnackTwoDone: !state.todaySnackTwoDone});
+    }
+    else if (action.type === "DINNERTODAY") {
+        return ({  ...state, todayDinnerDone: !state.todayDinnerDone});
     }
     else if (action.type === "RECORD") {
         return ({  ...state, record: [...state.record,state.todayExerciseDone]});
