@@ -22,9 +22,9 @@ const styles=StyleSheet.create({
         // alignItems:"center",
         // marginVertical:15
         backgroundColor: "#6A6DB0",
-        width: 300,
+        width: 250,
         height: 50,
-        borderRadius: 10,
+        borderRadius: 25,
         marginTop: 20,
         padding: 10,
         alignSelf: "center"
@@ -36,7 +36,7 @@ const styles=StyleSheet.create({
         textAlign:"center",
         textAlignVertical: "center",
         padding: 5,
-        fontWeight: "bold"
+        // fontWeight: "bold"
         
     }
 })

@@ -1,6 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+// const ip = 'http://192.168.1.10'
 import {IP} from "../../files/information"
 import { store } from "../../redux/reduxActions";
 const ip=`http://${IP}`
@@ -202,7 +203,7 @@ exports.verifyUser = async () => {
 exports.storeUserState = async (state) => {
        return new Promise(async(resolve,reject)=>{
 
-              const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
+              const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
        axios.patch(`${ip}:3000/`,
               { "state": state },
               { headers: { "Authorization": "Bearer " + token } })

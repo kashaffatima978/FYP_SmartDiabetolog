@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import React from "react-native";
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, TouchableOpacity , TextInput} from "react-native";
 import { Input } from "../components/input";
 import { addBloodPressureRecord, viewBloodPressureInstance, updateBloodPressureRecord, deleteBloodPressureInstance } from "../connectionToDB/trackerBloodPressure";
 import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+
 export default function AddBloodPressure({ navigation, route }) {
 
 
@@ -73,9 +77,7 @@ export default function AddBloodPressure({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <View style={styles.textView}>
-                <Text style={styles.text}>Add Blood Pressure</Text>
-            </View>
+            <Heading name="Add Blood Pressure"/>
 
             <ScrollView style={styles.container2}
                 showsVerticalScrollIndicator={false}>
@@ -84,40 +86,57 @@ export default function AddBloodPressure({ navigation, route }) {
                         textColor="#212529"
                         buttonColor="#6B705C" />
                 </View> */}
+                
 
-                <View style={styles.inputContainer}>
+                <View style={{flexDirection: 'row', marginTop: 20}}>
+                    <Icon name="heartbeat" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Disystolic Pressure</Text>
+                        <TextInput style={styles.input}  placeholder="Enter your disystolic pressure" value={`${inputList.disystolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "disystolic")}/>
+                    </View>
+                </View>
+
+
+                {/* <View style={styles.inputContainer}>
                     <Input label="Disystolic Pressure"
-                        value={`${inputList.disystolic}`}
-                        maxlength={3}
-                        onChangeText={text => handleOnTextChange(text, "disystolic")}
-                        placeholder="Enter your disystolic pressure"
+                        
+                        
+                        
+                       
                         inputBackground="white"
                         textColor="black" />
+                </View> */}
+
+                <View style={{flexDirection: 'row', marginTop: 35}}>
+                    <Icon name="heartbeat" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Systolic Pressure</Text>
+                        <TextInput style={styles.input} multiline={false}  placeholder="Enter your Systolic pressure" value={`${inputList.systolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "systolic")}/>
+                    </View>
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <Input label="Systolic Pressure"
-                        value={`${inputList.systolic}`}
-                        maxlength={3}
-                        onChangeText={text => handleOnTextChange(text, "systolic")}
-                        placeholder="Enter your Systolic pressure"
-                        multiline={false}
-                        inputBackground="white"
-                        textColor="black" />
-                </View>
+                
 
-
-                <View style={styles.inputContainer}>
+                {/* <View style={styles.inputContainer}>
                     <Input label="Notes"
-                        value={`${inputList.description}`}
+                        
                         onChangeText={text => handleOnTextChange(text, "description")}
                         placeholder="Enter a Description"
                         multiline={true}
                         inputBackground="white"
                         textColor="black"
-                    />
+                    /> */}
+                {/* </View> */}
+
+                <View style={{flexDirection: 'row', marginTop: 40}}>
+                    <Icon name="sticky-note" size={25} style={styles.icon}/>
+                    <View style={{width: "85%"}}>
+                        <Text style={styles.label}>Notes</Text>
+                        <TextInput style={styles.input} value={`${inputList.description}`} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                    </View>
                 </View>
 
+                
 
                 {
 
@@ -148,7 +167,7 @@ export default function AddBloodPressure({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#6B705C",
+        backgroundColor: 'white',
         flexDirection: "column"
     },
     textView: {
@@ -174,20 +193,53 @@ const styles = StyleSheet.create({
         padding: "2%"
     },
     saveButtonContainer: {
-        marginVertical: "3%",
-        marginHorizontal: "3%",
-        backgroundColor: "#6B705C",
-        width: "30%",
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "flex-end",
-        borderRadius: 30,
+        backgroundColor: "#6A6DB0",
+        width: 250,
+        height: 50,
+        borderRadius: 25,
+        marginTop: 40,
+        padding: 10,
+        alignSelf: "center"
     },
     saveButtonText: {
-        color: "black",
-        fontWeight: "bold",
-        fontSize: 16
-    }
+        fontSize: 15,
+        color: "white",
+        textAlign:"center",
+        textAlignVertical: "center",
+        padding: 5,
+    },
+    text: {
 
+        fontSize: 14,
+        color: 'black',
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    icon:{
+        width: "13%",
+        height: 50,
+        backgroundColor: "#b8bedd",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+        borderRadius: 25,
+        textAlign: 'center',
+        margin: 5,
+        verticalAlign: 'middle'
+      }
+,input: {
+    width: '94%',
+    // backgroundColor: '#b8bedd',
+    // margin: 10,
+    // alignSelf: 'center',
+    // borderRadius: 10,
+    // padding: 10,
+
+    borderBottomWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    // elevation: 5,
+  }
 })

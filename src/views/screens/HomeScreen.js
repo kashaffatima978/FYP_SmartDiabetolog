@@ -8,7 +8,6 @@ import { CircularProgress } from 'react-native-circular-progress';
 import DailyInputs from "../components/DailyInputs";
 import NavBar from "../components/NavBar";
 import SpinListButton from "../components/SpinListButton";
-import { Modal} from 'react-native-paper';
 
 export default function HomeScreen({navigation, prop}){
     const [visible, setVisible] =useState(false);
@@ -23,13 +22,6 @@ export default function HomeScreen({navigation, prop}){
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
     const animatedProgress = new Animated.Value((bloodSugar/500)*100);
 
-
-    ///for modal
-    
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
-    const containerStyle = {backgroundColor: 'white', padding: 20, width: 300, height: 100};
-
     useEffect(() => {
         Animated.timing(animatedProgress, {
         toValue: 1,
@@ -42,16 +34,17 @@ export default function HomeScreen({navigation, prop}){
     
     return(
         <View>
-        <Pressable onPress={showModal}>
-                <NavBar name ={name} profile={profile}/>
-            </Pressable>
+        <Pressable onPress={()=>{
+            return(
+                <View>
+                    <NewDropDown dropdownlist={['Delete account', 'Logout'], title="Settings"}/>
+                </View>
+            )
+        }}>
+            <NavBar name ={name} profile={profile}/>
+        </Pressable>
+        
         <ScrollView style={styles.container}>
-
-            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                <Text>Example Modal.  Click outside this area to dismiss.</Text>
-            </Modal>
-            
-            
             <View style={styles.con}>
                 <AnimatedCircularProgress
                     size={200}

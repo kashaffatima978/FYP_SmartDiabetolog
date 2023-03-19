@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import colors from "../../files/Colors";
 import { CircularProgress } from 'react-native-circular-progress';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  Image,
-  View,
-  Touchable,
-  Modal,
-  TouchableOpacity,
-  Animated
-} from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, Image, View, Touchable, Modal, TouchableOpacity, Animated } from 'react-native';
+import { storeUserState } from "../connectionToDB/authentication"
 
 import PageHeading from "../components/PageHeading"
 import { Heading } from '../components/Heading';
@@ -24,13 +12,14 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MealCard from '../components/MealDishCard';
 import Fab from '../components/Fab';
 import Loader from '../components/loader';
-import { IP } from "../../files/information"
+
 import { Button } from 'react-native-paper';
 import { FAB } from 'react-native-paper';
 import { store } from "../../redux/reduxActions";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setBreakfastToday, setLunchToday, setDinnerToday, setSnackOneToday, setSnackTwoToday } from "../../redux/reduxActions";
 
+import { IP } from "../../files/information"
 
 
 
@@ -52,13 +41,28 @@ export default DietChartMain = function ({ navigation }) {
   const [isSnackTwoEnabled, setIsSnackTwoEnabled] = useState((!store.getState()) ? false : store.getState().todaySnackTwoDone);
   const [isDinnerEnabled, setIsDinnerEnabled] = useState((!store.getState()) ? false : store.getState().todayDinnerDone);
 
+  useEffect(()=>{
+    storeUserState(store.getState())
+    .then((res) => {
+      console.log(res)
+      console.log("User state SuccessFully stored after food taking changed")
+
+    })
+    .catch((err) => {
+      console.log("Error while state storing after  food taking changed", err)
+      Alert.alert("Error", "Connection Lost! Try Again")
+    })
+  },[isBreakfastEnabled,isLunchEnabled,isSnackOneEnabled,isSnackTwoEnabled,isDinnerEnabled])
+
   store.subscribe(() => {
     setIsBreakfastEnabled((old) => { return (store.getState().todayBreakfastDone) })
     setIsLunchEnabled((old) => { return (store.getState().todayLunchDone) })
     setIsSnackOneEnabled((old) => { return (store.getState().todaySnackOneDone) })
     setIsSnackTwoEnabled((old) => { return (store.getState().todaySnackTwoDone) })
     setIsDinnerEnabled((old) => { return (store.getState().todayDinnerDone) })
+
   })
+
 
 
   const ip = `http://${IP}`
@@ -101,6 +105,70 @@ export default DietChartMain = function ({ navigation }) {
     navigation.navigate('AddMeal')
   }
 
+  const BreakfastComponent = () => {
+    return (
+      <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
+        <FAB
+          disabled={isBreakfastEnabled ? true : false}
+          onPress={() => { dispatch(setBreakfastToday()); console.log(store.getState()) }}
+          style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+          { backgroundColor: isBreakfastEnabled ? "gray" : "#6A6DB0" }]}
+          small icon="check" color='white' />
+        <MealCard style={{ zIndex: 1 }} title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
+      </View>
+    )
+  }
+
+  const LunchComponent = () => {
+    return (
+      <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+        <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
+        <FAB
+          disabled={isLunchEnabled ? true : false}
+          onPress={() => { dispatch(setLunchToday()); console.log(store.getState()) }}
+          style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+          { backgroundColor: isLunchEnabled ? "gray" : "#6A6DB0" }]}
+          small icon="check" color='white' />
+      </View>
+    )
+  }
+
+  const DinnerComponent = () => {
+    return (
+      <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+        <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
+        <FAB disabled={isDinnerEnabled ? true : false}
+          onPress={() => {
+            dispatch(setDinnerToday()); console.log("state after changing setDinnerToday ",
+              store.getState()); 
+          }}
+          style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+          { backgroundColor: isDinnerEnabled ? "gray" : "#6A6DB0" }]}
+          small icon="check" color='white' />
+      </View>
+    )
+  }
+
+  const SnackComponent = () => {
+    return (
+      <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+        <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
+        <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
+        <FAB
+          disabled={isSnackOneEnabled ? true : false}
+          onPress={() => { dispatch(setSnackOneToday()); console.log(store.getState());  }}
+          style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
+          { backgroundColor: isSnackOneEnabled ? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
+        <FAB
+          disabled={isSnackTwoEnabled ? true : false}
+          onPress={() => { dispatch(setSnackTwoToday()); console.log(store.getState());   }}
+          style={[{ position: 'absolute', margin: 16, right: 0, bottom: "37%", backgroundColor: '#6A6DB0', zIndex: 10 },
+          { backgroundColor: isSnackTwoEnabled ? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
+      </ScrollView>
+    )
+  }
+
+
   return (
     <SafeAreaView style={styles.safeAreaCont}>
       <Loader visible={loader}></Loader>
@@ -131,74 +199,23 @@ export default DietChartMain = function ({ navigation }) {
       </View>
 
       <Tab.Navigator >
-        <Tab.Screen name="breakfast" component={() => {
-          return (
-            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
-              <FAB
-                disabled={isBreakfastEnabled ? true : false}
-                onPress={() => { dispatch(setBreakfastToday()); console.log(store.getState()) }}
-                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
-                { backgroundColor: isBreakfastEnabled ? "gray" : "#6A6DB0" }]}
-                small icon="check" color='white' />
-              <MealCard style={{ zIndex: 1 }} title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
-            </View>
-          )
-        }} />
+        <Tab.Screen name="breakfast" component={BreakfastComponent} />
 
-        <Tab.Screen name="lunch" component={() => {
-          return (
-            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
-              <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
-              <FAB
-                disabled={isLunchEnabled ? true : false}
-                onPress={() => { dispatch(setLunchToday()); console.log(store.getState()) }}
-                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
-                { backgroundColor: isLunchEnabled ? "gray" : "#6A6DB0" }]}
-                small icon="check" color='white' />
-            </View>
-          )
-        }} />
+        <Tab.Screen name="lunch" component={LunchComponent} />
 
-        <Tab.Screen name="snacks" component={() => {
-          return (
-            <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
-              <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
-              <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
-              <FAB
-                disabled={isSnackOneEnabled ? true : false}
-                onPress={() => { dispatch(setSnackOneToday()); console.log(store.getState()) }}
-                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
-                { backgroundColor: isSnackOneEnabled ? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
-              <FAB
-                disabled={isSnackTwoEnabled ? true : false}
-                onPress={() => { dispatch(setSnackTwoToday()); console.log(store.getState()) }} 
-                style={[{ position: 'absolute', margin: 16, right: 0, bottom: "37%", backgroundColor: '#6A6DB0', zIndex: 10 },
-                 { backgroundColor: isSnackTwoEnabled? "gray" : "#6A6DB0" }]} small icon="check" color='white' />
-            </ScrollView>
-          )
-        }} />
+        <Tab.Screen name="snacks" component={SnackComponent} />
 
-        <Tab.Screen name="dinner" component={() => {
-          return (
-            <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
-              <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
-              <FAB disabled={isDinnerEnabled ? true : false}
-                onPress={() => {
-                  dispatch(setDinnerToday()); console.log("state after changing setDinnerToday ",
-                    store.getState())
-                }}
-                style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
-                { backgroundColor: isDinnerEnabled ? "gray" : "#6A6DB0" }]}
-                small icon="check" color='white' />
-            </View>
-          )
-        }} />
+        <Tab.Screen name="dinner" component={DinnerComponent} />
       </Tab.Navigator >
 
       <Fab onPress={addMeal} />
     </SafeAreaView>
   );
 };
+
+
+
+
 const styles = StyleSheet.create({
   safeAreaCont: {
     flex: 1,
