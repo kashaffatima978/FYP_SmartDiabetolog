@@ -204,6 +204,7 @@ exports.storeUserState = async (state) => {
        return new Promise(async(resolve,reject)=>{
 
               const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
+              console.log("this is new token ******************", token)
        axios.patch(`${ip}:3000/`,
               { "state": state },
               { headers: { "Authorization": "Bearer " + token } })

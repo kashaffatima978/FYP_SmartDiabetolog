@@ -19,6 +19,7 @@ export default Profile = function ({navigation}) {
     getProfileInformation()
       .then((res) => {
         console.log("here", res)
+        console.log("state", res.userDetails.state)
         setInputList(() => {
           return {
             "name": res.userDetails.name,
@@ -32,7 +33,7 @@ export default Profile = function ({navigation}) {
             "age":  res.userDetails.age
           }
         });
-        console.log("*******************************************",inputList.age);
+        // console.log("*******************************************",inputList.age);
 
       })
       .catch(err => { console.log("Error in profile screen", err) })
@@ -116,7 +117,7 @@ export default Profile = function ({navigation}) {
           <Icon name="user-edit" size={25} style={styles.icon}/>
           <View style={{width: "85%"}}>
             <Text style={styles.label}>Age</Text>
-            <TextInput style={styles.input} value={`${inputList.age}`}  keyboardType='numeric' placeholder='Age' onChangeText={text => handleOnTextChange(text, "age")} />
+            <TextInput style={styles.input} value={(inputList.age!=undefined)?`${inputList.age}`:0}  keyboardType='numeric' placeholder='Age' onChangeText={text => handleOnTextChange(text, "age")} />
           </View>
         </View>
         
@@ -125,7 +126,7 @@ export default Profile = function ({navigation}) {
           <Icon name="weight" size={25} style={styles.icon}/>
           <View style={{width: "85%"}}>
             <Text style={styles.label}>Weight</Text>
-            <TextInput style={styles.input} value={`${inputList.weight}`} placeholder='Weight in kg' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "weight")} />
+            <TextInput style={styles.input} value={(inputList.weight!=undefined)?`${inputList.weight}`:0} placeholder='Weight in kg' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "weight")} />
           </View>
         </View>
 
@@ -178,7 +179,6 @@ export default Profile = function ({navigation}) {
           <View style={{width: "50%", marginTop: 5}}>
             <Text style={styles.label}>Activity level</Text>
             <SelectDropdown
-                        // style={{height: '5%'}}
                         data={['Very Light','Light','Moderate','Heavy',
                         'Very Heavy']}
                         onSelect={(selectedItem, index) => {
@@ -223,9 +223,9 @@ export default Profile = function ({navigation}) {
           <View style={{width: "85%"}}>
             <Text style={styles.label}>Height</Text>
             <View style={{flexDirection: 'row'}}>
-              <TextInput style={[styles.input, {width: '25%', marginRight: 20, textAlign: 'center'}]} value={`${inputList.heightFeet}`} placeholder='Height in Feet' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightFeet")} />
+              <TextInput style={[styles.input, {width: '25%', marginRight: 20, textAlign: 'center'}]} value={(inputList.heightFeet!="")?`${inputList.heightFeet}`:0} placeholder='Feet' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightFeet")} />
               <Text style={{marginTop: 15, marginRight: 20}}>ft</Text>
-              <TextInput style={[styles.input, {width: '25%', textAlign: 'center'}]} value={`${inputList.heightInches}`} placeholder='Height in Inches' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightInches")} />
+              <TextInput style={[styles.input, {width: '25%', textAlign: 'center'}]} value={(inputList.heightInches)?`${inputList.heightInches}`:0} placeholder='Inches' keyboardType='numeric' onChangeText={text => handleOnTextChange(text, "heightInches")} />
               <Text style={{marginTop: 15, marginRight: 20}}>in</Text>
             </View>
           </View>

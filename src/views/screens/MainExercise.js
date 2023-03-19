@@ -15,16 +15,17 @@ export default function MainExercisePage({navigation}) {
     date = new Date()
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const[mount, setMount]= useState(0);
+    
     useEffect(()=>{
         if(mount==0){
             axios.post(ip+':8000/exercisePlan',{
-                "day":2,
+                "day":1,
                 "weight": 50,
                 "calories": 1200,
-                // "routine":[true,true,true,true,true,true,true,true]
+                "routine":["True","True","True","True","True","True","True","True"]
             })
             .then((response)=>{
-                console.log(response)
+                console.log("this is data ^^^^^^^&&&&&&&&&&&***************",response.data.res)
             })
             .catch((err)=>{
                 console.log(err)

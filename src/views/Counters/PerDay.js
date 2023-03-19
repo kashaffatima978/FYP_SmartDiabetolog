@@ -1,7 +1,10 @@
 
 
-export default function getCalories(weight, pounds, gender, height, Age ,acitivitLevel){
-        
+export default function getCalories(weight, pounds, gender, heightfeet,heightInch , Age ,acitivitLevel){
+    height = heightfeet+'.'+heightInch
+    height = parseFloat(height)
+    
+    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
     height = parseFloat(height)
     BMI = weight/ (height*0.304);
     leanFactor =0
@@ -66,6 +69,6 @@ export default function getCalories(weight, pounds, gender, height, Age ,acitivi
     }
     calories = Math.round(calories)
     console.log("**************************************************************8", calories)
-    return(calories);
+    return calories
     
 }

@@ -1,5 +1,5 @@
 import {React, useState, useEffect} from "react";
-import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity, Image, Animated, Easing, Pressable  } from "react-native";
+import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity,Alert, Image, Animated, Easing, Pressable  } from "react-native";
 import { Input } from "../components/input";
 import NewDropDown from "../components/NewDropDown"
 import NewPicker from "../components/NewPicker";
@@ -8,16 +8,33 @@ import { CircularProgress } from 'react-native-circular-progress';
 import DailyInputs from "../components/DailyInputs";
 import NavBar from "../components/NavBar";
 import SpinListButton from "../components/SpinListButton";
+import { getProfileInformation } from "../connectionToDB/profile"
+import { Paragraph, Dialog, Portal, Button, Provider, Modal } from 'react-native-paper';
+
 
 export default function HomeScreen({navigation, prop}){
-    const [visible, setVisible] =useState(false);
+    // const [visible, setVisible] =useState(false);
     const [name, setName] = useState('Fatima');
     const [bloodSugar, setBloodSugar]= useState(120);
     const [ldl, setldl]= useState(60);
     const [hdl, sethdl]= useState(70);
     const [sbp, setsbp]= useState(80);
     const [dbp, setdbp]= useState(120);
-    const [profile, setprofile]= useState(''); 
+    const [mount, setMount]= useState(0); 
+    const[profile, setProfile]= useState('')
+    
+    if(mount==0){
+        getProfileInformation()
+            .then((res) => {
+                console.log("here", res)
+                console.log("state", res.userDetails.state)
+                if(res.userDetails.weight==undefined|| res.userDetails.age==undefined || res.userDetails.heightFeet==undefined){
+                    Alert.alert("Set Your Profile","Thank you!")
+                    navigation.navigate('Profile')
+                } 
+            })
+      .catch(err => { console.log("Error in Home screen", err) }) 
+    }
 
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
     const animatedProgress = new Animated.Value((bloodSugar/500)*100);
@@ -31,20 +48,41 @@ export default function HomeScreen({navigation, prop}){
         }).start();
     }, [animatedProgress, bloodSugar]);
 
+    // const [modalVisible, setModalVisible] = useState(false);
+    
+      
+
     
     return(
         <View>
-        <Pressable onPress={()=>{
-            return(
-                <View>
-                    <NewDropDown dropdownlist={['Delete account', 'Logout'], title="Settings"}/>
-                </View>
-            )
-        }}>
-            <NavBar name ={name} profile={profile}/>
-        </Pressable>
+            
+        <NavBar name ={name} profile={profile}/>
+        
         
         <ScrollView style={styles.container}>
+
+        {/* <Button onPress={()=>{setModalVisible(true)}}>open</Button>
+           <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+                }}>
+                <View style={{backgroundColor: 'green', width: '100%', height:'50%'}}>
+                <View style={{backgroundColor:'blue'}}>
+                    <Text style={styles.modalText}>Hello World!</Text>
+                    <Pressable
+                    style={{backgroundColor:'red'}}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Text style={styles.textStyle}>Hide Modal</Text>
+                    </Pressable>
+                </View>
+                </View>
+            </Modal> */}
+
+
             <View style={styles.con}>
                 <AnimatedCircularProgress
                     size={200}

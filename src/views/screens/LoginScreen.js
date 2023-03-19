@@ -14,7 +14,7 @@ import { getProfileInformation } from "../connectionToDB/profile"
 import { updateInitialState } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
-import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord,setExerciseToday } from "../../redux/reduxActions";
+import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord,setExerciseToday,setBreakfastToday,setLunchToday,setSnackOneToday,setSnackTwoToday,setDinnerToday } from "../../redux/reduxActions";
 
 
 
@@ -100,6 +100,14 @@ export default function LoginScreen({ navigation }) {
                             if (res.userDetails.state.back) dispatch(setBack())
                             if (res.userDetails.state.waist) dispatch(setWaist())
 
+                            //state setting for diet
+                            if (res.userDetails.state.todayBreakfastDone) dispatch(setBreakfastToday())
+                            if (res.userDetails.state.todayLunchDone) dispatch(setLunchToday())
+                            if (res.userDetails.state.todaySnackOneDone) dispatch(setSnackOneToday())
+                            if (res.userDetails.state.todaySnackTwoDone) dispatch(setSnackTwoToday())
+                            if (res.userDetails.state.todayDinnerDone) dispatch(setDinnerToday())
+
+
                             //todayExerciseDone is initially false already
                             //now set record
                             date = (new Date()).getDate()
@@ -115,10 +123,14 @@ export default function LoginScreen({ navigation }) {
                                     dispatch(setExerciseRecord())
                                 }
                             }
+                            //if the gotten record does not have missed exercise days
+
                              //if today exercise is true then update the state todayExerciseDone
                              if (res.userDetails.state.todayExerciseDone) {
                                 dispatch(setExerciseToday())
                             }
+
+                        
 
 
 
