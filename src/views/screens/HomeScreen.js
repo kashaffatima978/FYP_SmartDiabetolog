@@ -33,6 +33,7 @@ export default function HomeScreen({ navigation, prop }) {
             .then((res) => {
                 console.log("here", res)
                 console.log("state", res.userDetails.state)
+                setName(res.userDetails.name)
                 if(res.userDetails.weight==undefined|| res.userDetails.age==undefined || res.userDetails.heightFeet==undefined){
                     Alert.alert("Set Your Profile","Thank you!")
                     navigation.navigate('Profile')
@@ -54,87 +55,6 @@ export default function HomeScreen({ navigation, prop }) {
         }).start();
     }, [animatedProgress, bloodSugar]);
 
-    // const [modalVisible, setModalVisible] = useState(false);
-    
-      
-
-    
-    // return(
-    //     <View>
-            
-    //     <NavBar name ={name} profile={profile}/>
-        
-        
-    //     <ScrollView style={styles.container}>
-
-    //     {/* <Button onPress={()=>{setModalVisible(true)}}>open</Button>
-    //        <Modal
-    //             animationType="slide"
-    //             transparent={true}
-    //             visible={modalVisible}
-    //             onRequestClose={() => {
-    //             Alert.alert('Modal has been closed.');
-    //             setModalVisible(!modalVisible);
-    //             }}>
-    //             <View style={{backgroundColor: 'green', width: '100%', height:'50%'}}>
-    //             <View style={{backgroundColor:'blue'}}>
-    //                 <Text style={styles.modalText}>Hello World!</Text>
-    //                 <Pressable
-    //                 style={{backgroundColor:'red'}}
-    //                 onPress={() => setModalVisible(!modalVisible)}>
-    //                 <Text style={styles.textStyle}>Hide Modal</Text>
-    //                 </Pressable>
-    //             </View>
-    //             </View>
-    //         </Modal> */}
-
-
-    //         <View style={styles.con}>
-    //             <AnimatedCircularProgress
-    //                 size={200}
-    //                 width={8}
-    //                 fill={animatedProgress}
-    //                 tintColor="#6A6DB0"
-    //                 backgroundColor="#E2E4FF"
-    //                 rotation={0}
-    //                 lineCap="round"
-    //             >
-    //                 {() => (
-    //                 ((bloodSugar >= 80)&&(bloodSugar <130))?
-    //                     <Image
-    //                         source={require('../../../assets/Images/normal.png')}
-    //                         resizeMode="center"
-    //                         style={[styles.image,{width: 250, height:250}]}
-    //                     />
-    //                     : 
-    //                     <Image
-    //                         style={[styles.image,{width: 200, height:200}]}
-    //                         source={require('../../../assets/Images/pain.png')}
-    //                         resizeMode="center"
-    //                     />
-                    
-    //                 )}
-    //             </AnimatedCircularProgress>
-    //             <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text> 
-    //         </View>
-    //         <View style={{marginTop: 16, padding: 20}}>
-    //             <Text style={[styles.text, {alignSelf: "flex-start", fontSize: 16, fontWeight: "bold"}]}>Daily Inputs</Text>
-    //         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-    //             <Pressable onPress={()=>{navigation.navigate('Tracker')}}>
-    //                 <View style={{
-    //                     backgroundColor: "#6A6DB0",
-    //                     width: 150, 
-    //                     height:190, 
-    //                     borderRadius: 20, 
-    //                     marginTop: 20, 
-    //                     padding: 10,
-    //                     marginRight: 15
-    //                 }}>
-    //                     <View style ={{alignItems: "center", marginTop: 50}}>
-    //                         <View style={{backgroundColor: 'white', justifyContent: "center", width: '40%',borderRadius: 50 }}> 
-    //                             <Text style ={{fontSize: 40, color: 'black', alignSelf: "center"}}>+</Text>
-    //this useEffect tracks the date
-    // On date change the status for the user state changes and get stores in db
     const [date, setDate] = useState(new Date().getDate());
     useEffect(() => {
         const intervalId = setInterval(() => {

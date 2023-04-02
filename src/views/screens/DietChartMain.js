@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import colors from "../../files/Colors";
 import { CircularProgress } from 'react-native-circular-progress';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, Image, View, Touchable, Modal, TouchableOpacity, Animated } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet,Pressable, Text, useColorScheme, Image, View, Touchable, Modal, TouchableOpacity, Animated } from 'react-native';
 import { storeUserState } from "../connectionToDB/authentication"
 
 import { getProfileInformation } from "../connectionToDB/profile"
@@ -140,9 +140,16 @@ export default DietChartMain = function ({ navigation }) {
     const addMeal = ()=>{
       navigation.navigate('AddMeal')
     }
+
     const BreakfastComponent = () => {
       return (
-        <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
+        <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={()=>{
+          axios.post(ip+':8000/getRecipe', {'name': breakfast[0]}).
+          then((res)=>{
+            console.log(res.data)
+          })
+          .catch((err)=>console.log(err))
+        }}>
           <FAB
             disabled={isBreakfastEnabled ? true : false}
             onPress={() => { dispatch(setBreakfastToday()); console.log(store.getState()) }}
@@ -150,7 +157,7 @@ export default DietChartMain = function ({ navigation }) {
             { backgroundColor: isBreakfastEnabled ? "gray" : "#6A6DB0" }]}
             small icon="check" color='white' />
           <MealCard style={{ zIndex: 1 }} title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
-        </View>
+        </Pressable>
       )
     }
   

@@ -63,7 +63,7 @@ export default function Retinopathy({navigation}){
                         setConfidence(response.data.confidence)
                     })
                     .catch((error) => {
-                        setError('Not a Fundus image')
+                        // setError('Not a Fundus image')
                         console.error(error);
                     }
                 );
