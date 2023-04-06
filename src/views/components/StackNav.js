@@ -42,6 +42,7 @@ import ExerciseSetting from "../screens/ExerciseSetting";
 import MainExerciseStartPage from "../screens/MainExerciseStartPage";
 import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
 import { Recipe } from "../screens/Recipe";
+import BlogList from "../screens/BlogList";
 
 
 export default function StackNav(){
@@ -78,7 +79,7 @@ export default function StackNav(){
         <Stack.Screen name="InsulinMed" component={InsulinMed}/>
         <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine}/>
         <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain}/>
-        {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
+        <Stack.Screen name="BlogList" component={BlogList}/>
         <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions}/>
         <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions}/>
         <Stack.Screen name="AddFoodAllergicReactions" component={AddFoodAllergicReactions}/>

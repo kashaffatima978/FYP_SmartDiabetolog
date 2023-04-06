@@ -203,7 +203,7 @@ export default function HomeScreen({ navigation, prop }) {
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Awareness</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#FCE0D7" }]} onPress={() => { navigation.navigate('Diet') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#FCE0D7" }]} onPress={() => { navigation.navigate('BlogList') }}>
                             <Text style={[styles.boxText, { color: '#9d8189' }]}>Blogs</Text>
                         </Pressable>
 

@@ -86,9 +86,6 @@ export default function Retinopathy({navigation}){
                 <Text style={styles.ResultText}>Confidence: {(confidence*100).toFixed(0)}% </Text>
             </View>: null}
             {(photo!=null)?<Image source={{uri: photo}} style={{width: 200, height: 200, alignSelf: "center", borderRadius: 20}}/>:null}
-            
-            
-           
         </View>
     );
 };
