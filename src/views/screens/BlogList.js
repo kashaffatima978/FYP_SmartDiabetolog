@@ -5,11 +5,13 @@ import { Card, Title, Paragraph } from 'react-native-paper';
 import { IP } from '../../files/information';
 import axios from 'axios';
 import { Linking } from 'react-native';
+import Loader from "../components/loader";
 
 const BlogList = ({ navigation }) => {
   const [mount, setMount]= useState(0)
   const ip = `http://${IP}:8000`
   const [blogs, setBlogs] = useState([])
+  const [loader, setLoader] = useState(true)
 
   useEffect(()=>{
 
@@ -18,6 +20,7 @@ const BlogList = ({ navigation }) => {
       then((res)=>{
         console.log(res.data.blogs)
         setBlogs(res.data.blogs)
+        setLoader(false)
       })
       .catch((err)=>{console.log("error in blogs", err)})
       setMount(1);
@@ -47,12 +50,17 @@ const BlogList = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Loader visible={loader}></Loader>
       <Heading name={'Diabetes Blogs'} />
-      {blogs!=null?<FlatList
-        data={blogs}
-        renderItem={renderItem}
-        // keyExtractor={(item) => item.id.toString()}
-      />:null}
+      
+      {blogs!=null?
+      <>
+        <FlatList
+          data={blogs}
+          renderItem={renderItem}
+        />
+      </>
+      :null}
     </View>
   );
 };

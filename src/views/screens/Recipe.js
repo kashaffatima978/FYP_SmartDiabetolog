@@ -6,6 +6,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { block } from "react-native-reanimated";
 import Loader from "../components/loader";
+import { Heading } from "../components/Heading";
 
 
 export const Recipe=({navigation, route})=>{
@@ -16,13 +17,12 @@ export const Recipe=({navigation, route})=>{
     const[prepTime, setPrepTime]=useState(0)
     const[cookTime, setCookTime]=useState(0)
     const [mount, setMount] = useState(0)
-    const [loader, setLoader] = useState(false)
+    const [loader, setLoader] = useState(true)
 
     
     const ip=`http://${IP}`
     
     useEffect(() => {
-        setLoader(true)
         if(mount==0){
             axios.post(ip+':8000/getRecipe', {'name': route.params.name}).
             then((res)=>{
@@ -33,19 +33,23 @@ export const Recipe=({navigation, route})=>{
                 setCookTime(res.data.cooktime)
                 setMethod(res.data.method)
                 setIngredient(res.data.ingredient )
+                setLoader(false)
             })
             .catch((err)=>console.log(err))
             setMount(1)
         }
-        setLoader(false)
+        
     }, [mount]);
 
     
 
     
     return (
-            <ScrollView style={styles.container}>
-                <Loader visible={loader}></Loader>
+        <>
+        <Loader visible={loader}/>
+        <ScrollView style={styles.container}>
+            {/* <Heading name={'Recipe'} style={{height: 100}}/> */}
+            
             {prepTime!=0?
             <>
                 <Image source ={{uri: imgURL}} style={styles.image}/>
@@ -82,7 +86,8 @@ export const Recipe=({navigation, route})=>{
             :null
 
             }
-            </ScrollView>
+        </ScrollView>
+        </>
     );
 }
 

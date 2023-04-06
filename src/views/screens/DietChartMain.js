@@ -45,7 +45,7 @@ export default DietChartMain = function ({ navigation }) {
   const[snack2, setSnack2]= useState([])
   const[dinner, setDinner]= useState([])
   const[gotDiet, setGotDiet]= useState(false)
-  const[loader, setLoader]= useState(false)
+  const[loader, setLoader]= useState(true)
   const [isBreakfastEnabled, setIsBreakfastEnabled] = useState((!store.getState()) ? false : store.getState().todayBreakfastDone);
   const [isLunchEnabled, setIsLunchEnabled] = useState((!store.getState()) ? false : store.getState().todayLunchDone);
   const [isSnackOneEnabled, setIsSnackOneEnabled] = useState((!store.getState()) ? false : store.getState().todaySnackOneDone);
@@ -75,10 +75,6 @@ export default DietChartMain = function ({ navigation }) {
     
     useEffect(()=>{
       if(gotDiet==false){
-        setLoader(true)
-        setTimeout(()=>{
-          setLoader(false)
-        }, 4000)
         axios.post(ip+':8000/dietPlan', {'calories': totalCalories})
         .then((response)=>{
           setBreakfast(response.data.breakfast)
@@ -87,6 +83,7 @@ export default DietChartMain = function ({ navigation }) {
           setSnack2(response.data.snack2)
           setDinner(response.data.dinner)
           setGotDiet(true)
+          setLoader(false)
           
       })
       .catch((err)=>{
