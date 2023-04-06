@@ -144,11 +144,10 @@ export default DietChartMain = function ({ navigation }) {
     const BreakfastComponent = () => {
       return (
         <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={()=>{
-          axios.post(ip+':8000/getRecipe', {'name': breakfast[0]}).
-          then((res)=>{
-            console.log(res.data)
+          navigation.navigate("Recipe",{
+            name: breakfast[0],
+            img: breakfast[5]
           })
-          .catch((err)=>console.log(err))
         }}>
           <FAB
             disabled={isBreakfastEnabled ? true : false}
@@ -163,7 +162,12 @@ export default DietChartMain = function ({ navigation }) {
   
     const LunchComponent = () => {
       return (
-        <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+        <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={()=>{
+          navigation.navigate("Recipe",{
+            name: lunch[0],
+            img: lunch[5]
+          })
+        }}>
           <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
           <FAB
             disabled={isLunchEnabled ? true : false}
@@ -171,13 +175,18 @@ export default DietChartMain = function ({ navigation }) {
             style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
             { backgroundColor: isLunchEnabled ? "gray" : "#6A6DB0" }]}
             small icon="check" color='white' />
-        </View>
+        </Pressable>
       )
     }
   
     const DinnerComponent = () => {
       return (
-        <View style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+        <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={()=>{
+          navigation.navigate("Recipe",{
+            name: dinner[0],
+            img: dinner[5]
+          })
+        }}>
           <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
           <FAB disabled={isDinnerEnabled ? true : false}
             onPress={() => {
@@ -187,15 +196,29 @@ export default DietChartMain = function ({ navigation }) {
             style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
             { backgroundColor: isDinnerEnabled ? "gray" : "#6A6DB0" }]}
             small icon="check" color='white' />
-        </View>
+        </Pressable>
       )
     }
   
     const SnackComponent = () => {
       return (
         <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
-          <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
-          <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
+          <Pressable onPress={()=>{
+          navigation.navigate("Recipe",{
+            name: snack1[0],
+            img: snack1[5]
+          })
+        }}>
+            <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
+          </Pressable>
+          <Pressable onPress={()=>{
+            navigation.navigate("Recipe",{
+              name: snack2[0],
+              img: snack2[5]
+            })
+          }}>
+            <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
+          </Pressable>
           <FAB
             disabled={isSnackOneEnabled ? true : false}
             onPress={() => { dispatch(setSnackOneToday()); console.log(store.getState());  }}

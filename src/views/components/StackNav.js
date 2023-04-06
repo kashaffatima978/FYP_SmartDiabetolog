@@ -41,6 +41,7 @@ import MainExercisePage from "../screens/MainExercise";
 import ExerciseSetting from "../screens/ExerciseSetting";
 import MainExerciseStartPage from "../screens/MainExerciseStartPage";
 import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
+import { Recipe } from "../screens/Recipe";
 
 
 export default function StackNav(){
@@ -58,7 +59,7 @@ export default function StackNav(){
         <Stack.Screen name="Loading" component={Loading}/>
         <Stack.Screen name="Home" component={TabNav} />
         
-        {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
+        <Stack.Screen name="Recipe" component={Recipe} />
         <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
         <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
         <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
