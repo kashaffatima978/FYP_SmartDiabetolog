@@ -47,9 +47,8 @@ export const Recipe=({navigation, route})=>{
     return (
         <>
         <Loader visible={loader}/>
+        <Heading name={'Recipe'}/>
         <ScrollView style={styles.container}>
-            {/* <Heading name={'Recipe'} style={{height: 100}}/> */}
-            
             {prepTime!=0?
             <>
                 <Image source ={{uri: imgURL}} style={styles.image}/>
@@ -62,7 +61,7 @@ export const Recipe=({navigation, route})=>{
                     <Text style={styles.serve}>{cookTime}</Text>
                 </View>
                 <View style={{padding: 10, backgroundColor:'white', marginLeft: 10, marginRight: 10, marginBottom: 25}} >
-                    <Text style={styles.title}>Ingredients</Text>
+                    <Text style={[styles.title, {marginBottom:10}]}>Ingredients</Text>
                     {ingredient.map((element, index)=>{
                         return(
                             <View style={{width: '90%', height: 50, borderBottomWidth: 1, borderColor:'lightgrey'}}>
@@ -72,7 +71,7 @@ export const Recipe=({navigation, route})=>{
                     })}
                 </View>
                 <View style={{padding: 10, backgroundColor:'white', marginLeft: 10, marginRight: 10, marginBottom: 10}} >
-                    <Text style={styles.title}>Method</Text>
+                    <Text style={[styles.title, {marginBottom:10}]}>Method</Text>
                     {method.map((element, index)=>{
                         return(
                             <View style={{width: '90%', borderBottomWidth: 1, borderColor:'lightgrey'}}>

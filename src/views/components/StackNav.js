@@ -43,7 +43,7 @@ import MainExerciseStartPage from "../screens/MainExerciseStartPage";
 import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
 import { Recipe } from "../screens/Recipe";
 import BlogList from "../screens/BlogList";
-
+import Videos from "../screens/Videos";
 
 export default function StackNav(){
   const Stack = createNativeStackNavigator();
@@ -59,7 +59,7 @@ export default function StackNav(){
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Loading" component={Loading}/>
         <Stack.Screen name="Home" component={TabNav} />
-        
+        <Stack.Screen name="Videos" component={Videos}/>
         <Stack.Screen name="Recipe" component={Recipe} />
         <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
         <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
