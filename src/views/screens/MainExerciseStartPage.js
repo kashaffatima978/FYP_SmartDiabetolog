@@ -110,7 +110,7 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
                             <Image style={{ width: 100, height: 100 }} source={{ uri: val[2] }} />
                             <View style={{ justifyContent: "center", alignItems: "center", marginLeft: "8%" }}>
                                 <Text style={{ color: "black" }}>{val[4]}</Text>
-                                <Text style={{ color: "black" }}>{seconds}</Text>
+                                <Text style={{ color: "black" }}> </Text>
                             </View>
                         </View>
                     )

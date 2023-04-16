@@ -6,7 +6,7 @@ import React,{ useEffect, useState } from "react";
 import AddBloodPressure from "../screens/AddBloodPressure";
 import AddBloodSugar from "../screens/AddBloodSugar";
 import AddCholesterol from "../screens/AddCholesterol";
-import AddFoodAllergicReactions from "../screens/AddFoodAllergicReactions";
+import AddAllergicReactions from "../screens/AddAllergicReactions";
 import AddInsulinMedicine from "../screens/AddInsulinMed";
 import AddMeal from "../screens/AddMeal";
 import AddMedicineAllergicReactions from "../screens/AddMedicineAllergicReactions";
@@ -25,7 +25,7 @@ import InsulinMed from "../screens/InsulinMed";
 import Loading from "../screens/Loading";
 import LoginScreen from "../screens/LoginScreen";
 import LunchPage from "../screens/LunchPage";
-import MedicationMain from "../screens/MedicationMain";
+import AddNewPrescription from "../screens/AddNewPrescription";
 import MedicineAllergicReactions from "../screens/MedicineAllergicReactions";
 import OralMed from "../screens/OralMed";
 import Profile from "../screens/Profile";
@@ -41,13 +41,16 @@ import MainExercisePage from "../screens/MainExercise";
 import ExerciseSetting from "../screens/ExerciseSetting";
 import MainExerciseStartPage from "../screens/MainExerciseStartPage";
 import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
+import Prescription from "../screens/Prescription";
 
 
 export default function StackNav(){
   const Stack = createNativeStackNavigator();
     return (
-      <Stack.Navigator  initialRouteName={'FirstScreen'} screenOptions={ {headerShown: false}}>
+      <Stack.Navigator  initialRouteName={'AllergicReactionMain'} screenOptions={ {headerShown: false}}>
       {/* <Stack.Navigator initialRouteName="FirstScreen"  screenOptions={ {headerShown: false}}> */}
+      <Stack.Screen name="Prescription" component={Prescription}/>
+      <Stack.Screen name="AddNewPrescription" component={AddNewPrescription}/>
         <Stack.Screen  name="MainExercisePage" component={MainExercisePage} />
         <Stack.Screen  name="ExerciseSetting" component={ExerciseSetting} />
         <Stack.Screen  name="MainExerciseStartPage" component={MainExerciseStartPage} />
@@ -71,7 +74,7 @@ export default function StackNav(){
         <Stack.Screen name="Dinner" component={DinnerPage} />
         <Stack.Screen name="Breakfast" component={BreakfastPage} />
         <Stack.Screen name="AddMeal" component={AddMeal} />
-        <Stack.Screen name="MedicationMain" component={MedicationMain}/>
+        
         <Stack.Screen name="OralMed" component={OralMed}/>
         <Stack.Screen name="AddOralMedicine" component={AddOralMedicine}/>
         <Stack.Screen name="InsulinMed" component={InsulinMed}/>
@@ -80,7 +83,7 @@ export default function StackNav(){
         {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
         <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions}/>
         <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions}/>
-        <Stack.Screen name="AddFoodAllergicReactions" component={AddFoodAllergicReactions}/>
+        <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions}/>
         <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions}/>
         <Stack.Screen name="ForgetPassword" component={ForgetPassword}/>
         <Stack.Screen name="EnterCode" component={EnterCode}/>

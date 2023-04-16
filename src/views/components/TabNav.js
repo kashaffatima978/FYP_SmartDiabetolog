@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AllergicReactionMain from "../screens/AllergicReactionMain";
-import MedicationMain from "../screens/MedicationMain";
+import MedicationMain from "../screens/AddNewPrescription";
 import TrackerScreen from "../screens/TrackerScreen";
 import DietFirstMain from "../screens/DietFirstMain";
 import StackNav from "./StackNav";

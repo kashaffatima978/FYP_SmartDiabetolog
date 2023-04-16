@@ -1,76 +1,3 @@
-// import React from "react";
-// import {View,Text,StyleSheet,Image, TouchableOpacity} from "react-native";
-// import Card from "../components/cards";
-// import colors from "../../files/Colors";
-
-
-// export default function AllergicReactionMain({navigation}){
-//     return(
-//         <View style={styles.container}>
-//             <Image style={styles.medImg}source={require("../../../assets/Images/allergicMed.jpg")}/>
-//             <Text style={styles.heading} >Allergic Reaction</Text>
-//             <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('FoodAllergicReactions')}}>
-//                 <Image source={require('../../../assets/Images/foodAllergy.jpg') } style={styles.image}/>
-//                 <Text style={styles.buttonText}>Food Allergic Reaction</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('MedicineAllergicReactions')}}>
-//                 <Image source={require('../../../assets/Images/medicineAllergy.jpg') } style={styles.image}/>
-//                 <Text style={styles.buttonText}>Medication Allergic Reaction</Text>
-//             </TouchableOpacity>
-//         </View>
-//     );
-// };
-
-// const styles=StyleSheet.create({
-//     container:{
-//        flex:1,
-//         backgroundColor: "white",
-//     },
-//     heading:{
-//         fontSize: 30,
-//         fontStyle: "italic",
-//         textAlign: "center",
-//         fontWeight: "bold",
-//         color: 'black',
-//         margin: 15
-//     },
-//     medImg:{
-//         width: "80%",
-//         height: 150,
-//         alignSelf:"center"
-//     },
-
-//     button:{
-//         borderColor:"#b2e7ed",
-//         borderWidth:2,
-//         height:200,
-//         width:"90%",
-//         marginTop:10,
-//         marginBottom:10,
-//         alignSelf: "center",
-//         // elevation: 6,
-//         // shadowColor: '#DDBEA9',
-//     },
-//     buttonText:{
-//         fontWeight:"bold",
-//         fontSize:20,
-//         color:colors.darkGreyBlue,
-//         textAlign:"center",
-//         height:"20%",
-//         width:"100%",
-//         marginTop: 15
-
-//     },
-//     image:{
-//         height:"70%",
-//         width:"50%",
-//         alignSelf:"center",
-//         justifyContent: "center"
-//     },
-
-// });
-
-
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, TextInput, StyleSheet, Image, TouchableOpacity, SafeAreaView, FlatList } from "react-native";
 
@@ -82,17 +9,14 @@ import { Avatar, Title, Paragraph, Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { MyButton } from "../components/button";
 import { updatePrescriptionTitle, viewParticularPrescriptionOralMedicines, deletePartiularPrescription, viewFastInsulin, viewLongInsulin } from "../connectionToDB/prescription"
-import {
-    addAllergicReaction, updateAllergicReaction, deleteAllergicReaction,
-    viewParticularAllergicReaction, viewAllTypeAllergicReaction
-} from "../connectionToDB/reactions"
-export default function AllergicReactionMain({ navigation, route }) {
 
-
-
+export default function AddNewPrescription({ navigation, route }) {
+    const name = route.params.title
+    const id = route.params.id
+    const [title, setTitle] = useState(name)
 
     const saveTitle = () => {
-        updatePrescriptionTitle("j")
+        updatePrescriptionTitle(id, title)
             .then((data) => {
                 console.log("updating prescription title", data);
             })
@@ -100,7 +24,7 @@ export default function AllergicReactionMain({ navigation, route }) {
     }
 
     const deletePrescription = () => {
-        deletePartiularPrescription()
+        deletePartiularPrescription(route.params.id)
             .then((data) => {
                 console.log("deletePrescription", data);
                 navigation.replace("Prescription")
@@ -108,18 +32,21 @@ export default function AllergicReactionMain({ navigation, route }) {
             .catch((err) => { console.log("Error in deletePrescription in AddNewPrescription", err) })
     }
 
-    const Food = () => {
-        const [foodReactions, setFoodReactions] = useState([])
+    const Oral = () => {
+        const [oralMedications, setOralMedications] = useState([
+        ])
         const [mount, setMount] = useState(0)
 
         const loadDataOnlyOnce = () => {
-            viewAllTypeAllergicReaction("food")
+            viewParticularPrescriptionOralMedicines(route.params.id)
                 .then((res) => {
-                    console.log("in loadDataOnlyOnce in AllergicReactionMain")
-                    console.log("allergic reaction for food are", res)
-                    setFoodReactions(() => { return res })
+                    console.log("in loadDataOnlyOnce in AddNewPrescription")
+                    console.log("oral medications in this prescription are", res)
+                    setOralMedications(() => { return res })
+
+
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AllergicReactionMain ", err) })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err) })
 
 
         };
@@ -131,15 +58,15 @@ export default function AllergicReactionMain({ navigation, route }) {
             }
         }, [mount]);
 
-        console.log("data in flatlist is ", foodReactions)
+        console.log("data in flatlist is ", oralMedications)
         return (
             <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
                 <FlatList style={styles.flatlist}
                     showsVerticalScrollIndicator={false}
-                    data={foodReactions}
+                    data={oralMedications}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddAllergicReactions", { "id": item._id }) }}>
+                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddOralMedicine", { "title": title, "id": id, "oralMedicineId": item._id }) }}>
                                 <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                     <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                         <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)} </Text>
@@ -154,39 +81,57 @@ export default function AllergicReactionMain({ navigation, route }) {
                                             </View>
 
                                             <View style={{ flexDirection: "row" }}>
-                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Symptoms: </Paragraph>
-                                                <Paragraph>{item.symptoms}</Paragraph>
+                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Units: </Paragraph>
+                                                <Paragraph>{item.unit}</Paragraph>
                                             </View>
 
 
                                             <View style={{ flexDirection: "row" }}>
-                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Description: </Paragraph>
-                                                <Paragraph>{item.description}</Paragraph>
+                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Dosage: </Paragraph>
+                                                <Paragraph>{item.dosage}</Paragraph>
                                             </View>
+
+                                            <View style={{ flexDirection: "row" }}>
+                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Time: </Paragraph>
+                                                <Paragraph>{item.time}</Paragraph>
+                                            </View>
+
+
                                         </Card.Content>
                                     </View>
                                 </Card>
                             </TouchableOpacity>
+
                         )
                     }}
                 >
                 </FlatList>
-
+                <Fab onPress={() => { navigation.navigate("AddOralMedicine", { "title": title, "id": id }) }}></Fab>
             </View>
         )
     }
-    const Medication = () => {
-        const [medicationReactions, setMedicationReactions] = useState([])
+    const Insulin = () => {
+
+        const [longInsulinMedication, setLongInsulinMedication] = useState()
+        const [fastInsulinMedication, setFastInsulinMedication] = useState()
         const [mount, setMount] = useState(0)
+        //viewLongInsulin, viewFastInsulin
 
         const loadDataOnlyOnce = () => {
-            viewAllTypeAllergicReaction("medication")
+            viewLongInsulin().then((res) => {
+                console.log("in loadDataOnlyOnce in AddNewPrescription")
+                console.log("oral medications in this prescription are", res)
+                setLongInsulinMedication(res)
+            })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err) })
+
+            viewFastInsulin()
                 .then((res) => {
-                    console.log("in loadDataOnlyOnce in AllergicReactionMain")
-                    console.log("allergic reaction for medication are", res)
-                    setMedicationReactions(() => { return res })
+                    console.log("in loadDataOnlyOnce in AddNewPrescription")
+                    console.log("oral medications in this prescription are", res)
+                    setFastInsulinMedication(res)
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AllergicReactionMain ", err) })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err) })
 
 
         };
@@ -198,47 +143,84 @@ export default function AllergicReactionMain({ navigation, route }) {
             }
         }, [mount]);
 
-        console.log("data in flatlist is ", medicationReactions)
+
         return (
             <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
-                <FlatList style={styles.flatlist}
-                    showsVerticalScrollIndicator={false}
-                    data={medicationReactions}
-                    renderItem={({ item }) => {
-                        return (
-                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddAllergicReactions", { "id": item._id }) }}>
-                                <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
-                                    <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
-                                        <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)} </Text>
-                                        {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
-                                    </View>
 
-                                    <View style={{ margin: 10 }}>
-                                        <Card.Content style={{ flexDirection: "column" }}>
-                                            <View style={{ flexDirection: "row" }}>
-                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Name: </Paragraph>
-                                                <Paragraph>{item.name}</Paragraph>
-                                            </View>
+                {(!fastInsulinMedication || fastInsulinMedication[0]===undefined) ? null :
+                    (
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "fastInsulinID": fastInsulinMedication[0]._id }) }}>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
+                                <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
+                                    <Text style={styles.titleText}>Date: {(fastInsulinMedication[0].createdAt).slice(0, 10)} </Text>
 
-                                            <View style={{ flexDirection: "row" }}>
-                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Symptoms: </Paragraph>
-                                                <Paragraph>{item.symptoms}</Paragraph>
-                                            </View>
+                                </View>
+                                <View style={{ margin: 10 }}>
+                                    <Card.Content style={{ flexDirection: "column" }}>
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Fast Acting Insulin </Paragraph>
+                                        </View>
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Name: </Paragraph>
+                                            <Paragraph>{fastInsulinMedication[0].name}</Paragraph>
+                                        </View>
+
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Units: </Paragraph>
+                                            <Paragraph>{fastInsulinMedication[0].isf}</Paragraph>
+                                        </View>
 
 
-                                            <View style={{ flexDirection: "row" }}>
-                                                <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Description: </Paragraph>
-                                                <Paragraph>{item.description}</Paragraph>
-                                            </View>
-                                        </Card.Content>
-                                    </View>
-                                </Card>
-                            </TouchableOpacity>
-                        )
-                    }}
-                >
-                </FlatList>
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Dosage: </Paragraph>
+                                            <Paragraph>{fastInsulinMedication[0].carb_ratio}</Paragraph>
+                                        </View>
 
+                                    </Card.Content>
+                                </View>
+                            </Card>
+                        </TouchableOpacity>
+
+                    )
+                }
+
+                {(!longInsulinMedication || longInsulinMedication[0]===undefined) ? null :
+                    (
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "longInsulinID": longInsulinMedication[0]._id }) }}>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
+                                <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
+                                    <Text style={styles.titleText}>Date: {(longInsulinMedication[0].createdAt).slice(0, 10)} </Text>
+
+                                </View>
+                                <View style={{ margin: 10 }}>
+                                    <Card.Content style={{ flexDirection: "column" }}>
+                                    <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Long Acting Insulin </Paragraph>
+                                        </View>
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Name: </Paragraph>
+                                            <Paragraph>{longInsulinMedication[0].name}</Paragraph>
+                                        </View>
+
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Time: </Paragraph>
+                                            <Paragraph>{longInsulinMedication[0].time}</Paragraph>
+                                        </View>
+
+
+                                        <View style={{ flexDirection: "row" }}>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Units: </Paragraph>
+                                            <Paragraph>{longInsulinMedication[0].units}</Paragraph>
+                                        </View>
+
+                                    </Card.Content>
+                                </View>
+                            </Card>
+                        </TouchableOpacity>
+                    )
+                }
+
+                <Fab onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id }) }}></Fab>
             </View>
         )
     }
@@ -248,15 +230,31 @@ export default function AllergicReactionMain({ navigation, route }) {
 
         <SafeAreaView style={styles.safeAreaCont}>
 
-            <Heading name={"Allergic Reactions"} />
+            <Heading name={title} />
+            <TouchableOpacity
+                onPress={deletePrescription}
+                activeOpacity={0.5} style={[styles.touchOpacity, { width: "50%", }]}>
+                <Text style={styles.textButton}>delete</Text>
+            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', marginTop: 5, width: "100%" }}>
+                <Icon name="heartbeat" size={25} style={styles.icon} />
+                <View style={{ width: "60%" }}>
+                    <Text style={{ color: "black" }}>Prescription Title</Text>
+                    <TextInput value={title} onChangeText={text => setTitle(text)} style={styles.input} placeholder="Enter Prescription Name" placeholderTextColor={"gray"} />
+                </View>
+                <TouchableOpacity
+                    onPress={saveTitle}
+                    activeOpacity={0.5} style={styles.touchOpacity}>
+                    <Text style={styles.textButton}>Save</Text>
+                </TouchableOpacity>
+            </View>
 
             <Tab.Navigator >
-                <Tab.Screen name="Food" component={Food} />
+                <Tab.Screen name="Oral" component={Oral} />
 
-                <Tab.Screen name="Medication" component={Medication} />
+                <Tab.Screen name="Insulin" component={Insulin} />
 
             </Tab.Navigator >
-            <Fab onPress={() => { navigation.navigate("AddAllergicReactions",{"id":"undefined"}) }}></Fab>
 
         </SafeAreaView>
     );

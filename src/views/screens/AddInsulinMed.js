@@ -1,98 +1,375 @@
-import React from "react";
-import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import generalStyles from "../../files/generalStyle";
+import { MainHeading } from "../components/mainHeading";
+import colors from "../../files/Colors";
 import { Input } from "../components/input";
-import NewDropDown from "../components/NewDropDown"
-import NewPicker from "../components/NewPicker";
+import MyDropDown from "../components/dropdown";
+import Picker from "../components/picker";
+import { MyButton } from "../components/button";
+import { addBloodSugarRecord, viewBloodSugarInstance, updateBloodSugarRecord, deleteBloodSugarInstance } from "../connectionToDB/trackerBloodSugar"
+import SelectDropdown from "react-native-select-dropdown";
+import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {
+    viewLongInsulin, viewFastInsulin, updateLongInsulin, updateFastInsulin, addFastInsulin,
+    deleteFastInsulin, addLongInsulin, deleteLongInsulin
+} from "../connectionToDB/prescription"
 
-export default function AddInsulinMedicine({navigation}){
-    return(
-        <SafeAreaView style={styles.container}>
-        <View style={styles.textView}>
-            <Text style={styles.text}>Add Insulin Medicine</Text>
-        </View>
 
-        <ScrollView style={styles.container2}
-        showsVerticalScrollIndicator={false}>
-           <View style={styles.inputContainer}>
-           <NewDropDown  dropdownlist={["long acting insulin","fast acting insulin"]} defaultValue="select insulin type"
-               title="Type" />
-               </View>
 
-            <View style={styles.inputContainer}>
-                <Input label="Name"
-                placeholder="Enter insulin Name"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+export default AddInsulinMedicine = function ({ navigation, route }) {
 
-            <View style={styles.inputContainer}>
-                <Input label="Senstivity"
-                placeholder="Enter insulin senstivity"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+    const { title, id } = route.params
+    const [mount, setMount] = useState(0)
+    const loadDataOnlyOnce = () => {
+        if (route.params.longInsulinID) {
+            viewLongInsulin(route.params.longInsulinID)
+                .then((res) => {
+                    console.log("in loadDataOnlyOnce in AddInsulinMedicine for long")
+                    console.log("long insulin medication details is", res)
+                    setInsulinType("long")
+                    setName(res[0].name)
+                    setUnits(res[0].units)
+                    setTime(res[0].time)
+                })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err) })
+        }
+        if (route.params.fastInsulinID) {
+            viewFastInsulin(route.params.longInsulinID)
+                .then((res) => {
+                    console.log("in loadDataOnlyOnce in AddInsulinMedicine for fast")
+                    console.log("fast insulin medication details is", res)
+                    setInsulinType("fast")
+                    setName(res[0].name)
+                    setISF(res[0].isf)
+                    setCarbRatio(res[0].carb_ratio)
+                })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err) })
+        }
 
-            <View style={styles.inputContainer}>
-                <Input label="Dosage"
-                placeholder="Enter carb ratio"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+    };
+    useEffect(() => {
+        if (mount === 0) {
+            //setLoader(true)
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+    }, [mount]);
 
-            <TouchableOpacity style={styles.saveButtonContainer}>
-                <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
 
-        
 
-        </ScrollView>
 
-    </SafeAreaView>
-    )
-};
+    const [insulinType, setInsulinType] = useState("fast")
+    const [name, setName] = useState("")
+    const [units, setUnits] = useState("")
+    const [time, setTime] = useState("22:00")
+    const [ISF, setISF] = useState("")
+    const [carbRatio, setCarbRatio] = useState("")
 
-const styles=StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:"white",
-        flexDirection:"column"
-    },
-    textView:{     
-        flex:0.1,
-        backgroundColor:"#DDBEA9",
-        justifyContent:"center",
-        alignItems:"center"
-    },
-    text:{
-        fontSize:25,
-        color:"black",
-        fontWeight:"bold"
-    },
-    container2:{
-        flex:0.9,
-        backgroundColor:"white"
-    },
-    inputContainer:{
-        backgroundColor:"#DDBEA9",
-        marginVertical:"3%",
-        marginHorizontal:"3%",
-        padding:"2%"
-    },
-    saveButtonContainer:{
-        marginVertical:"3%",
-        marginHorizontal:"3%",
-        backgroundColor:"#DDBEA9",
-        width:"30%",
-        height:40,
-        alignItems:"center",
-        justifyContent:"center",
-        alignSelf:"flex-end", 
-        borderRadius:30,
-    },
-    saveButtonText:{
-        color:"black",
-        fontWeight:"bold",
-        fontSize:16
+    const saveLong = () => {
+        addLongInsulin(name, units, time)
+            .then((data) => {
+                console.log("adding long insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in saveLong in AddInsulinMed", err) })
     }
 
-})
+    const updateLong=()=>{
+        updateLongInsulin(route.params.longInsulinID, name, units, time)
+            .then((data) => {
+                console.log("updating long insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in updateLong in AddInsulinMed", err) })
+    }
+    const deleteLong=()=>{
+        deleteLongInsulin(route.params.longInsulinID)
+            .then((data) => {
+                console.log("deleting long insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in deleteLong in AddInsulinMed", err) })
+    }
+
+    const saveFast = () => {
+        addFastInsulin(name, ISF, carbRatio)
+            .then((data) => {
+                console.log("adding fast insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in saveFast in AddInsulinMed", err) })
+    }
+
+    const updateFast=()=>{
+        updateFastInsulin(route.params.fastInsulinID, name, ISF, carbRatio)
+            .then((data) => {
+                console.log("updating fast insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in updateFast in AddInsulinMed", err) })
+    }
+    const deleteFast=()=>{
+        deleteFastInsulin(route.params.fastInsulinID)
+            .then((data) => {
+                console.log("deleting fast insulin medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in deleteFast in AddInsulinMed", err) })
+    }
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Heading name="Add Insulin" />
+            <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+
+                <SafeAreaView style={[styles.container, { marginTop: 10, marginLeft: 50, marginRight: 28 }]}>
+                    <Text style={[styles.label, { marginBottom: 15 }]}> Insulin Type</Text>
+                    <SelectDropdown
+                        style={styles.dropdown}
+                        data={["Fast Acting Insulin", "Long Acting Insulin"]}
+                        onSelect={(selectedItem, index) => {
+                            console.log(selectedItem, index)
+                            if (selectedItem === "Long Acting Insulin") {
+                                setInsulinType("long")
+                            }
+                            else {
+                                setInsulinType("fast")
+                            }
+                        }}
+
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem;
+
+                        }}
+                        rowTextForSelection={(selectedItem, index) => {
+                            return selectedItem;
+                        }}
+
+                        buttonStyle={{ color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                        buttonTextStyle={
+                            {
+                                fontSize: 14,
+                                color: 'black',
+                                textTransform: "capitalize",
+                                fontWeight: "bold"
+                            }
+                        }
+                        defaultButtonText={insulinType === "fast" ? "Fast Acting Insulin" : "Long Acting Insulin"}
+
+                        dropdownIconPosition="right"
+                        dropdownStyle={{ backgroundColor: "white" }}
+                        rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
+                        rowTextStyle={{ color: colors.greyBlue }}
+
+                    >
+
+                    </SelectDropdown>
+                </SafeAreaView>
+
+                {insulinType === "fast" ?
+                    (
+                        <View>
+                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                                <Icon name="heartbeat" size={25} style={styles.icon} />
+                                <View style={{ width: "85%" }}>
+                                    <Text style={styles.label}>Name</Text>
+                                    <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Insulin Name" placeholderTextColor={"gray"} />
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                                <Icon name="heartbeat" size={25} style={styles.icon} />
+                                <View style={{ width: "85%" }}>
+                                    <Text style={styles.label}>Insulin Sensitivity Factor</Text>
+                                    <TextInput value={`${ISF}`} onChangeText={text => { setISF(text) }} style={styles.input} placeholder="ISF" placeholderTextColor={"gray"} />
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                                <Icon name="heartbeat" size={25} style={styles.icon} />
+                                <View style={{ width: "85%" }}>
+                                    <Text style={styles.label}>Carb Ratio</Text>
+                                    <TextInput value={`${carbRatio}`} onChangeText={text => { setCarbRatio(text) }} style={styles.input} placeholder="Enter Carb Ratio" placeholderTextColor={"gray"} />
+                                </View>
+                            </View>
+                    
+                            {!route.params.fastInsulinID ?
+                                (<MyButton title="Save" onPress={saveFast}></MyButton>)
+                                :
+                                (
+                                    <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                                        <MyButton title="Delete" style={{ width: "20%" }} onPress={deleteFast}></MyButton>
+                                        <MyButton title="Update" onPress={updateFast}></MyButton>
+                                    </View>
+                                )
+                            }
+                        </View>
+                    ) :
+                    (
+                        <View>
+                            <View style={{ marginTop: 10, marginLeft: 50, marginRight: 28 }}>
+                                <Text style={[styles.label, { marginBottom: 15 }]}> Time</Text>
+                                <SelectDropdown
+                                    style={styles.dropdown}
+                                    data={["00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+                                        "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                        "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]}
+                                    onSelect={(selectedItem, index) => {
+                                        console.log(selectedItem, index)
+                                        setTime(selectedItem)
+                                    }}
+
+                                    buttonTextAfterSelection={(selectedItem, index) => {
+                                        return selectedItem;
+
+                                    }}
+                                    rowTextForSelection={(selectedItem, index) => {
+                                        return selectedItem;
+                                    }}
+
+                                    buttonStyle={{ color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                                    buttonTextStyle={
+                                        {
+                                            fontSize: 14,
+                                            color: 'black',
+                                            textTransform: "capitalize",
+                                            fontWeight: "bold"
+                                        }
+                                    }
+                                    defaultButtonText={time}
+
+                                    dropdownIconPosition="right"
+                                    dropdownStyle={{ backgroundColor: "white" }}
+                                    rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
+                                    rowTextStyle={{ color: colors.greyBlue }}>
+                                </SelectDropdown>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                                <Icon name="heartbeat" size={25} style={styles.icon} />
+                                <View style={{ width: "85%" }}>
+                                    <Text style={styles.label}>Name</Text>
+                                    <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Insulin Name" placeholderTextColor={"gray"} />
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                                <Icon name="heartbeat" size={25} style={styles.icon} />
+                                <View style={{ width: "85%" }}>
+                                    <Text style={styles.label}>Units</Text>
+                                    <TextInput value={`${units}`} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Units" placeholderTextColor={"gray"} />
+                                </View>
+                            </View>
+                            {!route.params.longInsulinID ?
+                                (<MyButton title="Save" onPress={saveLong}></MyButton>)
+                                :
+                                (
+                                    <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                                        <MyButton title="Delete" style={{ width: "20%" }} onPress={deleteLong}></MyButton>
+                                        <MyButton title="Update" onPress={updateLong}></MyButton>
+                                    </View>
+                                )
+                            }
+
+
+
+                        </View>
+                    )
+
+
+                }
+
+
+
+
+
+
+
+
+
+            </ScrollView>
+        </SafeAreaView>
+    )
+}
+
+const styles = StyleSheet.create({
+    label: {
+        color: "black"
+    },
+    text: {
+        marginVertical: 5,
+        marginHorizontal: 5,
+
+        fontSize: 14,
+        color: colors.greyBlue,
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    dropdown: {
+        width: "100%",
+
+    },
+    scroll: {},
+    unitContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        margin: "2%"
+    },
+    radioContainer: {
+        flexDirection: "row"
+    },
+    radioButton: {
+        backgroundColor: '#6A6DB0',
+        width: "15%",
+        height: "90%",
+        borderRadius: 100,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: "5%"
+    },
+    radioCircle: {
+        // backgroundColor: 'red'
+    },
+    text: {
+
+        fontSize: 14,
+        color: colors.greyBlue,
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    icon: {
+        width: "13%",
+        height: 50,
+        backgroundColor: "#b8bedd",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+        borderRadius: 25,
+        textAlign: 'center',
+        margin: 5,
+        verticalAlign: 'middle'
+    },
+    radioText: { color: "black" }
+    , input: {
+        width: '94%',
+        color: "black",
+        // backgroundColor: '#b8bedd',
+        // margin: 10,
+        // alignSelf: 'center',
+        // borderRadius: 10,
+        // padding: 10,
+
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        // elevation: 5,
+    },
+});

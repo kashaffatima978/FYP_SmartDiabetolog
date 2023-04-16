@@ -1,103 +1,339 @@
-import React from "react";
-import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import generalStyles from "../../files/generalStyle";
+import { MainHeading } from "../components/mainHeading";
+import colors from "../../files/Colors";
 import { Input } from "../components/input";
-import NewDropDown from "../components/NewDropDown"
-import NewPicker from "../components/NewPicker";
+import MyDropDown from "../components/dropdown";
+import Picker from "../components/picker";
+import { MyButton } from "../components/button";
+import { addBloodSugarRecord, viewBloodSugarInstance, updateBloodSugarRecord, deleteBloodSugarInstance } from "../connectionToDB/trackerBloodSugar"
+import SelectDropdown from "react-native-select-dropdown";
+import Loader from '../components/loader';
+import { Heading } from "../components/Heading";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { addOralMedicationToPrescription, getOralMedicationDetails, updateOralMedicationDetails, deleteOralMedicationDetails } from "../connectionToDB/prescription"
 
-export default function AddOralMedicine({navigation}){
-    return(
-        <SafeAreaView style={styles.container}>
-        <View style={styles.textView}>
-            <Text style={styles.text}>Add Oral Medicine</Text>
-        </View>
+export default AddOralMedicine = function ({ navigation, route }) {
+    const { title, id } = route.params
+    console.log("id got in AddOralMedicine is ", id)
 
-        <ScrollView style={styles.container2}
-        showsVerticalScrollIndicator={false}>
-           <View style={styles.inputContainer}>
-           <NewDropDown  dropdownlist={["Dietic","Non-diabetic"]} defaultValue="select medicine type"
-               title="Type" />
-               </View>
+    const [mount, setMount] = useState(0)
+    const loadDataOnlyOnce = () => {
+        if (route.params.oralMedicineId) {
+            getOralMedicationDetails(route.params.oralMedicineId)
+                .then((res) => {
+                    console.log("in loadDataOnlyOnce in AddOralMedicine")
+                    console.log("oral medication details is", res)
+                    setType(res.type)
+                    setName(res.name)
+                    setUnits(res.unit)
+                    setDosage(`${res.dosage}`)
+                    setHour(res.time.substring(0, 2))
+                    setMinute(res.time.substring(3))
 
-            <View style={styles.inputContainer}>
-                <Input label="Name"
-                placeholder="Enter Medicine Name"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+                })
+                .catch(err => { console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err) })
+        }
 
-            <View style={styles.inputContainer}>
-                <Input label="Unit"
-                placeholder="Enter medicine unit"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+    };
+    useEffect(() => {
+        if (mount === 0) {
+            //setLoader(true)
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+    }, [mount]);
 
-            <View style={styles.inputContainer}>
-                <Input label="Dosage"
-                placeholder="Enter medicine dosage"
-                inputBackground="white"
-                textColor="black"/>
-            </View>
+    const [type, setType] = useState("nondiabetic")
+    const [name, setName] = useState("")
+    const [units, setUnits] = useState("")
+    const [dosage, setDosage] = useState("")
+    const [hour, setHour] = useState("00")
+    const [minute, setMinute] = useState("00")
 
-
-            <View style={styles.inputContainer}>
-            <NewPicker pickertitle="+" pickermode="time" textColor="black" buttonColor="#4A3C31"/>
-            </View>
-
-            <TouchableOpacity style={styles.saveButtonContainer}>
-                <Text style={styles.saveButtonText}>Save</Text>
-            </TouchableOpacity>
-
-        
-
-        </ScrollView>
-
-    </SafeAreaView>
-    )
-};
-
-const styles=StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:"white",
-        flexDirection:"column"
-    },
-    textView:{     
-        flex:0.1,
-        backgroundColor:"#DDBEA9",
-        justifyContent:"center",
-        alignItems:"center"
-    },
-    text:{
-        fontSize:25,
-        color:"black",
-        fontWeight:"bold"
-    },
-    container2:{
-        flex:0.9,
-        backgroundColor:"white"
-    },
-    inputContainer:{
-        backgroundColor:"#DDBEA9",
-        marginVertical:"3%",
-        marginHorizontal:"3%",
-        padding:"2%"
-    },
-    saveButtonContainer:{
-        marginVertical:"3%",
-        marginHorizontal:"3%",
-        backgroundColor:"#DDBEA9",
-        width:"30%",
-        height:40,
-        alignItems:"center",
-        justifyContent:"center",
-        alignSelf:"flex-end", 
-        borderRadius:30,
-    },
-    saveButtonText:{
-        color:"#4A3C31",
-        fontWeight:"bold",
-        fontSize:16
+    const saveOralMedicine = () => {
+        const time = `${hour}:${minute}`
+        addOralMedicationToPrescription(id, name, dosage, units, type, time)
+            .then((data) => {
+                console.log("adding oral medication", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in add in Prescription", err) })
     }
 
-})
+    const deleteOralMedicine = () => {
+        const time = `${hour}:${minute}`
+        deleteOralMedicationDetails(route.params.oralMedicineId,id)
+            .then((data) => {
+                console.log("deleteOralMedicine ", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in updatein deleteOralMedicine", err) })
+     }
+
+    const updateOralMedicine = () => {
+        const time = `${hour}:${minute}`
+        console.log(id, type, name, units, dosage, time)
+        updateOralMedicationDetails(route.params.oralMedicineId, type, name, units, dosage, time)
+            .then((data) => {
+                console.log(route.params.oralMedicineId, type, name, units, dosage, time)
+                console.log("updateOralMedicine ", data);
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
+            .catch((err) => { console.log("Error in updatein updateOralMedicine", err) })
+    }
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Heading name="Add Oral Medication" />
+            <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+                <SafeAreaView style={[styles.container, { marginTop: 10, marginLeft: 50, marginRight: 28 }]}>
+                    <Text style={[styles.label, { marginBottom: 15 }]}>Medication Type</Text>
+                    <SelectDropdown
+                        style={styles.dropdown}
+                        data={["Diabetic", "Non-Diabetic"]}
+                        onSelect={(selectedItem, index) => {
+                            console.log(selectedItem, index)
+                            if (selectedItem === "Diabetic") {
+                                setType("diabetic")
+                            }
+                            else {
+                                setType("nondiabetic")
+                            }
+                        }}
+
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem;
+
+                        }}
+                        rowTextForSelection={(selectedItem, index) => {
+                            return selectedItem;
+                        }}
+
+                        buttonStyle={{ color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                        buttonTextStyle={
+                            {
+                                fontSize: 14,
+                                color: 'black',
+                                textTransform: "capitalize",
+                                fontWeight: "bold"
+                            }
+                        }
+                        defaultButtonText={type}
+
+                        dropdownIconPosition="right"
+                        dropdownStyle={{ backgroundColor: "white" }}
+                        rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
+                        rowTextStyle={{ color: colors.greyBlue }}
+
+                    >
+
+                    </SelectDropdown>
+                </SafeAreaView>
+
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
+                        <Text style={styles.label}>Name</Text>
+                        <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Medicine Name" placeholderTextColor={"gray"} />
+                    </View>
+                </View>
+
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
+                        <Text style={styles.label}>Units</Text>
+                        <TextInput value={units} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Medicine Units in mg" placeholderTextColor={"gray"} />
+                    </View>
+                </View>
+
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
+                        <Text style={styles.label}>Dosage</Text>
+                        <TextInput value={dosage} onChangeText={text => { setDosage(text) }} style={styles.input} placeholder="Enter Medicine Dosage" placeholderTextColor={"gray"} />
+                    </View>
+                </View>
+
+                <SafeAreaView style={[styles.container, { marginTop: 20, marginLeft: 50, marginRight: 28 }]}>
+                    <Text style={[styles.label, { marginBottom: 15 }]}>Time</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-evenly", alignItems: "center" }}>
+                        <SelectDropdown
+                            style={styles.dropdown}
+                            data={["00", "01", "02", "03", "04", "05", "06", "07",
+                                "08", "09", "10", "11", "12", "13", "14", "15",
+                                "16", "17", "18", "19", "20", "21", "22", "23"]}
+                            onSelect={(selectedItem, index) => {
+                                console.log(selectedItem, index)
+                                setHour(selectedItem)
+                            }}
+
+                            buttonTextAfterSelection={(selectedItem, index) => {
+                                return selectedItem;
+
+                            }}
+                            rowTextForSelection={(selectedItem, index) => {
+                                return selectedItem;
+                            }}
+
+                            buttonStyle={{ color: "red", width: "50%", margin: 6, backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                            buttonTextStyle={
+                                {
+                                    fontSize: 14,
+                                    color: 'black',
+                                    textTransform: "capitalize",
+                                    fontWeight: "bold"
+                                }
+                            }
+                            defaultButtonText={hour}
+
+                            dropdownIconPosition="right"
+                            dropdownStyle={{ backgroundColor: "white" }}
+                            rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
+                            rowTextStyle={{ color: colors.greyBlue }}>
+                        </SelectDropdown>
+                        <SelectDropdown
+                            style={styles.dropdown}
+                            data={["00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+                                "10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+                                "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",
+                                "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+                                "40", "41", "42", "43", "44", "45", "46", "47", "48", "49",
+                                "50", "51", "52", "53", "54", "55", "56", "57", "58", "59",
+                            ]}
+                            onSelect={(selectedItem, index) => {
+                                console.log(selectedItem, index)
+                                setMinute(selectedItem)
+                            }}
+
+                            buttonTextAfterSelection={(selectedItem, index) => {
+                                return selectedItem;
+
+                            }}
+                            rowTextForSelection={(selectedItem, index) => {
+                                return selectedItem;
+                            }}
+
+                            buttonStyle={{ color: "red", width: "50%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+
+                            buttonTextStyle={
+                                {
+                                    fontSize: 14,
+                                    color: 'black',
+                                    textTransform: "capitalize",
+                                    fontWeight: "bold"
+                                }
+                            }
+                            defaultButtonText={minute}
+
+                            dropdownIconPosition="right"
+                            dropdownStyle={{ backgroundColor: "white" }}
+                            rowStyle={{ backgroundColor: '#b8bedd', margin: 4 }}
+                            rowTextStyle={{ color: colors.greyBlue }}>
+                        </SelectDropdown>
+                    </View>
+                    {!route.params.oralMedicineId ?
+                        (<MyButton title="Save" onPress={saveOralMedicine}></MyButton>)
+                        :
+                        (
+                            <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                                <MyButton title="Delete" style={{ width: "20%" }} onPress={deleteOralMedicine}></MyButton>
+                                <MyButton title="Update" onPress={updateOralMedicine}></MyButton>
+                            </View>
+                        )
+                    }
+
+                </SafeAreaView>
+
+
+
+
+
+
+
+
+
+            </ScrollView>
+        </SafeAreaView>
+    )
+}
+
+const styles = StyleSheet.create({
+    label: {
+        color: "black"
+    },
+    text: {
+        marginVertical: 5,
+        marginHorizontal: 5,
+
+        fontSize: 14,
+        color: colors.greyBlue,
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    dropdown: {
+        width: "100%",
+
+    },
+    scroll: {},
+    unitContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        margin: "2%"
+    },
+    radioContainer: {
+        flexDirection: "row"
+    },
+    radioButton: {
+        backgroundColor: '#6A6DB0',
+        width: "15%",
+        height: "90%",
+        borderRadius: 100,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: "5%"
+    },
+    radioCircle: {
+        // backgroundColor: 'red'
+    },
+    text: {
+
+        fontSize: 14,
+        color: colors.greyBlue,
+        textTransform: "capitalize",
+        fontWeight: "bold"
+    },
+    icon: {
+        width: "13%",
+        height: 50,
+        backgroundColor: "#b8bedd",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 10,
+        borderRadius: 25,
+        textAlign: 'center',
+        margin: 5,
+        verticalAlign: 'middle'
+    },
+    radioText: { color: "black" }
+    , input: {
+        width: '94%',
+        color: "black",
+        // backgroundColor: '#b8bedd',
+        // margin: 10,
+        // alignSelf: 'center',
+        // borderRadius: 10,
+        // padding: 10,
+
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        // elevation: 5,
+    },
+});

@@ -113,7 +113,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
                 <Icon name="heartbeat" size={25} style={styles.icon}/>
                 <View style={{width: "85%"}}>
                     <Text style={styles.label}>Blood Sugar Concentration</Text>
-                    <TextInput style={styles.input} value={`${inputList.concentration}`} keyboardType={'numeric'} maxLength={3} placeholder="Enter Blood Sugar Concentration" onChangeText={text => handleOnTextChange(text, "concentration")} />
+                    <TextInput style={styles.input} value={`${inputList.concentration}`} keyboardType={'numeric'} placeholderTextColor={"gray"} maxLength={3} placeholder="Enter Blood Sugar Concentration" onChangeText={text => handleOnTextChange(text, "concentration")} />
                 </View>
             </View>
 
@@ -191,7 +191,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
                     <Icon name="sticky-note" size={25} style={styles.icon}/>
                     <View style={{width: "85%"}}>
                         <Text style={styles.label}>Notes</Text>
-                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" placeholderTextColor={"gray"} onChangeText={text => handleOnTextChange(text, "description")}/>
                     </View>
                 </View>
                 
@@ -219,6 +219,9 @@ export default AddBloodSugar = function ({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    label:{
+        color:"black"
+    },
     text: {
         marginVertical: 5,
         marginHorizontal: 5,
@@ -273,9 +276,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 5,
         verticalAlign: 'middle'
-      }
+      },
+      radioText:{color:"black"}
 ,input: {
     width: '94%',
+    color:"black",
     // backgroundColor: '#b8bedd',
     // margin: 10,
     // alignSelf: 'center',

@@ -1,5 +1,5 @@
-import {React, useState, useEffect} from "react";
-import {View,StyleSheet,SafeAreaView,Text,ScrollView, TouchableOpacity,Alert, Image, Animated, Easing, Pressable  } from "react-native";
+import { React, useState, useEffect } from "react";
+import { View, StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity, Alert, Image, Animated, Easing, Pressable } from "react-native";
 import { Input } from "../components/input";
 import NewDropDown from "../components/NewDropDown"
 import NewPicker from "../components/NewPicker";
@@ -9,7 +9,7 @@ import DailyInputs from "../components/DailyInputs";
 import NavBar from "../components/NavBar";
 import SpinListButton from "../components/SpinListButton";
 import { store } from "../../redux/reduxActions";
-import { setExerciseRecord,setExerciseToday,setBreakfastToday,setLunchToday,setSnackOneToday,setSnackTwoToday,setDinnerToday } from "../../redux/reduxActions";
+import { setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, setSnackOneToday, setSnackTwoToday, setDinnerToday } from "../../redux/reduxActions";
 import { storeUserState } from "../connectionToDB/authentication"
 import { useDispatch } from "react-redux/es/exports";
 import { getProfileInformation } from "../connectionToDB/profile"
@@ -26,20 +26,20 @@ export default function HomeScreen({ navigation, prop }) {
     const [sbp, setsbp] = useState(80);
     const [dbp, setdbp] = useState(120);
     const [profile, setprofile] = useState('');
-    const [mount, setMount]= useState(0); 
+    const [mount, setMount] = useState(0);
 
-    if(mount==0){
+    if (mount == 0) {
         getProfileInformation()
             .then((res) => {
                 console.log("here", res)
                 console.log("state", res.userDetails.state)
-                if(res.userDetails.weight==undefined|| res.userDetails.age==undefined || res.userDetails.heightFeet==undefined){
-                    Alert.alert("Set Your Profile","Thank you!")
+                if (res.userDetails.weight == undefined || res.userDetails.age == undefined || res.userDetails.heightFeet == undefined) {
+                    Alert.alert("Set Your Profile", "Thank you!")
                     navigation.navigate('Profile')
-                } 
+                }
             })
-      .catch(err => { console.log("Error in Home screen", err) }) 
-    } 
+            .catch(err => { console.log("Error in Home screen", err) })
+    }
 
 
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
@@ -55,16 +55,16 @@ export default function HomeScreen({ navigation, prop }) {
     }, [animatedProgress, bloodSugar]);
 
     // const [modalVisible, setModalVisible] = useState(false);
-    
-      
 
-    
+
+
+
     // return(
     //     <View>
-            
+
     //     <NavBar name ={name} profile={profile}/>
-        
-        
+
+
     //     <ScrollView style={styles.container}>
 
     //     {/* <Button onPress={()=>{setModalVisible(true)}}>open</Button>
@@ -112,7 +112,7 @@ export default function HomeScreen({ navigation, prop }) {
     //                         source={require('../../../assets/Images/pain.png')}
     //                         resizeMode="center"
     //                     />
-                    
+
     //                 )}
     //             </AnimatedCircularProgress>
     //             <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text> 
@@ -184,7 +184,7 @@ export default function HomeScreen({ navigation, prop }) {
 
     return (
         <View>
-            <NavBar name ={name} profile={profile}/>
+            <NavBar name={name} profile={profile} />
 
             <ScrollView style={styles.container}>
                 <View style={styles.con}>
@@ -267,8 +267,8 @@ export default function HomeScreen({ navigation, prop }) {
                 <View style={{ marginTop: 16, padding: 20 }}>
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Health care</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => { navigation.navigate('ExerciseActivityOrRest', { "day": 16 }) }}>
+                        {/* navigation.navigate('ExerciseActivityOrRest', { "day": 16 }) */}
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => {navigation.navigate('Prescription') }}>
                             <Text style={[styles.boxText, { color: '#A4907C' }]}>Medication</Text>
                         </Pressable>
 
