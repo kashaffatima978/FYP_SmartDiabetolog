@@ -31,7 +31,6 @@ export default AddAllergicReactions = function ({ navigation, route }) {
             viewParticularAllergicReaction(route.params.id)
                 .then((res) => {
                     console.log("in loadDataOnlyOnce in AddAllergicReactions")
-                    console.log("fast insulin medication details is", res)
                     setName(res.name)
                     setType(res.type)
                     setSymtoms(res.symtoms)

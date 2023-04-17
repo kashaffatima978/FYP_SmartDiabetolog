@@ -272,7 +272,7 @@ export default function HomeScreen({ navigation, prop }) {
                             <Text style={[styles.boxText, { color: '#A4907C' }]}>Medication</Text>
                         </Pressable>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#CDDAFD' }]} onPress={() => { navigation.navigate('Diet') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#CDDAFD' }]} onPress={() => { navigation.navigate('AllergicReactionMain') }}>
                             <Text style={[styles.boxText, { color: '#8e9aaf' }]}>Allergies</Text>
                         </Pressable>
 
@@ -287,7 +287,7 @@ export default function HomeScreen({ navigation, prop }) {
                             <Text style={[styles.boxText, { color: '#9d8189' }]}>Blogs</Text>
                         </Pressable>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Diet') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Chatbot') }}>
                             <Text style={[styles.boxText, { color: '#a3b18a' }]}>Videos</Text>
                         </Pressable>
 

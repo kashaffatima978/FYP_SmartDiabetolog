@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 import AddBloodPressure from "../screens/AddBloodPressure";
@@ -42,53 +42,63 @@ import ExerciseSetting from "../screens/ExerciseSetting";
 import MainExerciseStartPage from "../screens/MainExerciseStartPage";
 import ExerciseActivityOrRest from "../screens/ExerciseActivityOrRest";
 import Prescription from "../screens/Prescription";
+import Chatbot from "../screens/chatbot";
+import Dashboard from "../screens/dashboard";
+import AskQuestion from "../screens/AskQuestion";
+import ViewQuestionDetails from "../screens/ViewQuestionDetails";
+import AddAnswer from "../screens/AddAnswer";
 
 
-export default function StackNav(){
+export default function StackNav() {
   const Stack = createNativeStackNavigator();
-    return (
-      <Stack.Navigator  initialRouteName={'AllergicReactionMain'} screenOptions={ {headerShown: false}}>
+  return (
+    <Stack.Navigator initialRouteName={'Home'} screenOptions={{ headerShown: false }}>
       {/* <Stack.Navigator initialRouteName="FirstScreen"  screenOptions={ {headerShown: false}}> */}
-      <Stack.Screen name="Prescription" component={Prescription}/>
-      <Stack.Screen name="AddNewPrescription" component={AddNewPrescription}/>
-        <Stack.Screen  name="MainExercisePage" component={MainExercisePage} />
-        <Stack.Screen  name="ExerciseSetting" component={ExerciseSetting} />
-        <Stack.Screen  name="MainExerciseStartPage" component={MainExerciseStartPage} />
-        <Stack.Screen  name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
-        <Stack.Screen name="FirstScreen" component={FirstScreen} />
-        <Stack.Screen  name="Registration" component={Registeration} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Loading" component={Loading}/>
-        <Stack.Screen name="Home" component={TabNav} />
-        
-        {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
-        <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
-        <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
-        <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
-        <Stack.Screen name="AddBloodPressure" component={AddBloodPressure} />
-        <Stack.Screen name="ViewCholesterol" component={ViewCholesterol} />
-        <Stack.Screen name="AddCholesterol" component={AddCholesterol} />
-        <Stack.Screen name="Diet" component={DietChartMain} />
-        <Stack.Screen name="Snacks" component={SnacksPage} />
-        <Stack.Screen name="Lunch" component={LunchPage} />
-        <Stack.Screen name="Dinner" component={DinnerPage} />
-        <Stack.Screen name="Breakfast" component={BreakfastPage} />
-        <Stack.Screen name="AddMeal" component={AddMeal} />
-        
-        <Stack.Screen name="OralMed" component={OralMed}/>
-        <Stack.Screen name="AddOralMedicine" component={AddOralMedicine}/>
-        <Stack.Screen name="InsulinMed" component={InsulinMed}/>
-        <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine}/>
-        <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain}/>
-        {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
-        <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions}/>
-        <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions}/>
-        <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions}/>
-        <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions}/>
-        <Stack.Screen name="ForgetPassword" component={ForgetPassword}/>
-        <Stack.Screen name="EnterCode" component={EnterCode}/>
-        <Stack.Screen name="Retinopathy" component={Retinopathy}/>
-        {/* <Stack.Screen name="Profile" component={Profile}/> */}
-      </Stack.Navigator>
-    )
+      <Stack.Screen name="Prescription" component={Prescription} />
+      <Stack.Screen name="AddNewPrescription" component={AddNewPrescription} />
+      <Stack.Screen name="Chatbot" component={Chatbot} />
+      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="AskQuestion" component={AskQuestion} />
+      <Stack.Screen name="AddAnswer" component={AddAnswer} />
+      <Stack.Screen name="ViewQuestionDetails" component={ViewQuestionDetails} />
+      <Stack.Screen name="MainExercisePage" component={MainExercisePage} />
+      <Stack.Screen name="ExerciseSetting" component={ExerciseSetting} />
+      <Stack.Screen name="MainExerciseStartPage" component={MainExerciseStartPage} />
+      <Stack.Screen name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
+      <Stack.Screen name="FirstScreen" component={FirstScreen} />
+      <Stack.Screen name="Registration" component={Registeration} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Loading" component={Loading} />
+      <Stack.Screen name="Home" component={TabNav} />
+
+      {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
+      <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
+      <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
+      <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
+      <Stack.Screen name="AddBloodPressure" component={AddBloodPressure} />
+      <Stack.Screen name="ViewCholesterol" component={ViewCholesterol} />
+      <Stack.Screen name="AddCholesterol" component={AddCholesterol} />
+      <Stack.Screen name="Diet" component={DietChartMain} />
+      <Stack.Screen name="Snacks" component={SnacksPage} />
+      <Stack.Screen name="Lunch" component={LunchPage} />
+      <Stack.Screen name="Dinner" component={DinnerPage} />
+      <Stack.Screen name="Breakfast" component={BreakfastPage} />
+      <Stack.Screen name="AddMeal" component={AddMeal} />
+
+      <Stack.Screen name="OralMed" component={OralMed} />
+      <Stack.Screen name="AddOralMedicine" component={AddOralMedicine} />
+      <Stack.Screen name="InsulinMed" component={InsulinMed} />
+      <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine} />
+      <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain} />
+      {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
+      <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions} />
+      <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions} />
+      <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions} />
+      <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions} />
+      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+      <Stack.Screen name="EnterCode" component={EnterCode} />
+      <Stack.Screen name="Retinopathy" component={Retinopathy} />
+      {/* <Stack.Screen name="Profile" component={Profile}/> */}
+    </Stack.Navigator>
+  )
 }

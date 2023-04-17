@@ -12,11 +12,10 @@ export const Heading=(props)=>{
 
 const styles=StyleSheet.create({
     titleContainer:{
-        height:"10%",
+        height:80,
         display:"flex",
         marginBottom: 30,
         backgroundColor: "#6A6DB0",
-        
     },
 
     titleHeading:{
