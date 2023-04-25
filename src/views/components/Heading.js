@@ -14,7 +14,7 @@ const styles=StyleSheet.create({
     titleContainer:{
         height:80,
         display:"flex",
-        marginBottom: 30,
+        marginBottom: 10,
         backgroundColor: "#6A6DB0",
     },
 

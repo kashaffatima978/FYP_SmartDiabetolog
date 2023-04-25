@@ -48,6 +48,9 @@ import AskQuestion from "../screens/AskQuestion";
 import ViewQuestionDetails from "../screens/ViewQuestionDetails";
 import AddAnswer from "../screens/AddAnswer";
 
+import { Recipe } from "../screens/Recipe";
+import BlogList from "../screens/BlogList";
+import Videos from "../screens/Videos";
 
 export default function StackNav() {
   const Stack = createNativeStackNavigator();
@@ -70,6 +73,8 @@ export default function StackNav() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Loading" component={Loading} />
       <Stack.Screen name="Home" component={TabNav} />
+      <Stack.Screen name="Videos" component={Videos} />
+      <Stack.Screen name="Recipe" component={Recipe} />
 
       {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
       <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
@@ -91,6 +96,7 @@ export default function StackNav() {
       <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine} />
       <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain} />
       {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
+      <Stack.Screen name="BlogList" component={BlogList} />
       <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions} />
       <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions} />
       <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions} />
@@ -101,4 +107,5 @@ export default function StackNav() {
       {/* <Stack.Screen name="Profile" component={Profile}/> */}
     </Stack.Navigator>
   )
+
 }

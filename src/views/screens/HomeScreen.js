@@ -33,8 +33,9 @@ export default function HomeScreen({ navigation, prop }) {
             .then((res) => {
                 console.log("here", res)
                 console.log("state", res.userDetails.state)
-                if (res.userDetails.weight == undefined || res.userDetails.age == undefined || res.userDetails.heightFeet == undefined) {
-                    Alert.alert("Set Your Profile", "Thank you!")
+                setName(res.userDetails.name)
+                if(res.userDetails.weight==undefined|| res.userDetails.age==undefined || res.userDetails.heightFeet==undefined){
+                    Alert.alert("Set Your Profile","Thank you!")
                     navigation.navigate('Profile')
                 }
             })
@@ -55,16 +56,16 @@ export default function HomeScreen({ navigation, prop }) {
     }, [animatedProgress, bloodSugar]);
 
     // const [modalVisible, setModalVisible] = useState(false);
+    
+      
 
-
-
-
+    
     // return(
     //     <View>
-
+            
     //     <NavBar name ={name} profile={profile}/>
-
-
+        
+        
     //     <ScrollView style={styles.container}>
 
     //     {/* <Button onPress={()=>{setModalVisible(true)}}>open</Button>
@@ -112,7 +113,7 @@ export default function HomeScreen({ navigation, prop }) {
     //                         source={require('../../../assets/Images/pain.png')}
     //                         resizeMode="center"
     //                     />
-
+                    
     //                 )}
     //             </AnimatedCircularProgress>
     //             <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text> 
@@ -283,11 +284,11 @@ export default function HomeScreen({ navigation, prop }) {
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Awareness</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#FCE0D7" }]} onPress={() => { navigation.navigate('Diet') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#FCE0D7" }]} onPress={() => { navigation.navigate('BlogList') }}>
                             <Text style={[styles.boxText, { color: '#9d8189' }]}>Blogs</Text>
                         </Pressable>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Chatbot') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Diet') }}>
                             <Text style={[styles.boxText, { color: '#a3b18a' }]}>Videos</Text>
                         </Pressable>
 
