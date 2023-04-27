@@ -17,10 +17,12 @@ import { addOralMedicationToPrescription, getOralMedicationDetails, updateOralMe
 export default AddOralMedicine = function ({ navigation, route }) {
     const { title, id } = route.params
     console.log("id got in AddOralMedicine is ", id)
+    const [loader, setLoader] = useState(false)
 
     const [mount, setMount] = useState(0)
     const loadDataOnlyOnce = () => {
         if (route.params.oralMedicineId) {
+            setLoader(true)
             getOralMedicationDetails(route.params.oralMedicineId)
                 .then((res) => {
                     console.log("in loadDataOnlyOnce in AddOralMedicine")
@@ -31,9 +33,14 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     setDosage(`${res.dosage}`)
                     setHour(res.time.substring(0, 2))
                     setMinute(res.time.substring(3))
-
+                    setLoader(false)
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err) })
+                .catch(err => {
+                    console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err)
+                    setLoader(false)
+                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                    alert("Connection Lost! Try Again")
+                })
         }
 
     };
@@ -53,38 +60,60 @@ export default AddOralMedicine = function ({ navigation, route }) {
     const [minute, setMinute] = useState("00")
 
     const saveOralMedicine = () => {
+        setLoader(true)
         const time = `${hour}:${minute}`
         addOralMedicationToPrescription(id, name, dosage, units, type, time)
             .then((data) => {
                 console.log("adding oral medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in add in Prescription", err) })
+            .catch((err) => {
+                console.log("Error in add in Prescription", err)
+                setLoader(false)
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                alert("Connection Lost! Try Again")
+            })
     }
 
     const deleteOralMedicine = () => {
+        setLoader(true)
         const time = `${hour}:${minute}`
-        deleteOralMedicationDetails(route.params.oralMedicineId,id)
+        deleteOralMedicationDetails(route.params.oralMedicineId, id)
             .then((data) => {
                 console.log("deleteOralMedicine ", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in updatein deleteOralMedicine", err) })
-     }
+            .catch((err) => {
+                console.log("Error in updatein deleteOralMedicine", err)
+                setLoader(false)
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                alert("Connection Lost! Try Again")
+            })
+    }
 
     const updateOralMedicine = () => {
+        setLoader(true)
         const time = `${hour}:${minute}`
         console.log(id, type, name, units, dosage, time)
         updateOralMedicationDetails(route.params.oralMedicineId, type, name, units, dosage, time)
             .then((data) => {
                 console.log(route.params.oralMedicineId, type, name, units, dosage, time)
                 console.log("updateOralMedicine ", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in updatein updateOralMedicine", err) })
+            .catch((err) => {
+                console.log("Error in updatein updateOralMedicine", err)
+                setLoader(false)
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                alert("Connection Lost! Try Again")
+            })
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader visible={loader}></Loader>
             <Heading name="Add Oral Medication" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
                 <SafeAreaView style={[styles.container, { marginTop: 10, marginLeft: 50, marginRight: 28 }]}>

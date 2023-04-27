@@ -9,55 +9,133 @@ import { Avatar, Title, Paragraph, Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { MyButton } from "../components/button";
 import { updatePrescriptionTitle, viewParticularPrescriptionOralMedicines, deletePartiularPrescription, viewFastInsulin, viewLongInsulin } from "../connectionToDB/prescription"
+import {
+    storeAllergiesInAsync, getAllergiesFromAsync
+} from "../connectionToDB/AsyncStorage"
+import Loader from "../components/loader";
 
 export default function AddNewPrescription({ navigation, route }) {
     const name = route.params.title
     const id = route.params.id
     const [title, setTitle] = useState(name)
+    const [loader, setLoader] = useState(false)
+
+    const [longInsulinMedication, setLongInsulinMedication] = useState([])
+    const [fastInsulinMedication, setFastInsulinMedication] = useState([])
+    const [oralMedications, setOralMedications] = useState([
+    ])
+    const [mount, setMount] = useState(0)
+    //viewLongInsulin, viewFastInsulin
+
+    const getState = (type) => {
+        getAllergiesFromAsync(type).then(insulin => {
+            if (insulin.length === 1 && mount !== 0) {
+                console.log(`in loadDataOnlyOnce in AddNewPrescription if for ${type}`)
+                console.log(insulin)
+                if (type === "fast") {
+                    setFastInsulinMedication(() => { return [insulin] })
+                }
+                else {
+                    setLongInsulinMedication(() => { return [insulin] })
+                    setLoader(false)
+                }
+
+            }
+            else {
+                if (type === "long") {
+                    viewLongInsulin(route.params.id)
+                        .then(async (res) => {
+                            console.log("in loadDataOnlyOnce in AddNewPrescription")
+                            console.log("long insulin in this prescription are", res)
+                            setLongInsulinMedication(res)
+                            await storeAllergiesInAsync("long", res)
+                            setLoader(false)
+                        })
+                        .catch(err => {
+                            console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err)
+                            setLoader(false)
+                            navigation.navigate("Home");
+                            alert("Connection Lost! Try Again")
+                        })
+                }
+                else {
+                    viewFastInsulin(route.params.id)
+                        .then(async (res) => {
+                            console.log("in loadDataOnlyOnce in AddNewPrescription")
+                            console.log("fast insulin in this prescription are", res)
+                            setFastInsulinMedication(res)
+                            await storeAllergiesInAsync("fast", res)
+                        })
+                        .catch(err => { console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err) })
+                }
+
+            }
+        })
+            .catch(err => {
+                console.log("Error in loadDataOnlyOnce in AllergicReactionMain outside catch ", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("Home");
+            })
+
+    }
+    const loadDataOnlyOnce = () => {
+        setLoader(true)
+        viewParticularPrescriptionOralMedicines(route.params.id)
+            .then((res) => {
+                console.log("in loadDataOnlyOnce in AddNewPrescription")
+                console.log("oral medications in this prescription are", res)
+                setOralMedications(() => { return res })
+            })
+            .catch(err => {
+                console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err)
+            })
+
+
+        getState("fast")
+        getState("long")
+    };
+    useEffect(() => {
+        if (mount === 0) {
+            //setLoader(true)
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+    }, [mount]);
+
 
     const saveTitle = () => {
+        setLoader(true)
         updatePrescriptionTitle(id, title)
             .then((data) => {
                 console.log("updating prescription title", data);
+                setLoader(false)
             })
-            .catch((err) => { console.log("Error in saveTitle in AddNewPrescription", err) })
+            .catch((err) => { 
+                console.log("Error in saveTitle in AddNewPrescription", err) 
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("Home");
+            })
     }
 
     const deletePrescription = () => {
+        setLoader(true)
         deletePartiularPrescription(route.params.id)
             .then((data) => {
                 console.log("deletePrescription", data);
+                setLoader(false)
                 navigation.replace("Prescription")
             })
-            .catch((err) => { console.log("Error in deletePrescription in AddNewPrescription", err) })
+            .catch((err) => { 
+                console.log("Error in deletePrescription in AddNewPrescription", err) 
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.replace("Prescription")
+            })
     }
 
     const Oral = () => {
-        const [oralMedications, setOralMedications] = useState([
-        ])
-        const [mount, setMount] = useState(0)
-
-        const loadDataOnlyOnce = () => {
-            viewParticularPrescriptionOralMedicines(route.params.id)
-                .then((res) => {
-                    console.log("in loadDataOnlyOnce in AddNewPrescription")
-                    console.log("oral medications in this prescription are", res)
-                    setOralMedications(() => { return res })
-
-
-                })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err) })
-
-
-        };
-        useEffect(() => {
-            if (mount === 0) {
-                //setLoader(true)
-                loadDataOnlyOnce();
-                setMount((oldVal) => oldVal++);
-            }
-        }, [mount]);
-
         console.log("data in flatlist is ", oralMedications)
         return (
             <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
@@ -112,42 +190,10 @@ export default function AddNewPrescription({ navigation, route }) {
     }
     const Insulin = () => {
 
-        const [longInsulinMedication, setLongInsulinMedication] = useState()
-        const [fastInsulinMedication, setFastInsulinMedication] = useState()
-        const [mount, setMount] = useState(0)
-        //viewLongInsulin, viewFastInsulin
-
-        const loadDataOnlyOnce = () => {
-            viewLongInsulin().then((res) => {
-                console.log("in loadDataOnlyOnce in AddNewPrescription")
-                console.log("oral medications in this prescription are", res)
-                setLongInsulinMedication(res)
-            })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err) })
-
-            viewFastInsulin()
-                .then((res) => {
-                    console.log("in loadDataOnlyOnce in AddNewPrescription")
-                    console.log("oral medications in this prescription are", res)
-                    setFastInsulinMedication(res)
-                })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err) })
-
-
-        };
-        useEffect(() => {
-            if (mount === 0) {
-                //setLoader(true)
-                loadDataOnlyOnce();
-                setMount((oldVal) => oldVal++);
-            }
-        }, [mount]);
-
-
         return (
             <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
 
-                {(!fastInsulinMedication || fastInsulinMedication[0]===undefined) ? null :
+                {(!fastInsulinMedication || fastInsulinMedication[0] === undefined) ? null :
                     (
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "fastInsulinID": fastInsulinMedication[0]._id }) }}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
@@ -166,13 +212,13 @@ export default function AddNewPrescription({ navigation, route }) {
                                         </View>
 
                                         <View style={{ flexDirection: "row" }}>
-                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Units: </Paragraph>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>ISF: </Paragraph>
                                             <Paragraph>{fastInsulinMedication[0].isf}</Paragraph>
                                         </View>
 
 
                                         <View style={{ flexDirection: "row" }}>
-                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Dosage: </Paragraph>
+                                            <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Carb Ratio: </Paragraph>
                                             <Paragraph>{fastInsulinMedication[0].carb_ratio}</Paragraph>
                                         </View>
 
@@ -184,7 +230,7 @@ export default function AddNewPrescription({ navigation, route }) {
                     )
                 }
 
-                {(!longInsulinMedication || longInsulinMedication[0]===undefined) ? null :
+                {(!longInsulinMedication || longInsulinMedication[0] === undefined) ? null :
                     (
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "longInsulinID": longInsulinMedication[0]._id }) }}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
@@ -194,7 +240,7 @@ export default function AddNewPrescription({ navigation, route }) {
                                 </View>
                                 <View style={{ margin: 10 }}>
                                     <Card.Content style={{ flexDirection: "column" }}>
-                                    <View style={{ flexDirection: "row" }}>
+                                        <View style={{ flexDirection: "row" }}>
                                             <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Long Acting Insulin </Paragraph>
                                         </View>
                                         <View style={{ flexDirection: "row" }}>
@@ -220,7 +266,8 @@ export default function AddNewPrescription({ navigation, route }) {
                     )
                 }
 
-                <Fab onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id }) }}></Fab>
+                <Fab isDisabled={fastInsulinMedication.length >= 1 && longInsulinMedication.length >= 1 ? true : false}
+                    onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id }) }}></Fab>
             </View>
         )
     }
@@ -229,6 +276,7 @@ export default function AddNewPrescription({ navigation, route }) {
 
 
         <SafeAreaView style={styles.safeAreaCont}>
+            <Loader visible={loader}></Loader>
 
             <Heading name={title} />
             <TouchableOpacity

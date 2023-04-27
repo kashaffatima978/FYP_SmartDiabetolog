@@ -212,7 +212,7 @@ exports.deleteOralMedicationDetails = (id, prescriptionId) => {
 }
 
 //add a fast insulin 
-exports.addFastInsulin = async (name, isf, carbRatio) => {
+exports.addFastInsulin = async (name, isf, carbRatio,pres_id) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in addFastInsulin is", token)
@@ -221,6 +221,7 @@ exports.addFastInsulin = async (name, isf, carbRatio) => {
                 "name": name,
                 "isf": isf,
                 "carb_ratio": carbRatio,
+                "prescription_id":pres_id
             },
             { headers: { "Authorization": "Bearer " + token } },
         )
@@ -262,11 +263,11 @@ exports.deleteFastInsulin = async (id) => {
 }
 
 //view all fast insulin 
-exports.viewFastInsulin = async () => {
+exports.viewFastInsulin = async (pres_id) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in viewFastInsulin is", token)
-        axios.get(`${ip}:3000/fastinsulin`,
+        axios.get(`${ip}:3000/fastinsulin/${pres_id}`,
             { headers: { "Authorization": "Bearer " + token } },
         )
             .then((res) => { console.log(res.data); resolve(res.data) })
@@ -275,7 +276,7 @@ exports.viewFastInsulin = async () => {
 }
 
 //add a long insulin 
-exports.addLongInsulin = async (name, units, time) => {
+exports.addLongInsulin = async (name, units, time,pres_id) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in addLongInsulin is", token)
@@ -283,7 +284,8 @@ exports.addLongInsulin = async (name, units, time) => {
             {
                 "name": name,
                 "units": units,
-                "time": time
+                "time": time,
+                "prescription_id":pres_id
             },
             { headers: { "Authorization": "Bearer " + token } },
         )
@@ -324,11 +326,11 @@ exports.deleteLongInsulin = async (id) => {
 }
 
 //view all long insulin 
-exports.viewLongInsulin = async () => {
+exports.viewLongInsulin = async (pres_id) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in viewLongInsulin is", token)
-        axios.get(`${ip}:3000/longinsulin`,
+        axios.get(`${ip}:3000/longinsulin/${pres_id}`,
             { headers: { "Authorization": "Bearer " + token } },
         )
             .then((res) => { console.log(res.data); resolve(res.data) })

@@ -15,15 +15,21 @@ export default function Prescription({ navigation }) {
     const [mount, setMount] = useState(0)
     const [loader, setLoader] = useState(false)
     const loadDataOnlyOnce = async () => {
+        setLoader(true)
         viewPrescriptions()
             .then((res) => {
                 console.log("in view prescriptions")
                 console.log(res)
-                setTimeout(() => { setLoader(false) }, 1000)
                 setPrescriptions(res)
                 setTitle(`Prescription${res.length+1}`)
+                setLoader(false)
             })
-            .catch(err => { console.log("Error in viewPrescriptions in Prescription ", err) })
+            .catch(err => { 
+                console.log("Error in viewPrescriptions in Prescription ", err) 
+                setLoader(false)
+               // navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                alert("Connection Lost! Try Again")
+            })
 
 
     };

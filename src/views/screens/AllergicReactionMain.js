@@ -1,76 +1,3 @@
-// import React from "react";
-// import {View,Text,StyleSheet,Image, TouchableOpacity} from "react-native";
-// import Card from "../components/cards";
-// import colors from "../../files/Colors";
-
-
-// export default function AllergicReactionMain({navigation}){
-//     return(
-//         <View style={styles.container}>
-//             <Image style={styles.medImg}source={require("../../../assets/Images/allergicMed.jpg")}/>
-//             <Text style={styles.heading} >Allergic Reaction</Text>
-//             <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('FoodAllergicReactions')}}>
-//                 <Image source={require('../../../assets/Images/foodAllergy.jpg') } style={styles.image}/>
-//                 <Text style={styles.buttonText}>Food Allergic Reaction</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('MedicineAllergicReactions')}}>
-//                 <Image source={require('../../../assets/Images/medicineAllergy.jpg') } style={styles.image}/>
-//                 <Text style={styles.buttonText}>Medication Allergic Reaction</Text>
-//             </TouchableOpacity>
-//         </View>
-//     );
-// };
-
-// const styles=StyleSheet.create({
-//     container:{
-//        flex:1,
-//         backgroundColor: "white",
-//     },
-//     heading:{
-//         fontSize: 30,
-//         fontStyle: "italic",
-//         textAlign: "center",
-//         fontWeight: "bold",
-//         color: 'black',
-//         margin: 15
-//     },
-//     medImg:{
-//         width: "80%",
-//         height: 150,
-//         alignSelf:"center"
-//     },
-
-//     button:{
-//         borderColor:"#b2e7ed",
-//         borderWidth:2,
-//         height:200,
-//         width:"90%",
-//         marginTop:10,
-//         marginBottom:10,
-//         alignSelf: "center",
-//         // elevation: 6,
-//         // shadowColor: '#DDBEA9',
-//     },
-//     buttonText:{
-//         fontWeight:"bold",
-//         fontSize:20,
-//         color:colors.darkGreyBlue,
-//         textAlign:"center",
-//         height:"20%",
-//         width:"100%",
-//         marginTop: 15
-
-//     },
-//     image:{
-//         height:"70%",
-//         width:"50%",
-//         alignSelf:"center",
-//         justifyContent: "center"
-//     },
-
-// });
-
-
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, TextInput, StyleSheet, Image, TouchableOpacity, SafeAreaView, FlatList } from "react-native";
 
@@ -80,57 +7,78 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { Heading } from '../components/Heading';
 import { Avatar, Title, Paragraph, Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Loader from '../components/loader';
 import { MyButton } from "../components/button";
 import { updatePrescriptionTitle, viewParticularPrescriptionOralMedicines, deletePartiularPrescription, viewFastInsulin, viewLongInsulin } from "../connectionToDB/prescription"
 import {
     addAllergicReaction, updateAllergicReaction, deleteAllergicReaction,
     viewParticularAllergicReaction, viewAllTypeAllergicReaction
 } from "../connectionToDB/reactions"
+import {
+    storeAllergiesInAsync, getAllergiesFromAsync
+} from "../connectionToDB/AsyncStorage"
+
+
 export default function AllergicReactionMain({ navigation, route }) {
+    const [foodReactions, setFoodReactions] = useState([])
+    const [medicationReactions, setMedicationReactions] = useState([])
+    const [mount, setMount] = useState(0)
+    const [loader, setLoader] = useState(false)
 
-
-
-
-    const saveTitle = () => {
-        updatePrescriptionTitle("j")
-            .then((data) => {
-                console.log("updating prescription title", data);
-            })
-            .catch((err) => { console.log("Error in saveTitle in AddNewPrescription", err) })
-    }
-
-    const deletePrescription = () => {
-        deletePartiularPrescription()
-            .then((data) => {
-                console.log("deletePrescription", data);
-                navigation.replace("Prescription")
-            })
-            .catch((err) => { console.log("Error in deletePrescription in AddNewPrescription", err) })
-    }
-
-    const Food = () => {
-        const [foodReactions, setFoodReactions] = useState([])
-        const [mount, setMount] = useState(0)
-
-        const loadDataOnlyOnce = () => {
-            viewAllTypeAllergicReaction("food")
-                .then((res) => {
-                    console.log("in loadDataOnlyOnce in AllergicReactionMain")
-                    console.log("allergic reaction for food are", res)
-                    setFoodReactions(() => { return res })
-                })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AllergicReactionMain ", err) })
-
-
-        };
-        useEffect(() => {
-            if (mount === 0) {
-                //setLoader(true)
-                loadDataOnlyOnce();
-                setMount((oldVal) => oldVal++);
+    const setStates = (type) => {
+        getAllergiesFromAsync(type).then(allergies => {
+            if (allergies.length >= 1 && mount !== 0) {
+                console.log(`in loadDataOnlyOnce in AllergicReactionMain if for ${type}`)
+                console.log(allergies)
+                if (type === "food") {
+                    setFoodReactions(() => { return allergies })
+                }
+                else {
+                    setMedicationReactions(() => { return allergies })
+                }
             }
-        }, [mount]);
+            else {
+                viewAllTypeAllergicReaction(type)
+                    .then(async (res) => {
+                        console.log(`in loadDataOnlyOnce in AllergicReactionMain ${type}`)
+                        console.log(`allergic reaction for ${type} are`, res)
+                        await storeAllergiesInAsync(type, res)
+                        if (type === "food") {
+                            setFoodReactions(() => { return res })
+                        }
+                        else {
+                            setMedicationReactions(() => { return res })
+                            setLoader(false)
+                        }
+                    })
+                    .catch(err => {
+                        setLoader(false)
+                        alert("Connection Lost! Try Again")
+                        console.log("Error in loadDataOnlyOnce in AllergicReactionMain else ", err)
+                    })
+            }
+        })
+            .catch(err => {
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                console.log("Error in loadDataOnlyOnce in AllergicReactionMain outside catch ", err)
+            })
 
+    }
+
+    const loadDataOnlyOnce = async () => {
+         setStates("food")
+         setStates("medication")
+    };
+
+    useEffect(() => {
+        if (mount === 0) {
+            setLoader(true)
+            loadDataOnlyOnce();
+            setMount((oldVal) => oldVal++);
+        }
+    }, [mount]);
+    const Food = () => {
         console.log("data in flatlist is ", foodReactions)
         return (
             <View style={{ backgroundColor: '#E2E4FF', flex: 1 }} >
@@ -176,27 +124,6 @@ export default function AllergicReactionMain({ navigation, route }) {
         )
     }
     const Medication = () => {
-        const [medicationReactions, setMedicationReactions] = useState([])
-        const [mount, setMount] = useState(0)
-
-        const loadDataOnlyOnce = () => {
-            viewAllTypeAllergicReaction("medication")
-                .then((res) => {
-                    console.log("in loadDataOnlyOnce in AllergicReactionMain")
-                    console.log("allergic reaction for medication are", res)
-                    setMedicationReactions(() => { return res })
-                })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AllergicReactionMain ", err) })
-
-
-        };
-        useEffect(() => {
-            if (mount === 0) {
-                //setLoader(true)
-                loadDataOnlyOnce();
-                setMount((oldVal) => oldVal++);
-            }
-        }, [mount]);
 
         console.log("data in flatlist is ", medicationReactions)
         return (
@@ -247,6 +174,7 @@ export default function AllergicReactionMain({ navigation, route }) {
 
 
         <SafeAreaView style={styles.safeAreaCont}>
+            <Loader visible={loader}></Loader>
 
             <Heading name={"Allergic Reactions"} />
 
@@ -256,7 +184,7 @@ export default function AllergicReactionMain({ navigation, route }) {
                 <Tab.Screen name="Medication" component={Medication} />
 
             </Tab.Navigator >
-            <Fab onPress={() => { navigation.navigate("AddAllergicReactions",{"id":"undefined"}) }}></Fab>
+            <Fab onPress={() => { navigation.navigate("AddAllergicReactions", { "id": "undefined" }) }}></Fab>
 
         </SafeAreaView>
     );

@@ -13,6 +13,10 @@ import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
+    storeAllergiesInAsync, getAllergiesFromAsync
+} from "../connectionToDB/AsyncStorage"
+
+import {
     viewLongInsulin, viewFastInsulin, updateLongInsulin, updateFastInsulin, addFastInsulin,
     deleteFastInsulin, addLongInsulin, deleteLongInsulin
 } from "../connectionToDB/prescription"
@@ -23,9 +27,11 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
 
     const { title, id } = route.params
     const [mount, setMount] = useState(0)
+    const [loader, setLoader] = useState(false)
     const loadDataOnlyOnce = () => {
         if (route.params.longInsulinID) {
-            viewLongInsulin(route.params.longInsulinID)
+            setLoader(true)
+            viewLongInsulin(route.params.id)
                 .then((res) => {
                     console.log("in loadDataOnlyOnce in AddInsulinMedicine for long")
                     console.log("long insulin medication details is", res)
@@ -33,11 +39,18 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                     setName(res[0].name)
                     setUnits(res[0].units)
                     setTime(res[0].time)
+                    setLoader(false)
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err) })
+                .catch(err => {
+                    console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err)
+                    setLoader(false)
+                    alert("Connection Lost! Try Again")
+                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                })
         }
         if (route.params.fastInsulinID) {
-            viewFastInsulin(route.params.longInsulinID)
+            setLoader(true)
+            viewFastInsulin(route.params.id)
                 .then((res) => {
                     console.log("in loadDataOnlyOnce in AddInsulinMedicine for fast")
                     console.log("fast insulin medication details is", res)
@@ -45,8 +58,14 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                     setName(res[0].name)
                     setISF(res[0].isf)
                     setCarbRatio(res[0].carb_ratio)
+                    setLoader(false)
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err) })
+                .catch(err => {
+                    console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err)
+                    setLoader(false)
+                    alert("Connection Lost! Try Again")
+                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                })
         }
 
     };
@@ -69,58 +88,102 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
     const [carbRatio, setCarbRatio] = useState("")
 
     const saveLong = () => {
-        addLongInsulin(name, units, time)
+        setLoader(true)
+        addLongInsulin(name, units, time, route.params.id)
             .then((data) => {
                 console.log("adding long insulin medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in saveLong in AddInsulinMed", err) })
+            .catch((err) => {
+                console.log("Error in saveLong in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
     }
 
-    const updateLong=()=>{
+    const updateLong = () => {
+        setLoader(true)
         updateLongInsulin(route.params.longInsulinID, name, units, time)
             .then((data) => {
                 console.log("updating long insulin medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in updateLong in AddInsulinMed", err) })
+            .catch((err) => {
+                console.log("Error in updateLong in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
     }
-    const deleteLong=()=>{
+    const deleteLong = () => {
+        setLoader(true)
         deleteLongInsulin(route.params.longInsulinID)
             .then((data) => {
                 console.log("deleting long insulin medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in deleteLong in AddInsulinMed", err) })
+            .catch((err) => {
+                console.log("Error in deleteLong in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
     }
 
     const saveFast = () => {
-        addFastInsulin(name, ISF, carbRatio)
+        setLoader(true)
+        addFastInsulin(name, ISF, carbRatio, route.params.id)
             .then((data) => {
                 console.log("adding fast insulin medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in saveFast in AddInsulinMed", err) })
+            .catch((err) => {
+                console.log("Error in saveFast in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
     }
 
-    const updateFast=()=>{
+    const updateFast = () => {
+        setLoader(true)
         updateFastInsulin(route.params.fastInsulinID, name, ISF, carbRatio)
             .then((data) => {
                 console.log("updating fast insulin medication", data);
+                setLoader(false)
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                //navigation.replace(navigation.dangerouslyGetState().routes[navigation.dangerouslyGetState().index - 1].key, { "title": title, "id": id });
+            })
+            .catch((err) => {
+                console.log("Error in updateFast in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in updateFast in AddInsulinMed", err) })
     }
-    const deleteFast=()=>{
+    const deleteFast = () => {
+        setLoader(true)
         deleteFastInsulin(route.params.fastInsulinID)
             .then((data) => {
                 console.log("deleting fast insulin medication", data);
+                setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
             })
-            .catch((err) => { console.log("Error in deleteFast in AddInsulinMed", err) })
+            .catch((err) => {
+                console.log("Error in deleteFast in AddInsulinMed", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again")
+                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+            })
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader visible={loader}></Loader>
             <Heading name="Add Insulin" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 
@@ -195,7 +258,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                                     <TextInput value={`${carbRatio}`} onChangeText={text => { setCarbRatio(text) }} style={styles.input} placeholder="Enter Carb Ratio" placeholderTextColor={"gray"} />
                                 </View>
                             </View>
-                    
+
                             {!route.params.fastInsulinID ?
                                 (<MyButton title="Save" onPress={saveFast}></MyButton>)
                                 :

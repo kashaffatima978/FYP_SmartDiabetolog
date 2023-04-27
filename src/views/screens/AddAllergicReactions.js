@@ -13,6 +13,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
 import {
     addAllergicReaction, updateAllergicReaction, deleteAllergicReaction,
     viewParticularAllergicReaction, viewAllTypeAllergicReaction
@@ -20,14 +21,16 @@ import {
 
 
 
+
 export default AddAllergicReactions = function ({ navigation, route }) {
     const {id}=route.params.id
-
+    const [loader, setLoader] = useState(false)
 
     const [mount, setMount] = useState(0)
     const loadDataOnlyOnce = () => {
 
         if (route.params.id!=="undefined") {
+            setLoader(true)
             viewParticularAllergicReaction(route.params.id)
                 .then((res) => {
                     console.log("in loadDataOnlyOnce in AddAllergicReactions")
@@ -35,14 +38,17 @@ export default AddAllergicReactions = function ({ navigation, route }) {
                     setType(res.type)
                     setSymtoms(res.symtoms)
                     setDescription(res.description)
+                    setLoader(false)
                 })
-                .catch(err => { console.log("Error in loadDataOnlyOnce in AddAllergicReactions ", err) })
+                .catch(err => { 
+                    setLoader(false);
+                    alert("Connection Lost")
+                    console.log("Error in loadDataOnlyOnce in AddAllergicReactions ", err) })
         }
 
     };
     useEffect(() => {
         if (mount === 0) {
-            //setLoader(true)
             loadDataOnlyOnce();
             setMount((oldVal) => oldVal++);
         }
@@ -54,32 +60,52 @@ export default AddAllergicReactions = function ({ navigation, route }) {
     const [symtoms, setSymtoms] = useState([])
 
     const saveReaction = () => {
+        setLoader(true)
         addAllergicReaction(name, symtoms, type, description)
             .then((data) => {
                 console.log("adding allergic reaction", data);
+                setLoader(false)
                 navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { console.log("Error in saveReaction in AddReaction", err) })
+            .catch((err) => { 
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
+                alert("Connection Lost! Try Again")
+                console.log("Error in saveReaction in AddReaction", err) 
+            })
     }
 
     const updateReaction = () => {
+        setLoader(true)
         updateAllergicReaction(route.params.id, name, symtoms, type, description)
             .then((data) => {
                 console.log("updating AllergicReaction medication", data);
-                navigation.navigate("AllergicReactionMain");
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { console.log("Error in updateReaction in AddInsulinMed", err) })
+            .catch((err) => { 
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
+                alert("Connection Lost! Try Again")
+                console.log("Error in updateReaction in AddInsulinMed", err) })
     }
     const deleteReaction = () => {
+        setLoader(true)
         deleteAllergicReaction(route.params.id)
             .then((data) => {
                 console.log("deleting AllergicReaction medication", data);
-                navigation.navigate("AllergicReactionMain");
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { console.log("Error in deleteReaction in AddInsulinMed", err) })
+            .catch((err) => { 
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
+                alert("Connection Lost! Try Again")
+                console.log("Error in deleteReaction in AddInsulinMed", err) })
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
+             <Loader visible={loader}></Loader>
             <Heading name="Add Allergic Reaction" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 

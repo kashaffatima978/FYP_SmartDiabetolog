@@ -8,7 +8,7 @@ const Fab = (props) => (
     small
     icon="plus"
     color='white'
-    
+    disabled={props.isDisabled}
     onPress={props.onPress}
   />
 );
