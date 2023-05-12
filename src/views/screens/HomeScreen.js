@@ -13,6 +13,11 @@ import { setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, 
 import { storeUserState } from "../connectionToDB/authentication"
 import { useDispatch } from "react-redux/es/exports";
 import { getProfileInformation } from "../connectionToDB/profile"
+import { storeTodayDateInAsync, getTodayDateFromAsync } from "../connectionToDB/AsyncStorage"
+import { storeRecordStateInAsync, getStateFromAsync, getRecordStateFromAsync } from "../connectionToDB/AsyncStorage"
+
+
+
 import { Paragraph, Dialog, Portal, Button, Provider, Modal } from 'react-native-paper';
 
 
@@ -28,19 +33,7 @@ export default function HomeScreen({ navigation, prop }) {
     const [profile, setprofile] = useState('');
     const [mount, setMount] = useState(0);
 
-    if (mount == 0) {
-        getProfileInformation()
-            .then((res) => {
-                console.log("here", res)
-                console.log("state", res.userDetails.state)
-                setName(res.userDetails.name)
-                if(res.userDetails.weight==undefined|| res.userDetails.age==undefined || res.userDetails.heightFeet==undefined){
-                    Alert.alert("Set Your Profile","Thank you!")
-                    navigation.navigate('Profile')
-                }
-            })
-            .catch(err => { console.log("Error in Home screen", err) })
-    }
+
 
 
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
@@ -56,16 +49,16 @@ export default function HomeScreen({ navigation, prop }) {
     }, [animatedProgress, bloodSugar]);
 
     // const [modalVisible, setModalVisible] = useState(false);
-    
-      
 
-    
+
+
+
     // return(
     //     <View>
-            
+
     //     <NavBar name ={name} profile={profile}/>
-        
-        
+
+
     //     <ScrollView style={styles.container}>
 
     //     {/* <Button onPress={()=>{setModalVisible(true)}}>open</Button>
@@ -113,7 +106,7 @@ export default function HomeScreen({ navigation, prop }) {
     //                         source={require('../../../assets/Images/pain.png')}
     //                         resizeMode="center"
     //                     />
-                    
+
     //                 )}
     //             </AnimatedCircularProgress>
     //             <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text> 
@@ -138,11 +131,34 @@ export default function HomeScreen({ navigation, prop }) {
     // On date change the status for the user state changes and get stores in db
     const [date, setDate] = useState(new Date().getDate());
     useEffect(() => {
-        const intervalId = setInterval(() => {
+
+        //for loading profile info
+        if (mount == 0) {
+            getProfileInformation()
+                .then((res) => {
+                    console.log("here", res)
+                    console.log("state", res.userDetails.state)
+                    setName(res.userDetails.name)
+                    if (res.userDetails.weight == undefined || res.userDetails.age == undefined || res.userDetails.heightFeet == undefined) {
+                        Alert.alert("Set Your Profile", "Thank you!")
+                        navigation.navigate('Profile')
+                    }
+                })
+                .catch(err => { console.log("Error in Home screen", err) })
+        }
+
+        const intervalId = setInterval(async () => {
             const currentDate = new Date().getDate();
+
+            const dateInAsyc = (await getTodayDateFromAsync())
+            //console.log("date from async in HomeScreen",dateInAsyc)
+
             //when the date changes
-            if (date !== currentDate) {
-                console.log("before changing date is ", date)
+            if (dateInAsyc !== currentDate) {
+                //set todayDate in Async
+                await storeTodayDateInAsync()
+
+                console.log("before changing date is ", dateInAsyc)
                 console.log("new date is ", currentDate)
                 console.log("states before changing to new date are  ", store.getState())
 
@@ -155,24 +171,34 @@ export default function HomeScreen({ navigation, prop }) {
                 if (store.getState().todayDinnerDone) dispatch(setDinnerToday())
 
                 //add todayExerciseDone to record to mark todays exercise is done(true)/skip(false)
-                dispatch(setExerciseRecord())
+                getRecordStateFromAsync()
+                    .then(records => {
+                        console.log("records got before updating state when change date is ", records)
+                        recordProcessed = records
+                        recordProcessed.push(store.getState().todayExerciseDone)
+                        storeRecordStateInAsync(recordProcessed)
+                    })
+
+                //dispatch(setExerciseRecord())
 
                 //if todayExerciseDone is true then update the state to false
                 if (store.getState().todayExerciseDone) {
                     dispatch(setExerciseToday())
                 }
 
-                //update state in db
-                storeUserState(store.getState())
-                    .then((res) => {
-                        console.log(res)
-                        console.log("User state SuccessFully stored in home screen when date changes")
+                //update state in db if todayExerciseDone is false
+                if (!(store.getState().todayExerciseDone)) {
+                    storeUserState(store.getState())
+                        .then((res) => {
+                            console.log(res)
+                            console.log("User state SuccessFully stored in home screen when date changes")
 
-                    })
-                    .catch((err) => {
-                        console.log("Error while state storing in home screen when date changes", err)
-                        Alert.alert("Error", "Connection Lost! Try Again")
-                    })
+                        })
+                        .catch((err) => {
+                            console.log("Error while state storing in home screen when date changes", err)
+                            Alert.alert("Error", "Connection Lost! Try Again")
+                        })
+                }
                 //Now set the date
                 setDate(currentDate);
             }
@@ -269,7 +295,7 @@ export default function HomeScreen({ navigation, prop }) {
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Health care</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {/* navigation.navigate('ExerciseActivityOrRest', { "day": 16 }) */}
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => {navigation.navigate('Prescription') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => { navigation.navigate('Prescription') }}>
                             <Text style={[styles.boxText, { color: '#A4907C' }]}>Medication</Text>
                         </Pressable>
 

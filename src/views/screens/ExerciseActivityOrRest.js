@@ -7,6 +7,8 @@ import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setExerciseRecord, setExerciseToday } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
+import { storeUserState } from "../connectionToDB/authentication"
+import { Alert } from "react-native";
 
 export default ExerciseActivityOrRest = ({ navigation, route }) => {
 
@@ -24,10 +26,24 @@ export default ExerciseActivityOrRest = ({ navigation, route }) => {
     useEffect(() => {
         mytimeout = setTimeout(() => {
             if (second === 1 && minute == 0) {
-                alert("Activity Completed")
                 dispatch(setExerciseToday())
-                console.log("the state is  ",store.getState())
+                console.log("the state is  ", store.getState())
                 clearTimeout(mytimeout);
+
+                storeUserState(store.getState())
+                    .then((res) => {
+                        console.log("now redux state is ", store.getState())
+                        console.log(res)
+                        console.log("User state SuccessFully stored after exercise being done")
+
+                    })
+                    .catch((err) => {
+                        console.log("Error while state storing after exercise being done", err)
+                        Alert.alert("Error", "Connection Lost! Try Again")
+                    })
+
+
+                alert("Activity Completed")
                 navigation.replace("MainExercisePage")
             }
             else {
@@ -59,14 +75,14 @@ export default ExerciseActivityOrRest = ({ navigation, route }) => {
             </View>
             <ScrollView style={styles.scroll}>
 
-                <View style={{ justifyContent: "center", alignItems: "center",marginTop:"5%"}}>
-                <Text style={styles.mainText}>ACTIVITY</Text>
-                    <Text style={styles.mainText}>{activity[0][4]}</Text>
+                <View style={{ justifyContent: "center", alignItems: "center", marginTop: "5%" }}>
+                    <Text style={styles.mainText}>ACTIVITY</Text>
+                    <Text style={styles.mainText}>{route.params.exercises[0]}</Text>
                     <Text style={styles.duration}>Duration: 45 minutes</Text>
                 </View>
 
             </ScrollView>
-            <TouchableOpacity onPress={() => { toggleModal();setSecond(60) }} style={styles.button}>
+            <TouchableOpacity onPress={() => { toggleModal(); setSecond(60) }} style={styles.button}>
                 <Text style={styles.text1}>Start</Text>
             </TouchableOpacity>
 
@@ -77,7 +93,7 @@ export default ExerciseActivityOrRest = ({ navigation, route }) => {
                         <Text style={{ color: "white" }}>Seconds:{second}</Text>
                     </View>
 
-                    <TouchableOpacity style={[styles.button, { height: 40 }]} onPress={() => { toggleModal(); clearTimeout(mytimeout);setMinute(-1);navigation.replace("MainExercisePage") }}>
+                    <TouchableOpacity style={[styles.button, { height: 40 }]} onPress={() => { toggleModal(); clearTimeout(mytimeout); setMinute(-1); navigation.replace("MainExercisePage") }}>
                         <Text>STOP</Text>
                     </TouchableOpacity>
 
@@ -123,16 +139,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: "center"
     },
-    mainText:{
-        fontSize:40,
-        color:"black",
-        textAlign:"center",
-        textAlignVertical:"center",
-        fontWeight:"bold"
+    mainText: {
+        fontSize: 40,
+        color: "black",
+        textAlign: "center",
+        textAlignVertical: "center",
+        fontWeight: "bold"
     },
-    duration:{
-        fontSize:20,
-        color:"black"
+    duration: {
+        fontSize: 20,
+        color: "black"
     }
 
 

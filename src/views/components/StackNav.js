@@ -55,7 +55,7 @@ import Videos from "../screens/Videos";
 export default function StackNav() {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName={'Home'} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName={'FirstScreen'} screenOptions={{ headerShown: false }}>
       {/* <Stack.Navigator initialRouteName="FirstScreen"  screenOptions={ {headerShown: false}}> */}
       <Stack.Screen name="Prescription" component={Prescription} />
       <Stack.Screen name="AddNewPrescription" component={AddNewPrescription} />

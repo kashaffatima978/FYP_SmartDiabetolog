@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setExerciseRecord, setExerciseToday } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
 import { storeUserState } from "../connectionToDB/authentication"
+import { Alert } from "react-native";
 
 export default MainExerciseStartPage = ({ navigation, route }) => {
 

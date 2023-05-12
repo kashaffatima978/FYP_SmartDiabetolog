@@ -2,9 +2,10 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 // const ip = 'http://192.168.1.10'
-import {IP} from "../../files/information"
+import { IP } from "../../files/information"
 import { store } from "../../redux/reduxActions";
-const ip=`http://${IP}`
+const ip = `http://${IP}`
+import { getRecordStateFromAsync, storeStateInAsync, getStateInAsync } from "./AsyncStorage"
 
 exports.checkRoot = () => {
        axios.get(`${ip}:3000/`)
@@ -50,7 +51,7 @@ exports.registeration = (name, email, password) => {
 }
 
 exports.signIn = (email, password) => {
-       return new Promise((resolve,reject)=>{
+       return new Promise((resolve, reject) => {
               var status = ""
               axios.post(`${ip}:3000/login`,
                      {
@@ -64,11 +65,11 @@ exports.signIn = (email, password) => {
                                    status = "success"
                                    console.log("token is", res.data.token);
                                    storeTokenInStorage(res.data.token, "login")
-                                   .then(token=>{
-                                          console.log("token in signin after storing in asyncstorage is",token)
-                                          resolve();
-                                   })
-                                   .catch(err=>{console.log("Error signIn1: ", err),reject(err)})
+                                          .then(token => {
+                                                 console.log("token in signin after storing in asyncstorage is", token)
+                                                 resolve();
+                                          })
+                                          .catch(err => { console.log("Error signIn1: ", err), reject(err) })
 
                             }
                      })
@@ -88,7 +89,7 @@ const storeTokenInStorage = (value, methodType = "register") => {
               const obj = { "token": value }
               //storage for register
               if (methodType === "register") {
-                     AsyncStorage.setItem("@registerToken", JSON.stringify(obj)).then(async() => {
+                     AsyncStorage.setItem("@registerToken", JSON.stringify(obj)).then(async () => {
                             const data = await AsyncStorage.getItem(("@registerToken"))
                             const token = JSON.parse(data).token
                             console.log(`In Asyncstorage register token is= ${JSON.parse(data).token}`)
@@ -102,7 +103,7 @@ const storeTokenInStorage = (value, methodType = "register") => {
               }
               //storage for login
               else {
-                     AsyncStorage.setItem("@token", JSON.stringify(obj)).then(async() => {
+                     AsyncStorage.setItem("@token", JSON.stringify(obj)).then(async () => {
                             const data = await AsyncStorage.getItem(("@token"))
                             const token = JSON.parse(data).token
                             console.log(`in Asyncstorage token for login is= ${JSON.parse(data).token}`)
@@ -178,69 +179,101 @@ exports.getOTP = async (data) => {
 
 //verify user registration process
 exports.verifyUser = async () => {
-       return new Promise(async(resolve,reject)=>{
+       return new Promise(async (resolve, reject) => {
 
               const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
-       axios.patch(`${ip}:3000/`,
-              { "userVerified": "true" },
-              { headers: { "Authorization": "Bearer " + token } })
-              .then((res) => {
-                     if (res.data.status !== undefined) {
-                            console.log("changes successfully maintained in verifyUser");
-                            console.log(res.data)
-                            resolve(res.data)
-                     }
-              })
-              .catch((err) => {
-                     console.log("Error: verifyUser= ", err)
-                     reject(err)
-              })
+              axios.patch(`${ip}:3000/`,
+                     { "userVerified": "true" },
+                     { headers: { "Authorization": "Bearer " + token } })
+                     .then((res) => {
+                            if (res.data.status !== undefined) {
+                                   console.log("changes successfully maintained in verifyUser");
+                                   console.log(res.data)
+                                   resolve(res.data)
+                            }
+                     })
+                     .catch((err) => {
+                            console.log("Error: verifyUser= ", err)
+                            reject(err)
+                     })
        })
-       
+
 }
 
 //store the  user state
 exports.storeUserState = async (state) => {
-       return new Promise(async(resolve,reject)=>{
-
-              const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-       axios.patch(`${ip}:3000/`,
-              { "state": state },
-              { headers: { "Authorization": "Bearer " + token } })
-              .then((res) => {
-                     if (res.data.status !== undefined) {
-                            console.log("changes successfully updated in user state");
-                            console.log(res.data)
-                            resolve(res.data)
-                     }
-              })
-              .catch((err) => {
-                     console.log("Error: storeUserState= ", err)
-                     reject(err)
-              })
-       })
+       var state = state
+       var records=[]
        
+       getRecordStateFromAsync()
+              .then(async (record) => {
+                     //if date is 1, new month starts then change record to empty []
+                     if((new Date().getDate())===1){
+                            record=[]
+                     }
+
+                     console.log("record before updating in Async after exercise done ", record)
+                     record.push(store.getState().todayExerciseDone)
+                     console.log("record before updating in Async after exercise done ", record)
+                     state.record=record
+                      await storeStateInAsync(state)
+
+                     
+                     return new Promise(async (resolve, reject) => {
+
+                            const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
+                            axios.patch(`${ip}:3000/`,
+                                   { "state": state },
+                                   { headers: { "Authorization": "Bearer " + token } })
+                                   .then(async (res) => {
+              
+                                          if (res.data.status !== undefined) {
+                                                 console.log("changes successfully updated in user state");
+                                                 console.log(res.data)
+                                                 await storeStateInAsync(state)
+                                                 resolve(res.data)
+                                          }
+                                   })
+                                   .catch((err) => {
+                                          console.log("Error: storeUserState= ", err)
+                                          reject(err)
+                                   })
+                     })
+              
+                     
+                    // await storeRecordStateInAsync(record)
+                     //console.log("the STATE is ", state)
+
+                     //state["record"] = record
+                     //console.log("After updating the state with the new record after excercise being done, the STATE is ", state)
+              })
+              .catch(err => { console.log("Error in storeUserState in authentication catchA",err) })
+       //state.record=record
+       //console.log("now state before updation in db is",state)
+      
+
+      
 }
 
 //store the  user state while registeration
 exports.storeUserStateWhileRegisteration = async (state) => {
-       return new Promise(async(resolve,reject)=>{
+       return new Promise(async (resolve, reject) => {
 
               const token = (JSON.parse(await AsyncStorage.getItem("@registerToken")).token)
-       axios.patch(`${ip}:3000/`,
-              { "state": state },
-              { headers: { "Authorization": "Bearer " + token } })
-              .then((res) => {
-                     if (res.data.status !== undefined) {
-                            console.log("changes successfully updated in user state");
-                            console.log(res.data)
-                            resolve(res.data)
-                     }
-              })
-              .catch((err) => {
-                     console.log("Error: storeUserState= ", err)
-                     reject(err)
-              })
+              axios.patch(`${ip}:3000/`,
+                     { "state": state },
+                     { headers: { "Authorization": "Bearer " + token } })
+                     .then((res) => {
+                            if (res.data.status !== undefined) {
+                                   console.log("changes successfully updated in user state");
+                                   console.log(res.data)
+                                   resolve(res.data)
+                            }
+                     })
+                     .catch((err) => {
+                            console.log("Error: storeUserState= ", err)
+                            reject(err)
+                     })
        })
 
 }

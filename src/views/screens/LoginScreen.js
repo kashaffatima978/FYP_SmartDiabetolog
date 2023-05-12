@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { title } from "process";
 import { signIn } from "../connectionToDB/authentication"
 import { getProfileInformation } from "../connectionToDB/profile"
+import {storeStateInAsync,getStateFromAsync} from "../connectionToDB/AsyncStorage"
 import { updateInitialState } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
@@ -82,9 +83,15 @@ export default function LoginScreen({ navigation }) {
                     //state loading from database
                     //first get profile info from database
                     getProfileInformation()
-                        .then((res) => {
+                        .then(async(res) => {
                             console.log("here", res)
                             console.log("state got is ", res.userDetails.state)
+
+                            //storing whole state and record state in AsycStorage
+                             await storeStateInAsync(res.userDetails.state)
+                             
+                             
+
                             //now state storing
                             //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 
                             //,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,
@@ -110,19 +117,19 @@ export default function LoginScreen({ navigation }) {
 
                             //todayExerciseDone is initially false already
                             //now set record
-                            date = (new Date()).getDate()
+                            //date = (new Date()).getDate()
 
-                            for (i = 0; i < res.userDetails.state.record.length; i++) {
-                                //if an instance for record is true
-                                if (res.userDetails.state.record[i]) {
-                                    dispatch(setExerciseToday())
-                                    dispatch(setExerciseRecord())
-                                    dispatch(setExerciseToday())
-                                }
-                                else {
-                                    dispatch(setExerciseRecord())
-                                }
-                            }
+                            // for (i = 0; i < res.userDetails.state.record.length; i++) {
+                            //     //if an instance for record is true
+                            //     if (res.userDetails.state.record[i]) {
+                            //         dispatch(setExerciseToday())
+                            //         dispatch(setExerciseRecord())
+                            //         dispatch(setExerciseToday())
+                            //     }
+                            //     else {
+                            //         dispatch(setExerciseRecord())
+                            //     }
+                            // }
 
                             //if today exercise is true then update the state todayExerciseDone
                             if (res.userDetails.state.todayExerciseDone) {

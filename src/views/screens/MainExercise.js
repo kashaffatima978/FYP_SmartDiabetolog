@@ -3,50 +3,77 @@ import { View, Text, Button, SafeAreaView, StatusBar, ScrollView, StyleSheet, To
 import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {  store } from "../../redux/reduxActions";
-import {Heading } from '../components/Heading'
+import { store } from "../../redux/reduxActions";
+import { Heading } from '../components/Heading'
 import axios from "axios";
-import {IP} from "../../files/information"
+import { IP } from "../../files/information"
+import { storeStateInAsync, getStateFromAsync, getRecordStateFromAsync } from "../connectionToDB/AsyncStorage"
 
-export default function MainExercisePage({navigation}) {
-    const ip=`http://${IP}`
+export default function MainExercisePage({ navigation }) {
+    const ip = `http://${IP}`
     days = [...Array(31).keys()]
     month = (new Date()).getMonth()
     date = new Date()
-    const [today,setToday]=useState(2)//new Date().getDay())
+    const [today, setToday] = useState(new Date().getDay())
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    const[mount, setMount]= useState(0);
-    const [exercises,setExersises]=useState([])
-    
-    useEffect(()=>{
-        if(mount==0){
-            axios.post(ip+':8000/exercisePlan',{
-                "day":2,
-                "weight": 50,
-                "calories": 1200,
-                //[back,arms,shoulders,waist,legs,chest,cardio,neck]
-                "routine":[store.getState().back,store.getState().arms,store.getState().shoulders,store.getState().waist,store.getState().legs,store.getState().chest,store.getState().cardio,store.getState().neck]
-            })
-            .then((response)=>{
-                console.log("this is data ^^^^^^^&&&&&&&&&&&***************",JSON.parse(response.data.res))
-                setExersises(JSON.parse(response.data.res))
-                
-                console.log(new Date().getDay())
-                console.log("1st exercise is ",JSON.parse(response.data.res)[0])
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
+    const [mount, setMount] = useState(0);
+    const [exercises, setExersises] = useState([])
+    const [states, setStates] = useState({})
+    const [record, setRecord] = useState([])
+
+    useEffect(() => {
+        if (mount === 0) {
+            // setStates(async () => { (await getStateFromAsync()) })
+            // setRecord(async () => { (await getRecordStateFromAsync()) })
+            // setMount(old => { old++ })
+
+            getStateFromAsync()
+                .then(states => {
+                    setStates(states)
+                    getRecordStateFromAsync()
+                        .then(records => {
+                            setRecord(records)
+                            setMount(old => { old++ })
+
+                            //alert("here")
+                            axios.post(ip + ':8000/exercisePlan', {
+                                "day": 5,
+                                "weight": 50,
+                                "calories": 1200,
+                                //[back,arms,shoulders,waist,legs,chest,cardio,neck]
+                                "routine": [store.getState().back, store.getState().arms, store.getState().shoulders, store.getState().waist, store.getState().legs, store.getState().chest, store.getState().cardio, store.getState().neck]
+                            })
+                                .then((response) => {
+                                    console.log("this is data ^^^^^^^&&&&&&&&&&&***************", JSON.parse(response.data.res))
+                                    setExersises(JSON.parse(response.data.res))
+
+                                    console.log(new Date().getDay())
+                                    console.log("1st exercise is ", JSON.parse(response.data.res)[0])
+                                    setMount(old => { old++ })
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+
+
+
+
+                        })
+                        .catch(err => { console.log("error in Main Exercise in useEffect getRecordStateFromAsync") })
+                })
+                .catch(err => { console.log("error in Main Exercise in useEffect getStateFromAsync") })
+
         }
-    }, [])
-    
+
+    },[mount])
+
 
 
     return (
         <SafeAreaView >
-            <Heading name="Exercise plan"/>
+            <Heading name="Exercise plan" />
             <View style={styles.infoView}>
-                
+
                 <Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>
                     Burn Calories and keep fit
                 </Text>
@@ -57,8 +84,8 @@ export default function MainExercisePage({navigation}) {
                 style={{alignSelf:"flex-end",marginRight:"4%",backgroundColor:"#282A71",width:50,height:50,borderRadius:100,justifyContent:"center",alignItems:"center"}}>
                     <Text>Activity</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity onPress={()=>navigation.navigate("ExerciseSetting")}
-                style={{alignSelf:"flex-end",marginRight:"4%",backgroundColor:"#282A71",width:50,height:50,borderRadius:100,justifyContent:"center",alignItems:"center"}}>
+                <TouchableOpacity onPress={() => navigation.navigate("ExerciseSetting")}
+                    style={{ alignSelf: "flex-end", marginRight: "4%", backgroundColor: "#282A71", width: 50, height: 50, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
                     <Icon name="list" style={styles.iconStyle}></Icon>
                 </TouchableOpacity>
             </View>
@@ -68,42 +95,42 @@ export default function MainExercisePage({navigation}) {
                         days.map((val, index) => {
                             return (
                                 <TouchableOpacity key={index} disabled={date.getDate() != val + 1 ? true : false} style={[styles.button, { backgroundColor: date.getDate() > val + 1 ? "#8E91BD" : "#6A6DB0" }]}
-                                    onPress={() => { console.log(store.getState())}}>
-                                    <View style={{ height: 50, justifyContent: "center", alignItems: "center" ,flexDirection:"row"}}>
+                                    onPress={() => { console.log(store.getState()) }}>
+                                    <View style={{ height: 50, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
                                         <Text style={[styles.text1]}>Day {val + 1}</Text>
-                                        {date.getDate() > val + 1 ? 
-                                        ( !store.getState()? 
-                                        <Text>SKIP</Text>:
-                                        <Text>{store.getState().record[val]?"DONE":"SKIP"}</Text> )
-                                        :
-                                        null
-                                    }
-                                        { 
-                                            (date.getDate() == val + 1)?
-                                               ( date.getDay()===0?
-                                               <Text>REST</Text>:
-                                                (!(!store.getState() ? false:store.getState().todayExerciseDone ) ?
-                                                (<TouchableOpacity style={{backgroundColor:"#282A71",width:"20%",height:"80%",alignItems:"center",justifyContent:"center",marginLeft:"10%"}}
-                                                    onPress={
-                                                        () => {
-                                                        if( today==1 || today==3 || today==5 ){
-                                                        navigation.navigate("ExerciseActivityOrRest",{"day":val+1,"exercises":exercises}) 
-                                                        }
-                                                        if( today==2 || today==4  ){
-                                                            navigation.navigate("MainExerciseStartPage",{"day":val+1,"exercises":exercises}) 
-                                                            }
-                                                        
-                                                    }
-                                                        }>
-                                                    <View style={{ height: 50, justifyContent: "center", alignItems: "center" }}>
-                                                        <Text style={[styles.text1,{color:"white"}]}>
-                                                            START 
-                                                        </Text>
+                                        {date.getDate() > val + 1 ?
+                                            (!store.getState() ?
+                                                <Text>SKIPP</Text> :
+                                                <Text>{record[val] ? "DONE" : "SKIP"}</Text>)
+                                            :
+                                            null
+                                        }
+                                        {
+                                            (date.getDate() == val + 1) ?
+                                                (date.getDay() === 0 ?
+                                                    <Text>REST</Text> :
+                                                    (!(!store.getState() ? false : store.getState().todayExerciseDone) ?
+                                                        (<TouchableOpacity style={{ backgroundColor: "#282A71", width: "20%", height: "80%", alignItems: "center", justifyContent: "center", marginLeft: "10%" }}
+                                                            onPress={
+                                                                () => {
+                                                                    if (today == 1 || today == 3 || today == 5) {
+                                                                        navigation.navigate("ExerciseActivityOrRest", { "day": val + 1, "exercises": exercises })
+                                                                    }
+                                                                    if (today == 2 || today == 4) {
+                                                                        navigation.navigate("MainExerciseStartPage", { "day": val + 1, "exercises": exercises })
+                                                                    }
 
-                                                    </View>
-                                                </TouchableOpacity>):
-                                                <Icon name="check-square-o" style={styles.iconStyle}></Icon>
-                                                ))
+                                                                }
+                                                            }>
+                                                            <View style={{ height: 50, justifyContent: "center", alignItems: "center" }}>
+                                                                <Text style={[styles.text1, { color: "white" }]}>
+                                                                    START
+                                                                </Text>
+
+                                                            </View>
+                                                        </TouchableOpacity>) :
+                                                        <Icon name="check-square-o" style={styles.iconStyle}></Icon>
+                                                    ))
                                                 : null
                                         }
 
@@ -147,11 +174,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderColor: colors.l7blue,
         backgroundColor: "#6A6DB0"
-    },  
-     iconStyle:{
-        fontSize:20,
-        color:'white',
-        marginHorizontal:5
+    },
+    iconStyle: {
+        fontSize: 20,
+        color: 'white',
+        marginHorizontal: 5
     }
 
 
