@@ -314,7 +314,7 @@ export default function HomeScreen({ navigation, prop }) {
                             <Text style={[styles.boxText, { color: '#9d8189' }]}>Blogs</Text>
                         </Pressable>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Diet') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Videos') }}>
                             <Text style={[styles.boxText, { color: '#a3b18a' }]}>Videos</Text>
                         </Pressable>
 

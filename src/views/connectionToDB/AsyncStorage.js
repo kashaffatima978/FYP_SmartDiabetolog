@@ -87,6 +87,9 @@ storeRecordStateInAsync = (record) => {
     console.log("record got in storeRecordStateInAsync is==== ",record)
     recordProcessed = []
     date = (new Date()).getDate()
+    if(record===undefined){
+        record=[]
+    }
     if (record.length < date - 1) {
         for (i = record.length; i < date - 1; i++) {
             recordProcessed.push(false)

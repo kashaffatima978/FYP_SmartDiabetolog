@@ -37,7 +37,7 @@ export default function MainExercisePage({ navigation }) {
 
                             //alert("here")
                             axios.post(ip + ':8000/exercisePlan', {
-                                "day": 5,
+                                "day": today,
                                 "weight": 50,
                                 "calories": 1200,
                                 //[back,arms,shoulders,waist,legs,chest,cardio,neck]
@@ -59,7 +59,7 @@ export default function MainExercisePage({ navigation }) {
 
 
                         })
-                        .catch(err => { console.log("error in Main Exercise in useEffect getRecordStateFromAsync") })
+                        .catch(err => { console.log("error in Main Exercise in useEffect getRecordStateFromAsync", err) })
                 })
                 .catch(err => { console.log("error in Main Exercise in useEffect getStateFromAsync") })
 
@@ -110,10 +110,10 @@ export default function MainExercisePage({ navigation }) {
                                                 (date.getDay() === 0 ?
                                                     <Text>REST</Text> :
                                                     (!(!store.getState() ? false : store.getState().todayExerciseDone) ?
-                                                        (<TouchableOpacity style={{ backgroundColor: "#282A71", width: "20%", height: "80%", alignItems: "center", justifyContent: "center", marginLeft: "10%" }}
+                                                        (<TouchableOpacity disabled={today==6?true:false} style={[{backgroundColor: today==6?'lightgrey':'#282A71'},{width: "20%", height: "80%", alignItems: "center", justifyContent: "center", marginLeft: "10%" }]}
                                                             onPress={
                                                                 () => {
-                                                                    if (today == 1 || today == 3 || today == 5) {
+                                                                    if (today == 1 || today == 3 || today == 5 || today==0) {
                                                                         navigation.navigate("ExerciseActivityOrRest", { "day": val + 1, "exercises": exercises })
                                                                     }
                                                                     if (today == 2 || today == 4) {
@@ -123,8 +123,8 @@ export default function MainExercisePage({ navigation }) {
                                                                 }
                                                             }>
                                                             <View style={{ height: 50, justifyContent: "center", alignItems: "center" }}>
-                                                                <Text style={[styles.text1, { color: "white" }]}>
-                                                                    START
+                                                                <Text style={[styles.text1, {color: today==6?'black':'white'}]}>
+                                                                    {today==6? 'REST':'START'}
                                                                 </Text>
 
                                                             </View>

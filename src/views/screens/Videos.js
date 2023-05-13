@@ -5,25 +5,34 @@ import { Card, Title, Paragraph } from 'react-native-paper';
 import { IP } from '../../files/information';
 import axios from 'axios';
 import VidPlayer from '../components/VidPlayer';
-import Loader from '../components/loader'
-
+import Loader from '../components/loader';
+import NoInternet from '../components/NoInternet'
 
 
 const Videos = ({ navigation }) => {
   const [mount, setMount]= useState(0)
   const ip = `http://${IP}:8000`
   const [videos, setVideos] = useState([])
+  const [empty, setEmpty] = useState(false)
   const [loader, setLoader] = useState(true)
 
   useEffect(()=>{
     if(mount==0){
       axios.get(ip +'/getVideos').
       then((res)=>{
+        if((res.data.ids).length==0){
+          console.log('yes')
+          setEmpty(true)
+          setLoader(false)
+        }else{
+          setEmpty(false)
+          setVideos(res.data.ids)
+          setLoader(false)
+        }
         console.log(res.data.ids)
-        setVideos(res.data.ids)
-        setLoader(false)
+        
       })
-      .catch((err)=>{console.log("error in blogs", err)})
+      .catch((err)=>{console.log("error in videos", err)})
       setMount(1);
     }
   },[mount])
@@ -41,14 +50,16 @@ const Videos = ({ navigation }) => {
         <Heading name={'Diabetes Videos'} />
       <Loader visible={loader}></Loader>
 
-      {videos!=null?
+      {empty==true?
+      <>
+        <NoInternet/>
+      </>:
       <>
         <FlatList
           data={videos}
           renderItem={renderItem}
         />
-      </>
-      :null}
+      </>}
     </View>
   );
 };

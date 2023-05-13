@@ -29,7 +29,7 @@ export default function AddNewPrescription({ navigation, route }) {
 
     const getState = (type) => {
         getAllergiesFromAsync(type).then(insulin => {
-            if (insulin.length === 1 && mount !== 0) {
+            if (insulin!==null && insulin.length === 1 && mount !== 0) {
                 console.log(`in loadDataOnlyOnce in AddNewPrescription if for ${type}`)
                 console.log(insulin)
                 if (type === "fast") {

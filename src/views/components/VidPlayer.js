@@ -17,7 +17,7 @@ export default function VidPlayer(props){
   .catch((err)=>{console.log('Error in vidPlayer : ',err)})
 
   return (
-    <>
+    <View style={{borderRadius: 1}}>
         <View style={styles.cardThumbnailContainer}>
             <YoutubePlayer
             videoId={props.vidId}
@@ -29,7 +29,7 @@ export default function VidPlayer(props){
         <View style={styles.cardTextContainer}>
             <Text style={styles.cardTitle}>{title}</Text>
         </View>
-   </>
+   </View>
   );
 };
 
