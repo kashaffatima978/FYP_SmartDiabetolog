@@ -32,6 +32,9 @@ exports.getAllergiesFromAsync = (type) => {
             .then((allergies) => {
                 const parsed = JSON.parse(allergies)
                 console.log(`data got for ${type} from Async are = ${parsed}`)
+                if(parsed==null){
+                    resolve([])
+                }
                 resolve(parsed)
             }).catch((err) => {
                 console.log("getAllergiesFromAsync error ", err)

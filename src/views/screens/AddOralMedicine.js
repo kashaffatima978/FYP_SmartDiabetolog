@@ -173,7 +173,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     <Icon name="heartbeat" size={25} style={styles.icon} />
                     <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Units</Text>
-                        <TextInput value={units} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Medicine Units in mg" placeholderTextColor={"gray"} />
+                        <TextInput keyboardType="numeric" value={units} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Medicine Units in mg" placeholderTextColor={"gray"} />
                     </View>
                 </View>
 
@@ -181,7 +181,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     <Icon name="heartbeat" size={25} style={styles.icon} />
                     <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Dosage</Text>
-                        <TextInput value={dosage} onChangeText={text => { setDosage(text) }} style={styles.input} placeholder="Enter Medicine Dosage" placeholderTextColor={"gray"} />
+                        <TextInput keyboardType="numeric" value={dosage} onChangeText={text => { setDosage(text) }} style={styles.input} placeholder="Enter Medicine Dosage" placeholderTextColor={"gray"} />
                     </View>
                 </View>
 

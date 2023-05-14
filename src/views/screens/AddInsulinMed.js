@@ -247,7 +247,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                                 <Icon name="heartbeat" size={25} style={styles.icon} />
                                 <View style={{ width: "85%" }}>
                                     <Text style={styles.label}>Insulin Sensitivity Factor</Text>
-                                    <TextInput value={`${ISF}`} onChangeText={text => { setISF(text) }} style={styles.input} placeholder="ISF" placeholderTextColor={"gray"} />
+                                    <TextInput keyboardType="numeric" value={`${ISF}`} onChangeText={text => { setISF(text) }} style={styles.input} placeholder="ISF" placeholderTextColor={"gray"} />
                                 </View>
                             </View>
 
@@ -255,7 +255,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                                 <Icon name="heartbeat" size={25} style={styles.icon} />
                                 <View style={{ width: "85%" }}>
                                     <Text style={styles.label}>Carb Ratio</Text>
-                                    <TextInput value={`${carbRatio}`} onChangeText={text => { setCarbRatio(text) }} style={styles.input} placeholder="Enter Carb Ratio" placeholderTextColor={"gray"} />
+                                    <TextInput keyboardType="numeric" value={`${carbRatio}`} onChangeText={text => { setCarbRatio(text) }} style={styles.input} placeholder="Enter Carb Ratio" placeholderTextColor={"gray"} />
                                 </View>
                             </View>
 
@@ -324,7 +324,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                                 <Icon name="heartbeat" size={25} style={styles.icon} />
                                 <View style={{ width: "85%" }}>
                                     <Text style={styles.label}>Units</Text>
-                                    <TextInput value={`${units}`} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Units" placeholderTextColor={"gray"} />
+                                    <TextInput keyboardType="numeric" value={`${units}`} onChangeText={text => { setUnits(text) }} style={styles.input} placeholder="Enter Units" placeholderTextColor={"gray"} />
                                 </View>
                             </View>
                             {!route.params.longInsulinID ?
