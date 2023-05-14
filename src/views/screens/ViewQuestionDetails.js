@@ -26,17 +26,26 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
 
 
     const [mount, setMount] = useState(0)
+    const [loader, setLoader] = useState(false)
 
     const loadDataOnlyOnce = () => {
-        alert(route.params.id)
+        setLoader(true)
+        //alert(route.params.id)
         viewParticularQuestionDetail(id)
             .then((res) => {
                 console.log("in loadDataOnlyOnce in ViewQuestionDetails")
                 setTitle(res.title)
                 setDetail(res.detail)
                 setAnswers(res.answers)
+                setLoader(false)
             })
-            .catch(err => { console.log("Error in loadDataOnlyOnce in ViewQuestionDetails ", err) })
+            .catch(err => { 
+                setLoader(false);
+                alert("Connection Lost")
+                console.log("Error in loadDataOnlyOnce in ViewQuestionDetails ", err) 
+                navigation.navigate("Home")
+            
+            })
 
 
     };
@@ -61,6 +70,7 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
 
     return (
         <ScrollView >
+            <Loader visible={loader}></Loader>
             <Heading name="Question Details" />
 
 
@@ -91,9 +101,9 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
 
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
                 {
-                    answers.map((item)=>{
+                    answers.map((item,index)=>{
                         return(
-                            <TouchableOpacity style={styles.flatlistItemContainer} >
+                            <TouchableOpacity style={styles.flatlistItemContainer} key={index}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 2 }}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
                                     {/* <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text>

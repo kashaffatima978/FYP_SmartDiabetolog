@@ -21,19 +21,30 @@ import {
 
 export default AddAnswer = function ({ navigation, route }) {
     const [answer, setAnswer] = useState("")
+    const [loader, setLoader] = useState(false)
     
 
     const saveAnswer = () => {
+        setLoader(true)
         addAnswerToQuestion(route.params.id,answer)
             .then((data) => {
+                setLoader(false)
                 console.log("adding answer", data);
-                navigation.replace("ViewQuestionDetails",{"id":route.params.id})
+                navigation.navigate("ViewQuestionDetails",{"id":route.params.id})
             })
-            .catch((err) => { console.log("Error in saveAnswer in AddAnswer", err) })
+            .catch((err) => { 
+                setLoader(false);
+                alert("Connection Lost")
+                console.log("Error in saveAnswer in AddAnswer", err) 
+                navigation.navigate("Home")
+                
+                 
+            })
     }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader visible={loader}></Loader>
             <Heading name="Add a new Answer" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 

@@ -29,7 +29,7 @@ export default function Chatbot({navigation}){
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>{
-                    navigation.navigate("ViewBloodPressure")
+                    navigation.navigate("Chat")
                 }}>
                     <Card style={styles.card} title="Live Chat" imageSource={require("../../../assets/Images/bloodPressure.jpg")}/>
                 </TouchableOpacity>

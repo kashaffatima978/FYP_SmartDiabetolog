@@ -51,6 +51,7 @@ import AddAnswer from "../screens/AddAnswer";
 import { Recipe } from "../screens/Recipe";
 import BlogList from "../screens/BlogList";
 import Videos from "../screens/Videos";
+import Chat from "../screens/chat";
 
 export default function StackNav() {
   const Stack = createNativeStackNavigator();
@@ -60,6 +61,7 @@ export default function StackNav() {
       <Stack.Screen name="Prescription" component={Prescription} />
       <Stack.Screen name="AddNewPrescription" component={AddNewPrescription} />
       <Stack.Screen name="Chatbot" component={Chatbot} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="AskQuestion" component={AskQuestion} />
       <Stack.Screen name="AddAnswer" component={AddAnswer} />

@@ -9,6 +9,7 @@ import {
     viewAllQuestions
 } from "../connectionToDB/dashboard"
 import { MyButton } from "../components/button";
+import { setShoulders } from "../../redux/reduxActions";
 
 
 
@@ -19,6 +20,8 @@ export default function Dashboard({ navigation }) {
     const [mount, setMount] = useState(0)
     const [loader, setLoader] = useState(false)
     const[questions,setQuestions]=useState([])
+    const[allQuestions,setAllQuestions]=useState([])
+    const [search,setSearch]=useState("")
 
     const loadDataOnlyOnce = async () => {
         viewAllQuestions()
@@ -26,6 +29,7 @@ export default function Dashboard({ navigation }) {
                 console.log(res)
                setLoader(false)
                 setQuestions(res)
+                setAllQuestions(res)
                 
             })
             .catch(err => { console.log("Error in viewAllQuestions in Dashboard ", err) })
@@ -43,11 +47,20 @@ export default function Dashboard({ navigation }) {
             <Loader visible={loader}></Loader>
             <Heading name="Dashboard" />
             <View style={{ marginHorizontal: "5%", marginVertical: "2%" }}>
-                <TextInput placeholder="search"></TextInput>
+                <TextInput placeholder="search" value={search} onChangeText={text=>{
+                    setSearch(text);
+                    console.log("search=",text)
+                    
+                        newArray=(allQuestions.filter(val=>( ((val.title).toLowerCase()).includes((text.toLowerCase())))))
+                        console.log(newArray)
+                        setQuestions(newArray)
+                 
+                }
+                    }></TextInput>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                     <View>
                         <Text style={{ color: "black", fontSize: 20 }}>Search Results</Text>
-                        <Text style={{ color: "black" }}>500 results</Text>
+                        <Text style={{ color: "black" }}>{!questions?0:questions.length} results</Text>
                     </View>
                     <TouchableOpacity onPress={() => { navigation.navigate("AskQuestion") }}
                         activeOpacity={0.5} style={styles.touchOpacity}>
@@ -64,7 +77,7 @@ export default function Dashboard({ navigation }) {
                     return (
 
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("ViewQuestionDetails",{"id":item._id}) }}>
-                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10,height:"100%",marginVertical:"3%" }}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     {/* <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text> */}
                                     {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}

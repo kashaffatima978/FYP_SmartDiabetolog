@@ -22,19 +22,28 @@ import {
 export default AskQuestion = function ({ navigation, route }) {
     const [title, setTitle] = useState("")
     const [detail, setDetail] = useState("")
+    const [loader, setLoader] = useState(false)
     
 
     const saveQuestion = () => {
+        setLoader(true)
         addAskQuestion(title,detail)
             .then((data) => {
                 console.log("adding question", data);
-               // navigation.navigate("AllergicReactionMain")
+                setLoader(false)
+                navigation.navigate("Dashboard")
             })
-            .catch((err) => { console.log("Error in saveQuestion in AskQuestion", err) })
+            .catch((err) => { 
+                setLoader(false);
+                alert("Connection Lost")
+                console.log("Error in saveQuestion in AskQuestion", err) 
+                navigation.navigate("Home")
+            })
     }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader visible={loader}></Loader>
             <Heading name="Ask a Question" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 
