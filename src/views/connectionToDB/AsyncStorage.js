@@ -226,8 +226,8 @@ exports.getTrackerInstanceInAsync  = (type) => {
             .then((instance) => {
                 const parsed = JSON.parse(instance)
                 console.log(`data got for ${type} from Async are = ${parsed}`)
-                if(parsed==null){
-                    resolve(null)
+                if(parsed===null){
+                    resolve({})
                 }
                 resolve(parsed)
             }).catch((err) => {

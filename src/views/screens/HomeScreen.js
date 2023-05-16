@@ -41,9 +41,9 @@ export default function HomeScreen({ navigation, prop }) {
     const [reminderDosage, setReminderDosage] = useState("")
     const [medicationForAlarm, setMedicationForAlarm] = useState([])
     const [alarmShown, setAlarmShown] = useState(0)
-    const [bloodSugarInstance, setBloodSugarInstance] = useState(null)
-    const [bloodPressureInstance, setBloodPressureInstance] = useState(null)
-    const [cholesterolInstance, setCholesterolInstance] = useState(null)
+    const [bloodSugarInstance, setBloodSugarInstance] = useState({})
+    const [bloodPressureInstance, setBloodPressureInstance] = useState({})
+    const [cholesterolInstance, setCholesterolInstance] = useState({})
 
 
 
@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation, prop }) {
             setMount(old => (old += 5))
             console.log("In oneffect")
             getProfileInformation()
-                .then((res) => {
+                .then(async (res) => {
                     console.log("here", res)
                     console.log("state", res.userDetails.state)
                     setName(res.userDetails.name)
@@ -93,20 +93,24 @@ export default function HomeScreen({ navigation, prop }) {
                         navigation.navigate('Profile')
                     }
 
-                    setBloodSugarInstance(async () => {
-                        getTrackerInstanceInAsync("bloodsugar").then((res) => {
-                            console.log("last sugar instance got from async is ", res)
-                            alert(res.concentration)
-                            return (res)
-                        }
-                        )
-                        .catch(err=>{"error in setBloodSugarInstance in HomeScreen", err})
-                    })
-                    console.log(bloodSugarInstance)
-                    setBloodPressureInstance(async () => { return (await getTrackerInstanceInAsync("bloodpressure")) })
-                    setCholesterolInstance(async () => { return (await getTrackerInstanceInAsync("cholesterol")) })
+                    const bs = await getTrackerInstanceInAsync("bloodsugar")
+                    console.log(bs)
+                    console.log(bs.concentration)
+                    setBloodSugarInstance(() => bs)
+
+                    const bp = await getTrackerInstanceInAsync("bloodpressure")
+                    console.log(bp)
+                    console.log(bp.systolic)
+                    setBloodPressureInstance(() => bp)
+
+                    const ch = await getTrackerInstanceInAsync("cholesterol")
+                    console.log(ch)
+                    console.log(ch.ldl)
+                    setCholesterolInstance(() => ch)
+
                 })
                 .catch(err => { console.log("Error in Home screen", err) })
+
 
 
         }
@@ -266,15 +270,98 @@ export default function HomeScreen({ navigation, prop }) {
                                 </View>
                             </View>
                         </Pressable>
-                        {bloodSugarInstance == null ? null :
-                            <DailyInputs colorbg="#FCE0D7" dataUnit={bloodSugarInstance.description} dataType="Blood Sugar" data={bloodSugarInstance.concentration} icon={require('../../../assets/Images/bloodsugar_icon.png')} dataColor="#9d8189" />
+                        {(Object.keys(bloodSugarInstance).length === 0) ?
+                            <DailyInputs colorbg="#FCE0D7"
+                                dataUnit="mg/dl"
+                                dataType="Blood Sugar"
+                                data={`120`}
+                                icon={require('../../../assets/Images/bloodsugar_icon.png')}
+                                dataColor="#9d8189" >
+
+                            </DailyInputs>
+                            :
+                            <DailyInputs colorbg="#FCE0D7"
+                                dataUnit={bloodSugarInstance.event}
+                                dataType="Blood Sugar"
+                                data={`${bloodSugarInstance.concentration}`}
+                                icon={require('../../../assets/Images/bloodsugar_icon.png')}
+                                dataColor="#9d8189" >
+
+                            </DailyInputs>
                         }
-                        <DailyInputs colorbg="#fad2e1" dataUnit={'mg/dl'} dataType="Systolic BP" data={sbp} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#e56866" />
-                        <DailyInputs colorbg="#dee2ff" dataUnit={'mg/dl'} dataType="Diasystolic BP" data={dbp} icon={require('../../../assets/Images/bloodpressure-icon.png')} dataColor="#8e9aaf" />
-                        <DailyInputs colorbg="#c8e7ff" dataUnit={'mg/dl'} dataType="LDL chlolestrol" data={ldl} icon={require('../../../assets/Images/ldl-icon.png')} dataColor="#618985" />
-                        <DailyInputs colorbg="#c9e4de" dataUnit={'mg/dl'} dataType="HDL chlolestrol" data={hdl} icon={require('../../../assets/Images/hdl-icon.png')} dataColor="#09814a" />
+
+                        {(Object.keys(bloodPressureInstance).length === 0) ?
+                            <DailyInputs colorbg="#fad2e1"
+                                dataType="Systolic BP"
+                                data={`120`}
+                                icon={require('../../../assets/Images/bloodpressure-icon.png')}
+                                dataColor="#e56866" >
+
+                            </DailyInputs>
+                            :
+                            <DailyInputs colorbg="#fad2e1"
+                                dataType="Systolic BP"
+                                data={bloodPressureInstance.systolic}
+                                icon={require('../../../assets/Images/bloodsugar_icon.png')}
+                                dataColor="#e56866" >
+                            </DailyInputs>
+                        }
+
+                        {(Object.keys(bloodPressureInstance).length === 0) ?
+                            <DailyInputs colorbg="#dee2ff"
+                                dataType="Diasystolic BP"
+                                data={dbp}
+                                icon={require('../../../assets/Images/bloodpressure-icon.png')}
+                                dataColor="#8e9aaf" />
+                            :
+                            <DailyInputs colorbg="#dee2ff"
+                                dataType="Diasystolic BP"
+                                data={bloodPressureInstance.disystolic}
+                                icon={require('../../../assets/Images/bloodpressure-icon.png')}
+                                dataColor="#8e9aaf" />
+                        }
+
+                        {(Object.keys(cholesterolInstance).length === 0) ?
+                            <DailyInputs
+                                colorbg="#c8e7ff"
+                                dataType="LDL chlolestroll"
+                                data={ldl}
+                                icon={require('../../../assets/Images/ldl-icon.png')}
+                                dataColor="#618985" />
+                            :
+                            <DailyInputs
+                                colorbg="#c8e7ff"
+                                dataType="LDL chlolestrol"
+                                data={cholesterolInstance.ldl}
+                                icon={require('../../../assets/Images/ldl-icon.png')}
+                                dataColor="#618985" />
+                        }
+
+                        {(Object.keys(cholesterolInstance).length === 0) ?
+                            <DailyInputs
+                                colorbg="#c9e4de"
+                                dataType="HDL chlolestrol"
+                                data={hdl}
+                                icon={require('../../../assets/Images/hdl-icon.png')}
+                                dataColor="#09814a" />
+                            :
+                            <DailyInputs
+                                colorbg="#c9e4de"
+                                dataType="HDL chlolestrol"
+                                data={cholesterolInstance.hdl}
+                                icon={require('../../../assets/Images/hdl-icon.png')}
+                                dataColor="#09814a" />
+                        }
+
+
+
+
+
+
+
 
                     </ScrollView>
+
 
                 </View>
                 <View style={{ marginTop: 16, padding: 20 }}>
@@ -319,7 +406,7 @@ export default function HomeScreen({ navigation, prop }) {
                             <Text style={[styles.boxText, { color: '#9d8189' }]}>Blogs</Text>
                         </Pressable>
 
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Alarm') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: '#d0f4ba' }]} onPress={() => { navigation.navigate('Videos') }}>
                             <Text style={[styles.boxText, { color: '#a3b18a' }]}>Videos</Text>
                         </Pressable>
 
