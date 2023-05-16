@@ -5,6 +5,7 @@ import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import { Heading } from "../components/Heading";
 import Fab from '../components/Fab';
 import { addPrescription, viewPrescriptions } from "../connectionToDB/prescription"
+import { getAllergiesFromAsync } from "../connectionToDB/AsyncStorage"
 
 
 
@@ -14,20 +15,24 @@ export default function Prescription({ navigation }) {
     const [id, setID] = useState("")
     const [mount, setMount] = useState(0)
     const [loader, setLoader] = useState(false)
+    const [currentPrescriptionid, setCurrentPrescriptionid] = useState("")
     const loadDataOnlyOnce = async () => {
         setLoader(true)
         viewPrescriptions()
             .then((res) => {
                 console.log("in view prescriptions")
                 console.log(res)
-                setPrescriptions(res)
-                setTitle(`Prescription${res.length+1}`)
+                setPrescriptions((res.reverse()))
+                setTitle(`Prescription${res.length + 1}`)
                 setLoader(false)
+                getAllergiesFromAsync("currentPrescriptionID")
+                    .then(ress => { console.log(ress); if (ress.length > 0) { setCurrentPrescriptionid((ress[0])) } })
+                    .catch(err => { console.log("Error in getAllergiesFromAsync in Prescription ", err) })
             })
-            .catch(err => { 
-                console.log("Error in viewPrescriptions in Prescription ", err) 
+            .catch(err => {
+                console.log("Error in viewPrescriptions in Prescription ", err)
                 setLoader(false)
-               // navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                // navigation.navigate("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
             })
 
@@ -55,8 +60,9 @@ export default function Prescription({ navigation }) {
                 renderItem={({ item }) => {
                     return (
 
-                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddNewPrescription", { "id": item._id,"title":item.title }) }}>
-                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddNewPrescription", { "id": item._id, "title": item.title }) }}>
+                            <Card style={[{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 },
+                            { borderWidth: 2, borderColor: currentPrescriptionid.id === item._id ? "red" : "white" }]}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text>
                                     {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
@@ -85,7 +91,7 @@ export default function Prescription({ navigation }) {
                 addPrescription(title)
                     .then((data) => {
                         console.log("adding prescription", data);
-                        navigation.replace("AddNewPrescription", { "title": title,"id":data.prescription._id });
+                        navigation.replace("AddNewPrescription", { "title": title, "id": data.prescription._id });
                     })
                     .catch((err) => { console.log("Error in add in Prescription", err) })
 
@@ -174,7 +180,8 @@ const styles = StyleSheet.create({
     },
     titleText: {
         color: 'white',
-        fontSize: 15
+        fontSize: 15,
+        
     },
     para: {
         fontSize: 16,

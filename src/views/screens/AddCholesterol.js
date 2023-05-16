@@ -5,6 +5,7 @@ import { addCholesterolRecord, viewCholesterolInstance, deleteCholesterolInstanc
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { storeTrackerInstanceInAsync } from "../connectionToDB/AsyncStorage"
 
 export default function AddCholesterol({ navigation, route }) {
 
@@ -20,7 +21,6 @@ export default function AddCholesterol({ navigation, route }) {
                 setLoader(true)
                 viewCholesterolInstance(id)
                     .then((res) => {
-                        setTimeout(() => { setLoader(false) }, 1000)
                         console.log("In ", res)
                         setExistingItem(() => { return res });
                         setInputList(() => {
@@ -33,9 +33,15 @@ export default function AddCholesterol({ navigation, route }) {
                             }
                         });
                         console.log("After setting existingItem= ", existingItem)
+                        setLoader(false)
 
                     })
-                    .catch((err) => { console.log("Error in AddCholesterol uploading particular instance ", err) })
+                    .catch((err) => {
+                        console.log("Error in AddCholesterol uploading particular instance ", err)
+                        setLoader(false)
+                        alert("Connection Lost! Try Again.")
+                        navigation.replace("ViewCholesterol")
+                    })
             }
         }
 
@@ -65,61 +71,93 @@ export default function AddCholesterol({ navigation, route }) {
     };
 
     const save = () => {
+        setLoader(true)
         addCholesterolRecord(inputList.hdl, inputList.ldl, inputList.triglycerides, inputList.description)
-            .then((data) => { console.log("abc", data), navigation.replace("ViewCholesterol") })
-            .catch((err) => { console.log("Error in save in add cholesterol", err) })
+            .then(async (data) => {
+                console.log("abc", data);
+                //also store instance in Async
+                await storeTrackerInstanceInAsync("cholesterol", data)
+                setLoader(false)
+                navigation.replace("ViewCholesterol")
+            })
+            .catch((err) => {
+                console.log("Error in save in add cholesterol", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewCholesterol")
+            })
     }
 
     const update = () => {
+        setLoader(true)
         updateCholesterolRecord(route.params.id, inputList.hdl, inputList.ldl, inputList.triglycerides, inputList.description)
-            .then((data) => { console.log("update", data), navigation.replace("ViewCholesterol") })
-            .catch((err) => { console.log("Error in update in add cholesterol", err) })
+            .then((data) => {
+                console.log("update", data)
+                setLoader(false)
+                navigation.replace("ViewCholesterol")
+            })
+            .catch((err) => {
+                console.log("Error in update in add cholesterol", err);
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewCholesterol")
+            })
     }
     const deleteItem = () => {
+        setLoader(true)
         deleteCholesterolInstance(route.params.id)
-            .then((data) => { console.log("delete", data), navigation.replace("ViewCholesterol") })
-            .catch((err) => { console.log("Error in delete in add cholesterol", err) })
+            .then((data) => {
+                console.log("delete", data);
+                setLoader(false)
+                navigation.replace("ViewCholesterol")
+            })
+            .catch((err) => {
+                console.log("Error in delete in add cholesterol", err);
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewCholesterol")
+            })
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <Heading name="Add Cholesterol"/>
+            <Heading name="Add Cholesterol" />
             {/* medkit */}
             <ScrollView style={styles.container2}
                 showsVerticalScrollIndicator={false}>
 
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                    <Icon name="tint" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="tint" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>LDL</Text>
-                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"}  value={`${inputList.ldl}`} multiline={true} placeholder="Enter your LDL reading" onChangeText={text => handleOnTextChange(text, "ldl")}/>
+                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"} value={`${inputList.ldl}`} multiline={true} placeholder="Enter your LDL reading" onChangeText={text => handleOnTextChange(text, "ldl")} />
                     </View>
                 </View>
 
 
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <Icon name="tint" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                    <Icon name="tint" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>HDL</Text>
-                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"}  value={`${inputList.hdl}`} multiline={true} placeholder="Enter your HDL reading" onChangeText={text => handleOnTextChange(text, "hdl")}/>
+                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"} value={`${inputList.hdl}`} multiline={true} placeholder="Enter your HDL reading" onChangeText={text => handleOnTextChange(text, "hdl")} />
                     </View>
                 </View>
 
 
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <Icon name="notes-medical" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                    <Icon name="notes-medical" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Triglycerides</Text>
-                        <TextInput style={styles.input} keyboardType={"numeric"}  value={`${inputList.triglycerides}`} multiline={true} placeholder="Enter your Triglycerides reading" onChangeText={text => handleOnTextChange(text, "triglycerides")}/>
+                        <TextInput style={styles.input} keyboardType={"numeric"} value={`${inputList.triglycerides}`} multiline={true} placeholder="Enter your Triglycerides reading" onChangeText={text => handleOnTextChange(text, "triglycerides")} />
                     </View>
                 </View>
 
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <Icon name="sticky-note" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                    <Icon name="sticky-note" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Notes</Text>
-                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")} />
                     </View>
                 </View>
 
@@ -202,7 +240,7 @@ const styles = StyleSheet.create({
     saveButtonText: {
         fontSize: 15,
         color: "white",
-        textAlign:"center",
+        textAlign: "center",
         textAlignVertical: "center",
         padding: 5,
     },
@@ -213,7 +251,7 @@ const styles = StyleSheet.create({
         textTransform: "capitalize",
         fontWeight: "bold"
     },
-    icon:{
+    icon: {
         width: "13%",
         height: 50,
         backgroundColor: "#b8bedd",
@@ -224,21 +262,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 5,
         verticalAlign: 'middle'
-      }
-,input: {
-    width: '94%',
-    // backgroundColor: '#b8bedd',
-    // margin: 10,
-    // alignSelf: 'center',
-    // borderRadius: 10,
-    // padding: 10,
+    }
+    , input: {
+        width: '94%',
+        // backgroundColor: '#b8bedd',
+        // margin: 10,
+        // alignSelf: 'center',
+        // borderRadius: 10,
+        // padding: 10,
 
-    borderBottomWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.4,
-    shadowRadius: 3,
-    // elevation: 5,
-  }
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        // elevation: 5,
+    }
 
 })

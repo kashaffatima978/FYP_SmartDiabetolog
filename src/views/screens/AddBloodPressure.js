@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import React from "react-native";
-import { StyleSheet, SafeAreaView, View, Text, ScrollView, TouchableOpacity , TextInput} from "react-native";
+import { StyleSheet, SafeAreaView, View, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
 import { Input } from "../components/input";
 import { addBloodPressureRecord, viewBloodPressureInstance, updateBloodPressureRecord, deleteBloodPressureInstance } from "../connectionToDB/trackerBloodPressure";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
 
 
 export default function AddBloodPressure({ navigation, route }) {
@@ -30,13 +31,17 @@ export default function AddBloodPressure({ navigation, route }) {
                             return {
 
                                 "disystolic": res.disystolic, "systolic": res.systolic, "description": res.description
-
                             }
                         });
                         console.log("After setting existingItem= ", existingItem)
-
+                        setLoader(false)
                     })
-                    .catch((err) => { console.log("Error in AddBloodPressure uploading particular instance ", err) })
+                    .catch((err) => {
+                        console.log("Error in AddBloodPressure uploading particular instance ", err)
+                        setLoader(false)
+                        alert("Connection Lost! Try Again.")
+                        navigation.replace("ViewBloodPressure")
+                    })
             }
         }
 
@@ -53,20 +58,42 @@ export default function AddBloodPressure({ navigation, route }) {
 
     const [inputList, setInputList] = useState({ "disystolic": "", "systolic": "", "description": "" });
     const save = () => {
+        setLoader(true)
         addBloodPressureRecord(inputList.disystolic, inputList.systolic, inputList.description)
-        navigation.replace("ViewBloodPressure")
+        setLoader(false)
+        navigation.navigate("ViewBloodPressure")
     }
 
     const update = () => {
-        console.log("JJJJJJJJJ")
+        //console.log("JJJJJJJJJ")
+        setLoader(true)
         updateBloodPressureRecord(route.params.id, inputList.disystolic, inputList.systolic, inputList.description)
-            .then((data) => { console.log("update", data), navigation.replace("ViewBloodPressure") })
-            .catch((err) => { console.log("Error in update in add bloodpressure", err) })
+            .then((data) => {
+                console.log("update", data);
+                setLoader(false)
+                navigation.replace("ViewBloodPressure")
+            })
+            .catch((err) => {
+                console.log("Error in update in add bloodpressure", err);
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewBloodPressure")
+            })
     }
     const deleteItem = () => {
+        setLoader(true)
         deleteBloodPressureInstance(route.params.id)
-            .then((data) => { console.log("delete", data), navigation.replace("ViewBloodPressure") })
-            .catch((err) => { console.log("Error in delete in add bloodpressure", err) })
+            .then((data) => { 
+                console.log("delete", data)
+                setLoader(false)
+                navigation.replace("ViewBloodPressure") })
+            .catch((err) => { 
+                console.log("Error in delete in add bloodpressure", err) 
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewBloodPressure")
+            
+            })
     }
 
     //Method sets the state change in inputList
@@ -77,7 +104,7 @@ export default function AddBloodPressure({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <Heading name="Add Blood Pressure"/>
+            <Heading name="Add Blood Pressure" />
 
             <ScrollView style={styles.container2}
                 showsVerticalScrollIndicator={false}>
@@ -86,13 +113,13 @@ export default function AddBloodPressure({ navigation, route }) {
                         textColor="#212529"
                         buttonColor="#6B705C" />
                 </View> */}
-                
 
-                <View style={{flexDirection: 'row', marginTop: 20}}>
-                    <Icon name="heartbeat" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Disystolic Pressure</Text>
-                        <TextInput style={styles.input}  placeholder="Enter your disystolic pressure" value={`${inputList.disystolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "disystolic")}/>
+                        <TextInput style={styles.input} placeholder="Enter your disystolic pressure" value={`${inputList.disystolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "disystolic")} />
                     </View>
                 </View>
 
@@ -107,15 +134,15 @@ export default function AddBloodPressure({ navigation, route }) {
                         textColor="black" />
                 </View> */}
 
-                <View style={{flexDirection: 'row', marginTop: 35}}>
-                    <Icon name="heartbeat" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 35 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Systolic Pressure</Text>
-                        <TextInput style={styles.input} multiline={false}  placeholder="Enter your Systolic pressure" value={`${inputList.systolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "systolic")}/>
+                        <TextInput style={styles.input} multiline={false} placeholder="Enter your Systolic pressure" value={`${inputList.systolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "systolic")} />
                     </View>
                 </View>
 
-                
+
 
                 {/* <View style={styles.inputContainer}>
                     <Input label="Notes"
@@ -128,15 +155,15 @@ export default function AddBloodPressure({ navigation, route }) {
                     /> */}
                 {/* </View> */}
 
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <Icon name="sticky-note" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                    <Icon name="sticky-note" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Notes</Text>
-                        <TextInput style={styles.input} value={`${inputList.description}`} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")}/>
+                        <TextInput style={styles.input} value={`${inputList.description}`} multiline={true} placeholder="Enter a Description" onChangeText={text => handleOnTextChange(text, "description")} />
                     </View>
                 </View>
 
-                
+
 
                 {
 
@@ -204,7 +231,7 @@ const styles = StyleSheet.create({
     saveButtonText: {
         fontSize: 15,
         color: "white",
-        textAlign:"center",
+        textAlign: "center",
         textAlignVertical: "center",
         padding: 5,
     },
@@ -215,7 +242,7 @@ const styles = StyleSheet.create({
         textTransform: "capitalize",
         fontWeight: "bold"
     },
-    icon:{
+    icon: {
         width: "13%",
         height: 50,
         backgroundColor: "#b8bedd",
@@ -226,20 +253,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 5,
         verticalAlign: 'middle'
-      }
-,input: {
-    width: '94%',
-    // backgroundColor: '#b8bedd',
-    // margin: 10,
-    // alignSelf: 'center',
-    // borderRadius: 10,
-    // padding: 10,
+    }
+    , input: {
+        width: '94%',
+        // backgroundColor: '#b8bedd',
+        // margin: 10,
+        // alignSelf: 'center',
+        // borderRadius: 10,
+        // padding: 10,
 
-    borderBottomWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.4,
-    shadowRadius: 3,
-    // elevation: 5,
-  }
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        // elevation: 5,
+    }
 })

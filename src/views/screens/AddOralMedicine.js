@@ -13,7 +13,7 @@ import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { addOralMedicationToPrescription, getOralMedicationDetails, updateOralMedicationDetails, deleteOralMedicationDetails } from "../connectionToDB/prescription"
-
+import {storeAllergiesInAsync} from "../connectionToDB/AsyncStorage"
 export default AddOralMedicine = function ({ navigation, route }) {
     const { title, id } = route.params
     console.log("id got in AddOralMedicine is ", id)
@@ -66,7 +66,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding oral medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in add in Prescription", err)
@@ -83,10 +83,10 @@ export default AddOralMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("deleteOralMedicine ", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
-                console.log("Error in updatein deleteOralMedicine", err)
+                console.log("Error in update in deleteOralMedicine", err)
                 setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
@@ -102,7 +102,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                 console.log(route.params.oralMedicineId, type, name, units, dosage, time)
                 console.log("updateOralMedicine ", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in updatein updateOralMedicine", err)

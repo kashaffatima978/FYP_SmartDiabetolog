@@ -92,8 +92,9 @@ storeRecordStateInAsync = (record) => {
     date = (new Date()).getDate()
     if (record.length < date - 1) {
         for (i = record.length; i < date - 1; i++) {
-            recordProcessed.push(false)
+            record.push(false)
         }
+        recordProcessed=record
     }
     else {
         recordProcessed = record
@@ -186,7 +187,7 @@ exports.getTodayDateFromAsync = (type) => {
                 const parsed = JSON.parse(date)
                 //console.log(`data got for todayDate from Async is = ${parsed}`)
                 if (parsed === "" || !parsed) {
-                    resolve((new Date().getDate()))
+                    resolve(" ")
                 }
                 else {
                     resolve(parsed)
@@ -198,3 +199,40 @@ exports.getTodayDateFromAsync = (type) => {
     })
 }
 
+
+
+//storing tracker Instance in Async
+exports.storeTrackerInstanceInAsync = (type, data) => {
+
+    return new Promise((resolve, reject) => {  
+        //type is either bloodsugar, bloodpressure or cholesterol
+        AsyncStorage.setItem(`@${type}`, JSON.stringify(data))
+            .then(async () => {
+                const instance = await AsyncStorage.getItem(`@${type}`)
+                const parsed = JSON.parse(instance)
+                console.log(`In Asyncstorage stored ${type} are = ${parsed} ${typeof parsed}`)
+                resolve(parsed)
+            }).catch((err) => {
+                console.log("storeTrackerInstanceInAsync error ", err)
+                reject(err)
+            })
+    })
+}
+
+//getting tracker Instance in Async
+exports.getTrackerInstanceInAsync  = (type) => {
+    return new Promise((resolve, reject) => {  
+        AsyncStorage.getItem(`@${type}`)
+            .then((instance) => {
+                const parsed = JSON.parse(instance)
+                console.log(`data got for ${type} from Async are = ${parsed}`)
+                if(parsed==null){
+                    resolve(null)
+                }
+                resolve(parsed)
+            }).catch((err) => {
+                console.log("getTrackerInstanceInAsync error ", err)
+                reject(err)
+            })
+    })
+}

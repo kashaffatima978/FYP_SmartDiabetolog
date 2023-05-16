@@ -82,10 +82,16 @@ export default function AddNewPrescription({ navigation, route }) {
     const loadDataOnlyOnce = () => {
         setLoader(true)
         viewParticularPrescriptionOralMedicines(route.params.id)
-            .then((res) => {
+            .then(async(res) => {
                 console.log("in loadDataOnlyOnce in AddNewPrescription")
                 console.log("oral medications in this prescription are", res)
+                //now also save this oral medication in Async for alarms
+                storeAllergiesInAsync("oralMedications",res)
                 setOralMedications(() => { return res })
+                //also add current prescription ID in Async
+                obj={"id":route.params.id}
+                console.log(obj)
+                await storeAllergiesInAsync("currentPrescriptionID",[obj])
             })
             .catch(err => {
                 console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err)
@@ -144,7 +150,7 @@ export default function AddNewPrescription({ navigation, route }) {
                     data={oralMedications}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddOralMedicine", { "title": title, "id": id, "oralMedicineId": item._id }) }}>
+                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddOralMedicine", { "title": title, "id": id, "oralMedicineId": item._id }) }}>
                                 <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                     <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                         <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)} </Text>

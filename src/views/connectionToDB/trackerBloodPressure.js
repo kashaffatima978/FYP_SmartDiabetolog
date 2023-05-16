@@ -1,8 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { response } from "express";
-import {IP} from "../../files/information"
-const ip=`http://${IP}`
+import { IP } from "../../files/information"
+const ip = `http://${IP}`
+import { storeTrackerInstanceInAsync } from "../connectionToDB/AsyncStorage"
 
 //method to add blood pressure instance
 exports.addBloodPressureRecord = async (disystolic, systolic, description) => {
@@ -16,8 +17,12 @@ exports.addBloodPressureRecord = async (disystolic, systolic, description) => {
                 "description": description,
             },
             { headers: { "Authorization": "Bearer " + token } },
-        )
-        console.log(res.data)
+        ).then(async (res) => {
+            //also store instance in Async
+            await storeTrackerInstanceInAsync("bloodpressure", res.data)
+            console.log(res.data)
+        }).catch((err)=>{console.log("Error in addBloodPressureRecord in trackerBloodPressure ",err)})
+        
     }
     catch (err) {
         console.log(err);
@@ -37,20 +42,20 @@ exports.viewBloodPressureRecord = async () => {
     console.log("week ends to ", endWeek)
     try {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
-       // alert(`${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}`)
+        // alert(`${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}`)
         //alert(`${endWeek.getFullYear()}-${endWeek.getMonth() + 1}-${endWeek.getDate()}`)
         const res = await axios.get(`${ip}:3000/bloodpressure/${startWeek.getFullYear()}-${startWeek.getMonth() + 1}-${startWeek.getDate()}/${endWeek.getFullYear()}-${endWeek.getMonth() + 1}-${endWeek.getDate()}`,
             {
                 headers: { "Authorization": "Bearer " + token },
             }
         )
-        const data=(res.data)
+        const data = (res.data)
         if ((data).length > 0) {
             return (data)
         }
         else {
             return new Array(0)
-        } 
+        }
     }
     catch (err) {
         console.log(err);
@@ -76,9 +81,9 @@ exports.viewBloodPressureInstance = async (id) => {
 
 
 //update a specific blood pressure instance
-exports.updateBloodPressureRecord = async (id,disystolic, systolic, description) => {
+exports.updateBloodPressureRecord = async (id, disystolic, systolic, description) => {
     return new Promise(async (resolve, reject) => {
-        console.log(id, disystolic,systolic,description
+        console.log(id, disystolic, systolic, description
         )
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in updatebloodpressure is", token)

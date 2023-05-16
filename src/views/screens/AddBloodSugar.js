@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView , TextInput} from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
@@ -12,6 +12,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { storeTrackerInstanceInAsync } from "../connectionToDB/AsyncStorage"
 
 
 export default AddBloodSugar = function ({ navigation, route }) {
@@ -36,7 +37,6 @@ export default AddBloodSugar = function ({ navigation, route }) {
             if (id !== undefined) {
                 viewBloodSugarInstance(id)
                     .then((res) => {
-                        setTimeout(() => { setLoader(false) }, 1000)
                         console.log("In ", res)
                         setExistingItem(res);
                         setInputList(() => {
@@ -50,9 +50,14 @@ export default AddBloodSugar = function ({ navigation, route }) {
                             }
                         });
                         console.log("After setting existingItem= ", existingItem)
-
+                        setLoader(false)
                     })
-                    .catch((err) => { console.log("Error in AddBloodSugar uploading particular instance ", err) })
+                    .catch((err) => { 
+                        console.log("Error in ViewBloodSugarInstance uploading particular instance ", err) 
+                        setLoader(false)
+                        alert("Connection Lost! Try Again.")
+                        navigation.replace("ViewBloodSugar")
+                    })
             }
         }
 
@@ -80,20 +85,52 @@ export default AddBloodSugar = function ({ navigation, route }) {
     const save = () => {
         // alert(date)
         // alert(time)
+        setLoader(true)
         addBloodSugarRecord(inputList.concentration, inputList.unit, inputList.description, inputList.event, inputList.creationDate, inputList.creationTime)
-            .then((data) => { console.log("abc", data); navigation.replace("ViewBloodSugar") })
-            .catch((err) => { console.log("Error in save in add blood sugar", err) })
+            .then(async (data) => {
+                console.log("abc", data);
+                //also store instance in Async
+                await storeTrackerInstanceInAsync("bloodsugar", data)
+                setLoader(false)
+                navigation.replace("ViewBloodSugar")
+            })
+            .catch((err) => {
+                console.log("Error in save in add blood sugar", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewBloodSugar")
+            })
     }
 
     const update = () => {
+        setLoader(true)
         updateBloodSugarRecord(route.params.id, inputList.concentration, inputList.unit, inputList.description, inputList.event, inputList.creationDate, inputList.creationTime)
-            .then((data) => { console.log("update", data); navigation.replace("ViewBloodSugar") })
-            .catch((err) => { console.log("Error in update in add blood sugar", err) })
+            .then((data) => {
+                console.log("update", data);
+                setLoader(false);
+                navigation.replace("ViewBloodSugar")
+            })
+            .catch((err) => {
+                console.log("Error in update in add blood sugar", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewBloodSugar")
+            })
     }
     const deleteItem = () => {
+        setLoader(true)
         deleteBloodSugarInstance(route.params.id)
-            .then((data) => { console.log("delete", data); navigation.replace("ViewBloodSugar") })
-            .catch((err) => { console.log("Error in delete in add blood sugar", err) })
+            .then((data) => {
+                console.log("delete", data);
+                setLoader(false);
+                navigation.replace("ViewBloodSugar")
+            })
+            .catch((err) => {
+                console.log("Error in delete in add blood sugar", err)
+                setLoader(false)
+                alert("Connection Lost! Try Again.")
+                navigation.replace("ViewBloodSugar")
+            })
     }
 
     //Method sets the state change in inputList
@@ -103,29 +140,29 @@ export default AddBloodSugar = function ({ navigation, route }) {
     };
 
     return (
-        <SafeAreaView style={{flex:1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <Loader visible={loader}></Loader>
             <Heading name="Add Blood Sugar" />
-            <ScrollView style={ styles.scroll} showsVerticalScrollIndicator={false}>
+            <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 
 
-            <View style={{flexDirection: 'row', marginTop: 20}}>
-                <Icon name="heartbeat" size={25} style={styles.icon}/>
-                <View style={{width: "85%"}}>
-                    <Text style={styles.label}>Blood Sugar Concentration</Text>
-                    <TextInput style={styles.input} value={`${inputList.concentration}`} keyboardType={'numeric'} placeholderTextColor={"gray"} maxLength={3} placeholder="Enter Blood Sugar Concentration" onChangeText={text => handleOnTextChange(text, "concentration")} />
+                <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <Icon name="heartbeat" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
+                        <Text style={styles.label}>Blood Sugar Concentration</Text>
+                        <TextInput style={styles.input} value={`${inputList.concentration}`} keyboardType={'numeric'} placeholderTextColor={"gray"} maxLength={3} placeholder="Enter Blood Sugar Concentration" onChangeText={text => handleOnTextChange(text, "concentration")} />
+                    </View>
                 </View>
-            </View>
 
-                <View style={{ marginTop: 40, marginLeft: 65}}>
-                    <Text style={[styles.label,{marginBottom: 15}]}>Select Concentration Unit</Text>
+                <View style={{ marginTop: 40, marginLeft: 65 }}>
+                    <Text style={[styles.label, { marginBottom: 15 }]}>Select Concentration Unit</Text>
                     <View style={styles.unitContainer}>
                         <TouchableOpacity style={[styles.radioContainer]}
                             value={mgUnit} onPress={() => {
                                 setMgUnit("mmol/L")
                                 handleOnTextChange("mmol/L", "unit")
                             }}>
-                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mmol/L") ? "#32004f" : '#6A6DB0'}]}>
+                            <View style={[styles.radioButton, { backgroundColor: (mgUnit === "mmol/L") ? "#32004f" : '#6A6DB0' }]}>
                                 <Text style={[styles.radioCircle]}>O</Text>
                             </View>
                             <Text style={styles.radioText}>mmol/L</Text>
@@ -145,8 +182,8 @@ export default AddBloodSugar = function ({ navigation, route }) {
                     </View>
                 </View>
 
-                <SafeAreaView style={[styles.container,{marginTop: 40, marginLeft: 50, marginRight: 28}]}>
-                    <Text style={[styles.label,{marginBottom: 15}]}> Event</Text>
+                <SafeAreaView style={[styles.container, { marginTop: 40, marginLeft: 50, marginRight: 28 }]}>
+                    <Text style={[styles.label, { marginBottom: 15 }]}> Event</Text>
                     <SelectDropdown
                         style={styles.dropdown}
                         data={["Before Breakfast", "After Breakfast", "Before Lunch",
@@ -164,7 +201,7 @@ export default AddBloodSugar = function ({ navigation, route }) {
                             return selectedItem;
                         }}
 
-                        buttonStyle={{  color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
+                        buttonStyle={{ color: "red", width: "100%", backgroundColor: '#b8bedd', height: 50, borderRadius: 15 }}
 
                         buttonTextStyle={
                             {
@@ -187,26 +224,26 @@ export default AddBloodSugar = function ({ navigation, route }) {
                 </SafeAreaView>
                 {/* sticky-note */}
 
-                <View style={{flexDirection: 'row', marginTop: 40}}>
-                    <Icon name="sticky-note" size={25} style={styles.icon}/>
-                    <View style={{width: "85%"}}>
+                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                    <Icon name="sticky-note" size={25} style={styles.icon} />
+                    <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Notes</Text>
-                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" placeholderTextColor={"gray"} onChangeText={text => handleOnTextChange(text, "description")}/>
+                        <TextInput style={styles.input} value={inputList.description} multiline={true} placeholder="Enter a Description" placeholderTextColor={"gray"} onChangeText={text => handleOnTextChange(text, "description")} />
                     </View>
                 </View>
-                
-                <View style={{marginTop: 40}}>
-                {
 
-                    existingItem === null ?
-                        (<MyButton title="Save" onPress={() => { save() }} />) :
-                        (<View>
-                            <MyButton title="Update" onPress={() => { update() }} />
-                            <MyButton title="Delete" onPress={() => { deleteItem() }} />
-                        </View>
-                        )
+                <View style={{ marginTop: 40 }}>
+                    {
 
-                }
+                        existingItem === null ?
+                            (<MyButton title="Save" onPress={() => { save() }} />) :
+                            (<View>
+                                <MyButton title="Update" onPress={() => { update() }} />
+                                <MyButton title="Delete" onPress={() => { deleteItem() }} />
+                            </View>
+                            )
+
+                    }
                 </View>
 
 
@@ -219,8 +256,8 @@ export default AddBloodSugar = function ({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    label:{
-        color:"black"
+    label: {
+        color: "black"
     },
     text: {
         marginVertical: 5,
@@ -265,7 +302,7 @@ const styles = StyleSheet.create({
         textTransform: "capitalize",
         fontWeight: "bold"
     },
-    icon:{
+    icon: {
         width: "13%",
         height: 50,
         backgroundColor: "#b8bedd",
@@ -276,22 +313,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 5,
         verticalAlign: 'middle'
-      },
-      radioText:{color:"black"}
-,input: {
-    width: '94%',
-    color:"black",
-    // backgroundColor: '#b8bedd',
-    // margin: 10,
-    // alignSelf: 'center',
-    // borderRadius: 10,
-    // padding: 10,
+    },
+    radioText: { color: "black" }
+    , input: {
+        width: '94%',
+        color: "black",
+        // backgroundColor: '#b8bedd',
+        // margin: 10,
+        // alignSelf: 'center',
+        // borderRadius: 10,
+        // padding: 10,
 
-    borderBottomWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.4,
-    shadowRadius: 3,
-    // elevation: 5,
-  },
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        // elevation: 5,
+    },
 });
