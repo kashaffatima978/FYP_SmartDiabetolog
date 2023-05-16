@@ -16,6 +16,7 @@ import AddBloodPressure from "../screens/AddBloodPressure";
 import AddBloodSugar from "../screens/AddBloodSugar";
 import AddCholesterol from "../screens/AddCholesterol";
 import Chatbot from "../screens/chatbot";
+import WeightScreen from "../screens/WeightScreen";
 // import DietChartMain from "../screens/DietChartMain";
 
 
@@ -38,8 +39,8 @@ export default function TabNav() {
           else if (route.name === 'Tracker') {
             iconName = focused ? 'pulse' : 'pulse-outline';
           }
-          else if (route.name === 'DietMain') {
-            iconName = focused ? 'pizza' : 'pizza-outline';
+          else if (route.name === 'Chatbot') {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           }
 
           // You can return any component that you like here!
@@ -55,8 +56,6 @@ export default function TabNav() {
         <Tab.Screen name="Tracker" component={TrackerScreen} />
         <Tab.Screen name="Chatbot" component={Chatbot}  options={{headerTitle: 'Chatbot', tabBarLabel: 'Community', }}/>
         <Tab.Screen name="Profile" component={Profile} />
-        {/* <Tab.Screen name="Chatbot" component={Chatbot} options={{ tabBarItemStyle: { display: 'none' }}} /> */}
-        
       </Tab.Navigator>
     );
   }

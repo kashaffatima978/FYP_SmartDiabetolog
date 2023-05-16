@@ -47,10 +47,15 @@ import Dashboard from "../screens/dashboard";
 import AskQuestion from "../screens/AskQuestion";
 import ViewQuestionDetails from "../screens/ViewQuestionDetails";
 import AddAnswer from "../screens/AddAnswer";
-
 import { Recipe } from "../screens/Recipe";
 import BlogList from "../screens/BlogList";
 import Videos from "../screens/Videos";
+import WeightScreen from "../screens/WeightScreen";
+import HeightScreen from "../screens/HeightScreen";
+import GenderSelectionPage from "../screens/GenderSelectionPage";
+import AgeAndActivity from "../screens/AgeAndActivity";
+
+
 
 export default function StackNav() {
   const Stack = createNativeStackNavigator();
@@ -75,8 +80,8 @@ export default function StackNav() {
       <Stack.Screen name="Home" component={TabNav} />
       <Stack.Screen name="Videos" component={Videos} />
       <Stack.Screen name="Recipe" component={Recipe} />
-
-      {/* <Stack.Screen name="Tracker" component={TrackerScreen} /> */}
+      <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
+      <Stack.Screen name="WeightScreen" component={WeightScreen} />
       <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
       <Stack.Screen name="AddBloodSugar" component={AddBloodSugar} />
       <Stack.Screen name="ViewBloodPressure" component={ViewBloodPressure} />
@@ -89,13 +94,13 @@ export default function StackNav() {
       <Stack.Screen name="Dinner" component={DinnerPage} />
       <Stack.Screen name="Breakfast" component={BreakfastPage} />
       <Stack.Screen name="AddMeal" component={AddMeal} />
-
+      <Stack.Screen name="AgeAndActivity" component={AgeAndActivity}/>
       <Stack.Screen name="OralMed" component={OralMed} />
       <Stack.Screen name="AddOralMedicine" component={AddOralMedicine} />
       <Stack.Screen name="InsulinMed" component={InsulinMed} />
       <Stack.Screen name="AddInsulinMedicine" component={AddInsulinMedicine} />
       <Stack.Screen name="AllergicReactionMain" component={AllergicReactionMain} />
-      {/* <Stack.Screen name="DietFirstMain" component={DietFirstMain}/> */}
+      <Stack.Screen name="HeightScreen" component={HeightScreen}/>
       <Stack.Screen name="BlogList" component={BlogList} />
       <Stack.Screen name="AddMedicineAllergicReactions" component={AddMedicineAllergicReactions} />
       <Stack.Screen name="MedicineAllergicReactions" component={MedicineAllergicReactions} />

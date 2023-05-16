@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput, Image } from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
@@ -12,14 +12,19 @@ import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { PermissionsAndroid } from 'react-native';
 import { addOralMedicationToPrescription, getOralMedicationDetails, updateOralMedicationDetails, deleteOralMedicationDetails } from "../connectionToDB/prescription"
+import axios from "axios";
+import {IP} from "../../files/information"
 
 export default AddOralMedicine = function ({ navigation, route }) {
     const { title, id } = route.params
     console.log("id got in AddOralMedicine is ", id)
     const [loader, setLoader] = useState(false)
-
     const [mount, setMount] = useState(0)
+    const ip = `http://${IP}`
+
     const loadDataOnlyOnce = () => {
         if (route.params.oralMedicineId) {
             setLoader(true)
@@ -44,6 +49,60 @@ export default AddOralMedicine = function ({ navigation, route }) {
         }
 
     };
+        
+        const requestCameraPermission = async () => {
+            try {
+              const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                  title: "App Camera Permission",
+                  message:"App needs access to your camera ",
+                  buttonNeutral: "Ask Me Later",
+                  buttonNegative: "Cancel",
+                  buttonPositive: "OK"
+                }
+              );
+              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Camera permission given");
+                const options= {
+                    quality: 1,
+                    cameraType: 'back'
+                };
+                launchCamera(options)
+                .then((response)=>{
+                 
+                    if (response.didCancel) {
+                        console.log('User cancelled image picker');
+                      } else if (response.error) {
+                        console.log('ImagePicker Error: ', response.error);
+                      } else {
+                        console.log('we got the image ');
+                        console.log(response.assets[0])
+                        console.log(response.assets[0].uri);
+                        //sending image 
+                        const formData = new FormData();
+                        formData.append('file', { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type, width: response.assets[0].width, height: response.assets[0].height });
+                        //axios request towards api
+                        axios.post(ip+':8000/ReadMedicineName', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then((response)=>{
+                            console.log(response.text)
+                        })
+                        .catch((err)=>{console.log('error in sending medication image:', err)})
+                      }
+                })
+                .catch(err=>{console.log('image not given', err)});
+              } else {
+                console.log("Camera permission denied");
+              }
+            } catch (err) {
+              console.warn(err);
+            }
+          };
+
     useEffect(() => {
         if (mount === 0) {
             //setLoader(true)
@@ -163,10 +222,11 @@ export default AddOralMedicine = function ({ navigation, route }) {
 
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <Icon name="heartbeat" size={25} style={styles.icon} />
-                    <View style={{ width: "85%" }}>
+                    <View style={{ width: "75%" }}>
                         <Text style={styles.label}>Name</Text>
                         <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Medicine Name" placeholderTextColor={"gray"} />
                     </View>
+                    <TouchableOpacity onPress={requestCameraPermission} ><Icon name="camera" size={27} style={{marginVertical: "50%", marginHorizontal:"3%"}}/></TouchableOpacity>
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
@@ -276,7 +336,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
 
                 </SafeAreaView>
 
-
+                
 
 
 
