@@ -101,15 +101,11 @@ export default function StackNav() {
               <Stack.Screen name="ExerciseSetting" component={ExerciseSetting} />
               <Stack.Screen name="MainExerciseStartPage" component={MainExerciseStartPage} />
               <Stack.Screen name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
-
               <Stack.Screen name="Loading" component={Loading} />
               <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
-      <Stack.Screen name="WeightScreen" component={WeightScreen} />
-      <Stack.Screen name="AgeAndActivity" component={AgeAndActivity}/>
-      <Stack.Screen name="HeightScreen" component={HeightScreen}/>
-      
-     
-
+              <Stack.Screen name="WeightScreen" component={WeightScreen} />
+              <Stack.Screen name="AgeAndActivity" component={AgeAndActivity} />
+              <Stack.Screen name="HeightScreen" component={HeightScreen} />
               <Stack.Screen name="Videos" component={Videos} />
               <Stack.Screen name="Recipe" component={Recipe} />
               <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
@@ -161,9 +157,7 @@ export default function StackNav() {
               <Stack.Screen name="ExerciseSetting" component={ExerciseSetting} />
               <Stack.Screen name="MainExerciseStartPage" component={MainExerciseStartPage} />
               <Stack.Screen name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
-
               <Stack.Screen name="Loading" component={Loading} />
-
               <Stack.Screen name="Videos" component={Videos} />
               <Stack.Screen name="Recipe" component={Recipe} />
               <Stack.Screen name="ViewBloodSugar" component={ViewBloodSugar} />
@@ -178,12 +172,10 @@ export default function StackNav() {
               <Stack.Screen name="Dinner" component={DinnerPage} />
               <Stack.Screen name="Breakfast" component={BreakfastPage} />
               <Stack.Screen name="AddMeal" component={AddMeal} />
-  <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
-      <Stack.Screen name="WeightScreen" component={WeightScreen} />
-      <Stack.Screen name="AgeAndActivity" component={AgeAndActivity}/>
-      <Stack.Screen name="HeightScreen" component={HeightScreen}/>
-      
-      
+              <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
+              <Stack.Screen name="WeightScreen" component={WeightScreen} />
+              <Stack.Screen name="AgeAndActivity" component={AgeAndActivity} />
+              <Stack.Screen name="HeightScreen" component={HeightScreen} />
               <Stack.Screen name="OralMed" component={OralMed} />
               <Stack.Screen name="AddOralMedicine" component={AddOralMedicine} />
               <Stack.Screen name="InsulinMed" component={InsulinMed} />
