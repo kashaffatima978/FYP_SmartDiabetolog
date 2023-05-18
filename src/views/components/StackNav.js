@@ -52,6 +52,10 @@ import HomeScreen from "../screens/HomeScreen";
 import { Recipe } from "../screens/Recipe";
 import BlogList from "../screens/BlogList";
 import Videos from "../screens/Videos";
+import WeightScreen from "../screens/WeightScreen";
+import HeightScreen from "../screens/HeightScreen";
+import GenderSelectionPage from "../screens/GenderSelectionPage";
+import AgeAndActivity from "../screens/AgeAndActivity";
 import Chat from "../screens/chat";
 import Alarm from "../screens/Alarm";
 
@@ -99,6 +103,12 @@ export default function StackNav() {
               <Stack.Screen name="ExerciseActivityOrRest" component={ExerciseActivityOrRest} />
 
               <Stack.Screen name="Loading" component={Loading} />
+              <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
+      <Stack.Screen name="WeightScreen" component={WeightScreen} />
+      <Stack.Screen name="AgeAndActivity" component={AgeAndActivity}/>
+      <Stack.Screen name="HeightScreen" component={HeightScreen}/>
+      
+     
 
               <Stack.Screen name="Videos" component={Videos} />
               <Stack.Screen name="Recipe" component={Recipe} />
@@ -128,6 +138,7 @@ export default function StackNav() {
               <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
               <Stack.Screen name="EnterCode" component={EnterCode} />
               <Stack.Screen name="Retinopathy" component={Retinopathy} />
+
             </>
           )
           : (
@@ -167,7 +178,12 @@ export default function StackNav() {
               <Stack.Screen name="Dinner" component={DinnerPage} />
               <Stack.Screen name="Breakfast" component={BreakfastPage} />
               <Stack.Screen name="AddMeal" component={AddMeal} />
-
+  <Stack.Screen name="GenderSelectionPage" component={GenderSelectionPage} />
+      <Stack.Screen name="WeightScreen" component={WeightScreen} />
+      <Stack.Screen name="AgeAndActivity" component={AgeAndActivity}/>
+      <Stack.Screen name="HeightScreen" component={HeightScreen}/>
+      
+      
               <Stack.Screen name="OralMed" component={OralMed} />
               <Stack.Screen name="AddOralMedicine" component={AddOralMedicine} />
               <Stack.Screen name="InsulinMed" component={InsulinMed} />

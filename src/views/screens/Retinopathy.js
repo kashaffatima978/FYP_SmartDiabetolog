@@ -7,7 +7,6 @@ import {ImageLibraryOptions, launchImageLibrary } from "react-native-image-picke
 import { Heading } from "../components/Heading";
 import { set } from "react-native-reanimated";
 import axios from "axios";
-import RNFetchBlob from 'rn-fetch-blob';
 import {IP} from "../../files/information"
 
 export default function Retinopathy({navigation}){

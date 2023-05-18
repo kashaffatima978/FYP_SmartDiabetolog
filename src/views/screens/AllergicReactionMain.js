@@ -27,7 +27,7 @@ export default function AllergicReactionMain({ navigation, route }) {
 
     const setStates = (type) => {
         getAllergiesFromAsync(type).then(allergies => {
-            if (allergies.length >= 1 && mount !== 0) {
+            if (allergies!==null && allergies.length >= 1 && mount !== 0) {
                 console.log(`in loadDataOnlyOnce in AllergicReactionMain if for ${type}`)
                 console.log(allergies)
                 if (type === "food") {

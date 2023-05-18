@@ -152,7 +152,7 @@ export default DietChartMain = function ({ navigation }) {
 
   const BreakfastComponent = () => {
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
         navigation.navigate("Recipe", {
           name: breakfast[0],
           img: breakfast[5]
@@ -171,7 +171,7 @@ export default DietChartMain = function ({ navigation }) {
 
   const LunchComponent = () => {
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
         navigation.navigate("Recipe", {
           name: lunch[0],
           img: lunch[5]
@@ -190,7 +190,7 @@ export default DietChartMain = function ({ navigation }) {
 
   const DinnerComponent = () => {
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 }} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
         navigation.navigate("Recipe", {
           name: dinner[0],
           img: dinner[5]
@@ -211,7 +211,7 @@ export default DietChartMain = function ({ navigation }) {
 
   const SnackComponent = () => {
     return (
-      <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1 }}>
+      <ScrollView style={{ backgroundColor: '#E2E4FF', flex: 1, paddingTop: 25 }}>
         <Pressable onPress={() => {
           navigation.navigate("Recipe", {
             name: snack1[0],
@@ -220,7 +220,7 @@ export default DietChartMain = function ({ navigation }) {
         }}>
           <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
         </Pressable>
-        <Pressable onPress={() => {
+        <Pressable style={{paddingTop: 25}} onPress={() => {
           navigation.navigate("Recipe", {
             name: snack2[0],
             img: snack2[5]
@@ -251,7 +251,7 @@ export default DietChartMain = function ({ navigation }) {
 
       <View style={styles.con}>
         <AnimatedCircularProgress
-          size={200}
+          size={150}
           width={8}
           fill={animatedProgress}
           tintColor="#6A6DB0"
@@ -262,7 +262,7 @@ export default DietChartMain = function ({ navigation }) {
           {() => (
 
             <Image
-              style={[styles.image, { width: 150, height: 150 }]}
+              style={[styles.image, { width: 100, height: 100 }]}
               source={require('../../../assets/Images/breakfast.jpg')}
               resizeMode="center"
 
@@ -273,7 +273,17 @@ export default DietChartMain = function ({ navigation }) {
 
       </View>
 
-      <Tab.Navigator >
+
+      <TouchableOpacity 
+      style={{ backgroundColor: "#6A6DB0", width: "30%", height:"5%",  margin:10,  justifyContent: 'center', alignItems: 'center', marginLeft: "65%", borderRadius: 10}}
+      onPress={()=>{
+        navigation.navigate("AddMeal")
+      }}>
+        <Text style={{fontSize: 16, color: 'white'}}>add meal </Text>
+      </TouchableOpacity>
+
+
+      <Tab.Navigator>
         <Tab.Screen name="breakfast" component={BreakfastComponent} />
 
         <Tab.Screen name="lunch" component={LunchComponent} />
@@ -282,8 +292,6 @@ export default DietChartMain = function ({ navigation }) {
 
         <Tab.Screen name="dinner" component={DinnerComponent} />
       </Tab.Navigator >
-
-      <Fab onPress={addMeal} />
     </SafeAreaView>
   );
 };
@@ -309,7 +317,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#fff',mar
-    // marginTop: 10
+    marginBottom: 15,
+    marginTop: 10
   },
 
   scrollContainer: {
