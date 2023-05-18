@@ -11,11 +11,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { title } from "process";
 import { signIn } from "../connectionToDB/authentication"
 import { getProfileInformation } from "../connectionToDB/profile"
-import {storeStateInAsync,getStateFromAsync} from "../connectionToDB/AsyncStorage"
+import { storeStateInAsync, getStateFromAsync } from "../connectionToDB/AsyncStorage"
 import { updateInitialState } from "../../redux/reduxActions";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
-import { setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, setSnackOneToday, setSnackTwoToday, setDinnerToday } from "../../redux/reduxActions";
+import { setAuthentication, setNeck, setArms, setLegs, setWaist, setCardio, setChest, setBack, setShoulders, setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, setSnackOneToday, setSnackTwoToday, setDinnerToday } from "../../redux/reduxActions";
+import { set } from "react-native-reanimated";
 
 
 
@@ -83,36 +84,36 @@ export default function LoginScreen({ navigation }) {
                     //state loading from database
                     //first get profile info from database
                     getProfileInformation()
-                        .then(async(res) => {
-                            console.log("here", res)
+                        .then(async (res) => {
                             console.log("state got is ", res.userDetails.state)
-
                             //storing whole state and record state in AsycStorage
-                             await storeStateInAsync(res.userDetails.state)
-                             
-                             
+                            await storeStateInAsync(res.userDetails.state)
+
+
 
                             //now state storing
                             //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 
                             //,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,
                             //cardio:false,todayExerciseDone:false }
+
                             // set states 
+                            dispatch(setAuthentication())
                             console.log("Before update after login the state is, ", store.getState())
-                            if (res.userDetails.state.neck) dispatch(setNeck())
-                            if (res.userDetails.state.arms) dispatch(setArms())
-                            if (res.userDetails.state.legs) dispatch(setLegs())
-                            if (res.userDetails.state.shoulders) dispatch(setShoulders())
-                            if (res.userDetails.state.chest) dispatch(setChest())
-                            if (res.userDetails.state.cardio) dispatch(setCardio())
-                            if (res.userDetails.state.back) dispatch(setBack())
-                            if (res.userDetails.state.waist) dispatch(setWaist())
+                            if (res.userDetails.state.neck && !store.getState().neck) dispatch(setNeck())
+                            if (res.userDetails.state.arms && !store.getState().arms) dispatch(setArms())
+                            if (res.userDetails.state.legs && !store.getState().legs) dispatch(setLegs())
+                            if (res.userDetails.state.shoulders && !store.getState().shoulders) dispatch(setShoulders())
+                            if (res.userDetails.state.chest && !store.getState().chest) dispatch(setChest())
+                            if (res.userDetails.state.cardio && !store.getState().cardio) dispatch(setCardio())
+                            if (res.userDetails.state.back && !store.getState().back) dispatch(setBack())
+                            if (res.userDetails.state.waist && !store.getState().waist) dispatch(setWaist())
 
                             //state setting for diet
-                            if (res.userDetails.state.todayBreakfastDone) dispatch(setBreakfastToday())
-                            if (res.userDetails.state.todayLunchDone) dispatch(setLunchToday())
-                            if (res.userDetails.state.todaySnackOneDone) dispatch(setSnackOneToday())
-                            if (res.userDetails.state.todaySnackTwoDone) dispatch(setSnackTwoToday())
-                            if (res.userDetails.state.todayDinnerDone) dispatch(setDinnerToday())
+                            if (res.userDetails.state.todayBreakfastDone && !store.getState().todayBreakfastDone) dispatch(setBreakfastToday())
+                            if (res.userDetails.state.todayLunchDone && !store.getState().todayLunchDone) dispatch(setLunchToday())
+                            if (res.userDetails.state.todaySnackOneDone && !store.getState().todaySnackOneDone) dispatch(setSnackOneToday())
+                            if (res.userDetails.state.todaySnackTwoDone && !store.getState().todaySnackTwoDone) dispatch(setSnackTwoToday())
+                            if (res.userDetails.state.todayDinnerDone && !store.getState().todayDinnerDone) dispatch(setDinnerToday())
 
 
                             //todayExerciseDone is initially false already
@@ -132,7 +133,7 @@ export default function LoginScreen({ navigation }) {
                             // }
 
                             //if today exercise is true then update the state todayExerciseDone
-                            if (res.userDetails.state.todayExerciseDone) {
+                            if (res.userDetails.state.todayExerciseDone && !store.getState().todayExerciseDone) {
                                 dispatch(setExerciseToday())
                             }
 
@@ -145,9 +146,6 @@ export default function LoginScreen({ navigation }) {
 
                         })
                         .catch(err => { console.log("Error in loading state in login screen", err) })
-
-
-
 
                 }, 3000)
             })

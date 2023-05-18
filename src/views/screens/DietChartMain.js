@@ -3,7 +3,7 @@ import colors from "../../files/Colors";
 import { CircularProgress } from 'react-native-circular-progress';
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Pressable, Text, useColorScheme, Image, View, Touchable, Modal, TouchableOpacity, Animated } from 'react-native';
 import { storeUserState } from "../connectionToDB/authentication"
-
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import { getProfileInformation } from "../connectionToDB/profile"
 
 import PageHeading from "../components/PageHeading"
@@ -23,9 +23,9 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setBreakfastToday, setLunchToday, setDinnerToday, setSnackOneToday, setSnackTwoToday } from "../../redux/reduxActions";
 import getCalories from '../Counters/PerDay';
 import {
-  storeAllergiesInAsync, getAllergiesFromAsync
+  storeAllergiesInAsync, getAllergiesFromAsync,storeStateInAsync,getRecordStateFromAsync
 } from "../connectionToDB/AsyncStorage"
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // import { Button } from 'react-native-paper';
@@ -66,6 +66,11 @@ export default DietChartMain = function ({ navigation }) {
   const ip = `http://${IP}`
   const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
   const animatedProgress = new Animated.Value((consumedCalories / totalCalories) * 100);
+  const [breakfastFromAddMeal, setBreakfastFromAddMeal] = useState()
+  const [lunchFromAddMeal, setLunchFromAddMeal] = useState()
+  const [snack1FromAddMeal, setSnack1FromAddMeal] = useState()
+  const [snack2FromAddMeal, setSnack2FromAddMeal] = useState()
+  const [dinnerFromAddMeal, setDinnerFromAddMeal] = useState()
 
   useEffect(() => {
     Animated.timing(animatedProgress, {
@@ -77,32 +82,48 @@ export default DietChartMain = function ({ navigation }) {
   }, [animatedProgress, consumedCalories]);
 
 
-  useEffect(() => {
+  useEffect(()=>{
+    async function call() {
     if (gotDiet == false) {
-      getAllergiesFromAsync("food")
-        .then(allergies => {
-          array=allergies.map(val=>val.name)
-          console.log("********", array, "********")
-          axios.post(ip + ':8000/dietPlan', { 'calories': totalCalories, 'alergies': array })
-            .then((response) => {
-              setBreakfast(response.data.breakfast)
-              setSnack1(response.data.snack1)
-              setLunch(response.data.lunch)
-              setSnack2(response.data.snack2)
-              setDinner(response.data.dinner)
-              setGotDiet(true)
-              setLoader(false)
+      // getAllergiesFromAsync("food")
+      //   .then(allergies => {
+      //     array=allergies.map(val=>val.name)
+      //     console.log("********", array, "********")
+      //     axios.post(ip + ':8000/dietPlan', { 'calories': totalCalories, 'alergies': array })
+      //       .then((response) => {
+      //         setBreakfast(response.data.breakfast)
+      //         setSnack1(response.data.snack1)
+      //         setLunch(response.data.lunch)
+      //         setSnack2(response.data.snack2)
+      //         setDinner(response.data.dinner)
+      //         setGotDiet(true)
+      //         setLoader(false)
 
-            })
-            .catch((err) => {
-              console.log(err, " in useEffect in dietChartMain for getting recipes catch 1")
-            })
-        })
-        .catch(err => {
-          console.log(err, " in useEffect in dietChartMain for getting recipes catch 2")
-        })
+      //       })
+      //       .catch((err) => {
+      //         console.log(err, " in useEffect in dietChartMain for getting recipes catch 1")
+      //       })
+      //   })
+      //   .catch(err => {
+      //     console.log(err, " in useEffect in dietChartMain for getting recipes catch 2")
+      //   })
+
+      //get Diet Chart From Async
+      const storedDate = await AsyncStorage.getItem(`@dietChart`)
+      const parsed = JSON.parse(storedDate)
+      console.log(parsed)
+      setBreakfast(parsed.breakfast)
+      setSnack1(parsed.snack1)
+      setLunch(parsed.lunch)
+      setSnack2(parsed.snack2)
+      setDinner(parsed.dinner)
+      setGotDiet(true)
+      setLoader(false)
     }
-  }, [])
+  }
+  call()
+  }
+  , [])
 
   const [oldCal, setOldCal] = useState(0)
 
@@ -117,6 +138,35 @@ export default DietChartMain = function ({ navigation }) {
         setTotalCalories(cal)
       })
       .catch(err => { console.log("Error in Diet screen", err) })
+
+    // //get add meal data from Async
+    //for breakfast
+    const b = await AsyncStorage.getItem(`@Breakfast`)
+    const parsed = JSON.parse(b)
+    console.log(parsed)
+    setBreakfastFromAddMeal(parsed)
+    //for lunch
+    const l = await AsyncStorage.getItem(`@Lunch`)
+    const parsed2 = JSON.parse(l)
+    console.log(parsed2)
+    setLunchFromAddMeal(parsed2)
+    //for snack1
+    const s1 = await AsyncStorage.getItem(`@Snack1`)
+    const parsed3 = JSON.parse(s1)
+    console.log(parsed3)
+    setSnack1FromAddMeal(parsed3)
+    //for snack2
+    const s2 = await AsyncStorage.getItem(`@Snack2`)
+    const parsed4 = JSON.parse(s2)
+    console.log(parsed4)
+    setSnack2FromAddMeal(parsed4)
+    //for dinner
+    const d = await AsyncStorage.getItem(`@Dinner`)
+    const parsed5 = JSON.parse(d)
+    console.log(parsed5)
+    setDinnerFromAddMeal(parsed5)
+
+
   };
 
   useEffect(() => {
@@ -126,16 +176,39 @@ export default DietChartMain = function ({ navigation }) {
 
 
   useEffect(() => {
-    storeUserState(store.getState())
-      .then((res) => {
-        console.log(res)
-        console.log("User state SuccessFully stored after food taking changed")
+    //store the  user state
 
-      })
-      .catch((err) => {
-        console.log("Error while state storing after  food taking changed", err)
-        Alert.alert("Error", "Connection Lost! Try Again")
-      })
+    function updateState() {
+      
+      getRecordStateFromAsync()
+        .then(async (record) => {
+          state = store.getState()
+          console.log("record got from  ASYNC is ", record)
+          state.record = record
+          await storeStateInAsync(state)
+
+          const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
+          axios.patch(`${ip}:3000/`,
+            { "state": state },
+            { headers: { "Authorization": "Bearer " + token } })
+            .then(async (res) => {
+
+              if (res.data.status !== undefined) {
+                console.log("changes successfully updated in user state");
+                console.log(res.data)
+              }
+            })
+            .catch((err) => {
+              console.log("Error: update state in DietChart= ", err)
+            })
+
+        })
+        .catch(err => { console.log("Error in update state in dietchartmain catchA", err) })
+
+
+
+    }
+    updateState()
   }, [isBreakfastEnabled, isLunchEnabled, isSnackOneEnabled, isSnackTwoEnabled, isDinnerEnabled])
 
   store.subscribe(() => {
@@ -151,8 +224,9 @@ export default DietChartMain = function ({ navigation }) {
   }
 
   const BreakfastComponent = () => {
+
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1, paddingTop: 25 }} onPress={() => {
         navigation.navigate("Recipe", {
           name: breakfast[0],
           img: breakfast[5]
@@ -164,20 +238,49 @@ export default DietChartMain = function ({ navigation }) {
           style={[{ position: 'absolute', margin: 16, right: 0, backgroundColor: '#6A6DB0', zIndex: 10 },
           { backgroundColor: isBreakfastEnabled ? "gray" : "#6A6DB0" }]}
           small icon="check" color='white' />
-        <MealCard style={{ zIndex: 1 }} title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
+        
+        {
+          (!breakfastFromAddMeal) ?
+            <MealCard title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
+            :
+            <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
+              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Content>
+                <Title>{breakfastFromAddMeal.name}</Title>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <Text style={styles.smallText}>Calories: {breakfastFromAddMeal.calories} kcl</Text>
+                </View>
+              </Card.Content>
+            </Card>
+        }
+
       </Pressable>
     )
   }
 
   const LunchComponent = () => {
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1, paddingTop: 25 }} onPress={() => {
         navigation.navigate("Recipe", {
           name: lunch[0],
           img: lunch[5]
         })
       }}>
-        <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
+        {
+          (!lunchFromAddMeal) ?
+            <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
+            :
+            <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
+              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Content>
+                <Title>{lunchFromAddMeal.name}</Title>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <Text style={styles.smallText}>Calories: {lunchFromAddMeal.calories} kcl</Text>
+                </View>
+              </Card.Content>
+            </Card>
+        }
+
         <FAB
           disabled={isLunchEnabled ? true : false}
           onPress={() => { dispatch(setLunchToday()); console.log(store.getState()) }}
@@ -190,14 +293,27 @@ export default DietChartMain = function ({ navigation }) {
 
   const DinnerComponent = () => {
     return (
-      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1 , paddingTop: 25}} onPress={() => {
+      <Pressable style={{ backgroundColor: '#E2E4FF', flex: 1, paddingTop: 25 }} onPress={() => {
         navigation.navigate("Recipe", {
           name: dinner[0],
           img: dinner[5]
         })
       }}>
-        <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
-        <FAB disabled={isDinnerEnabled ? true : false}
+        {
+          (!dinnerFromAddMeal) ?
+            <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
+            :
+            <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
+              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Content>
+                <Title>{dinnerFromAddMeal.name}</Title>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <Text style={styles.smallText}>Calories: {dinnerFromAddMeal.calories} kcl</Text>
+                </View>
+              </Card.Content>
+            </Card>
+        }
+         <FAB disabled={isDinnerEnabled ? true : false}
           onPress={() => {
             dispatch(setDinnerToday()); console.log("state after changing setDinnerToday ",
               store.getState());
@@ -218,16 +334,44 @@ export default DietChartMain = function ({ navigation }) {
             img: snack1[5]
           })
         }}>
-          <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
-        </Pressable>
-        <Pressable style={{paddingTop: 25}} onPress={() => {
+
+{
+          (!snack1FromAddMeal) ?
+            <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
+            :
+            <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
+              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Content>
+                <Title>{snack1FromAddMeal.name}</Title>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <Text style={styles.smallText}>Calories: {snack1FromAddMeal.calories} kcl</Text>
+                </View>
+              </Card.Content>
+            </Card>
+        }
+
+           </Pressable>
+        <Pressable style={{ paddingTop: 25 }} onPress={() => {
           navigation.navigate("Recipe", {
             name: snack2[0],
             img: snack2[5]
           })
         }}>
-          <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
-        </Pressable>
+          {
+          (!snack2FromAddMeal) ?
+            <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
+            :
+            <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
+              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Content>
+                <Title>{snack2FromAddMeal.name}</Title>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                  <Text style={styles.smallText}>Calories: {snack2FromAddMeal.calories} kcl</Text>
+                </View>
+              </Card.Content>
+            </Card>
+        }
+          </Pressable>
         <FAB
           disabled={isSnackOneEnabled ? true : false}
           onPress={() => { dispatch(setSnackOneToday()); console.log(store.getState()); }}
@@ -274,12 +418,12 @@ export default DietChartMain = function ({ navigation }) {
       </View>
 
 
-      <TouchableOpacity 
-      style={{ backgroundColor: "#6A6DB0", width: "30%", height:"5%",  margin:10,  justifyContent: 'center', alignItems: 'center', marginLeft: "65%", borderRadius: 10}}
-      onPress={()=>{
-        navigation.navigate("AddMeal")
-      }}>
-        <Text style={{fontSize: 16, color: 'white'}}>add meal </Text>
+      <TouchableOpacity
+        style={{ backgroundColor: "#6A6DB0", width: "30%", height: "5%", margin: 10, justifyContent: 'center', alignItems: 'center', marginLeft: "65%", borderRadius: 10 }}
+        onPress={() => {
+          navigation.navigate("AddMeal")
+        }}>
+        <Text style={{ fontSize: 16, color: 'white' }}>add meal </Text>
       </TouchableOpacity>
 
 
