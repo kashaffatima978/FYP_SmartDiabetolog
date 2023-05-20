@@ -136,6 +136,7 @@ openLibrarySide= ()=> {
               } else {
                 console.log('we got the top food image ');
                 setSide(response)
+                console.log(side)
               }
         })
         .catch(err=>{console.log('image not given', err)});
@@ -147,26 +148,33 @@ openLibrarySide= ()=> {
     }
   }
 
-  const predict =()=>{
+  const predict =async ()=>{
     if(top !== null && side !== null){
       const formData = new FormData();
         formData.append('top', { uri: top.assets[0].uri, name: top.assets[0].fileName, type: top.assets[0].type});
-        formData.append('side', { uri: side.assets[0].uri, side: side.assets[0].fileName, type: side.assets[0].type});
+        formData.append('side', { uri: side.assets[0].uri, name: side.assets[0].fileName, type: side.assets[0].type});
         console.log(formData)
+
+        axios.post(ip+':8000/getVolume', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          })
+          .then((response) => {
+            data = response.data.info; // Access the response data directly
+            console.log(data)
+            arr = data.split(':')
+            const name = (arr[1].split(','))[0]
+            const cal = (arr[2].split(','))[0]
+            console.log('name of dish ',name)
+            console.log('calories of the dish',cal) 
+
+
+          })
+          .catch((error) => {
+            console.error(error);
+          });
   
-        //axios request towards api
-        axios.post(ip+':8000/getVolume', {
-          'top': { uri: top.assets[0].uri, name: top.assets[0].fileName, type: top.assets[0].type},
-          'side': { uri: side.assets[0].uri, side: side.assets[0].fileName, type: side.assets[0].type}
-        }, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then((response)=>{
-            console.log(response)
-        })
-        .catch((err)=>{console.log('error in sending food image:', err)})
 
     }
     else{
@@ -174,15 +182,16 @@ openLibrarySide= ()=> {
     }
   }
 
-
-  const Manual = () => {
+  const Manual = ({ route, navigation}) => {
+    name = (route.params.name!=null? route.params.name: useState(''))
+    name = (route.params.cal!=null? route.params.cal: useState(''))
     return (
       <>
         <View style={{flexDirection: 'row', marginTop: 20}}>
             <Icon name="utensils" size={25} style={styles.icon}/>
             <View style={{width: "85%"}}>
                 <Text style={styles.label}>Dish name:</Text>
-                <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"} multiline={true} placeholder="Enter dish name" onChangeText={text => handleOnTextChange(text, "ldl")}/>
+                <TextInput style={styles.input} multiline={true} placeholder="Enter dish name" onChangeText={text => handleOnTextChange(text, "ldl")}/>
             </View>
         </View>
         <View style={{flexDirection: 'row', marginTop: 20}}>
@@ -239,7 +248,6 @@ openLibrarySide= ()=> {
     )
   }
 
-
   const Camera = () => {
     return (
       <View style={{margin: 10}}>
@@ -255,7 +263,7 @@ openLibrarySide= ()=> {
         <OptionsMenu
             customButton={myIcon}
             destructiveIndex={1}
-            options={["Camera", "Gallery", "Cancel"]}
+            options={["Camera", "Gallery"]}
             actions={[topImage, openLibraryTop]}
         />
 
@@ -269,7 +277,7 @@ openLibrarySide= ()=> {
         <OptionsMenu
             customButton={myIcon}
             destructiveIndex={1}
-            options={["Camera", "Gallery", "Cancel"]}
+            options={["Camera", "Gallery"]}
             actions={[sideImage, openLibrarySide]}
         />
 
@@ -282,6 +290,7 @@ openLibrarySide= ()=> {
       </View>
     )
   }
+
 
   const Tab = createMaterialTopTabNavigator();
 
