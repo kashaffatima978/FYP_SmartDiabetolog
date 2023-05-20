@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 //storing allergic reactions in Async
 //also works 
 exports.storeAllergiesInAsync = (type, data) => {
@@ -32,7 +33,7 @@ exports.getAllergiesFromAsync = (type) => {
             .then((allergies) => {
                 const parsed = JSON.parse(allergies)
                 console.log(`data got for ${type} from Async are = ${parsed}`)
-                if(parsed==null){
+                if (parsed == null) {
                     resolve([])
                 }
                 resolve(parsed)
@@ -45,9 +46,13 @@ exports.getAllergiesFromAsync = (type) => {
 
 
 //setting today date in async
-exports.storeTodayDateInAsync = () => {
+exports.storeTodayDateInAsync = async () => {
+
+    const storedDateBefore = await AsyncStorage.getItem(`@todayDate`)
+    const parsedbefore = JSON.parse(storedDateBefore)
+    console.log(`In Asyncstorage stored todayDate before changing is = ${parsedbefore}`)
+
     date = new Date().getDate()
-    //alert(date)
     console.log(`Date today @todayDate for saving in Async is ${date}`)
     AsyncStorage.setItem(`@todayDate`, JSON.stringify(date))
         .then(async () => {
@@ -64,12 +69,12 @@ exports.storeTodayDateInAsync = () => {
 
 //setting whole state and  in async
 exports.storeStateInAsync = (state) => {
-    stateProcessed={}
-    if(!state){
-        stateProcessed={}
+    stateProcessed = {}
+    if (!state) {
+        stateProcessed = {}
     }
-    else{
-        stateProcessed=state
+    else {
+        stateProcessed = state
     }
     AsyncStorage.setItem(`@state`, JSON.stringify(stateProcessed))
         .then(async () => {
@@ -87,22 +92,22 @@ exports.storeStateInAsync = (state) => {
 
 //setting record state in async
 storeRecordStateInAsync = (record) => {
-    console.log("record got in storeRecordStateInAsync is==== ",record)
+    console.log("record got in storeRecordStateInAsync is==== ", record)
     recordProcessed = []
     date = (new Date()).getDate()
-    if(record===undefined){
-        record=[]
+    if (record === undefined) {
+        record = []
     }
     if (record.length < date - 1) {
         for (i = record.length; i < date - 1; i++) {
             record.push(false)
         }
-        recordProcessed=record
+        recordProcessed = record
     }
     else {
         recordProcessed = record
     }
-    console.log("record going to be stored in ASYNC is ",recordProcessed)
+    console.log("record going to be stored in ASYNC is ", recordProcessed)
     AsyncStorage.setItem(`@record`, JSON.stringify(recordProcessed))
         .then(async () => {
             const storedDate = await AsyncStorage.getItem(`@record`)
@@ -150,7 +155,7 @@ exports.getStateFromAsync = () => {
             .then((date) => {
                 const parsed = JSON.parse(date)
                 //if state is undefined
-                if (Object.keys(parsed).length === 0 ) {
+                if (Object.keys(parsed).length === 0) {
                     resolve(
                         {
                             "arms": true,
@@ -207,7 +212,7 @@ exports.getTodayDateFromAsync = (type) => {
 //storing tracker Instance in Async
 exports.storeTrackerInstanceInAsync = (type, data) => {
 
-    return new Promise((resolve, reject) => {  
+    return new Promise((resolve, reject) => {
         //type is either bloodsugar, bloodpressure or cholesterol
         AsyncStorage.setItem(`@${type}`, JSON.stringify(data))
             .then(async () => {
@@ -223,13 +228,13 @@ exports.storeTrackerInstanceInAsync = (type, data) => {
 }
 
 //getting tracker Instance in Async
-exports.getTrackerInstanceInAsync  = (type) => {
-    return new Promise((resolve, reject) => {  
+exports.getTrackerInstanceInAsync = (type) => {
+    return new Promise((resolve, reject) => {
         AsyncStorage.getItem(`@${type}`)
             .then((instance) => {
                 const parsed = JSON.parse(instance)
                 console.log(`data got for ${type} from Async are = ${parsed}`)
-                if(parsed===null){
+                if (parsed === null) {
                     resolve({})
                 }
                 resolve(parsed)
@@ -239,3 +244,22 @@ exports.getTrackerInstanceInAsync  = (type) => {
             })
     })
 }
+
+//backend of add meal
+exports.AddMealInAsync = (name, calories, type) => {
+    const obj = { "name": name, "calories": calories }
+    return new Promise((resolve, reject) => {
+        //type is either bloodsugar, bloodpressure or cholesterol
+        AsyncStorage.setItem(`@${type}`, JSON.stringify(obj))
+            .then(async () => {
+                const instance = await AsyncStorage.getItem(`@${type}`)
+                const parsed = JSON.parse(instance)
+                console.log(`In Asyncstorage stored ${type} is = ${parsed} ${typeof parsed}`)
+                resolve(parsed)
+            }).catch((err) => {
+                console.log("AddMealInAsync error ", err)
+                reject(err)
+            })
+    })
+}
+

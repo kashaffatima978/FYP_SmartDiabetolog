@@ -13,15 +13,19 @@ import { setExerciseRecord, setExerciseToday, setBreakfastToday, setLunchToday, 
 import { storeUserState } from "../connectionToDB/authentication"
 import { useDispatch } from "react-redux/es/exports";
 import { getProfileInformation } from "../connectionToDB/profile"
-import { storeTodayDateInAsync, getTodayDateFromAsync, getAllergiesFromAsync } from "../connectionToDB/AsyncStorage"
-import { storeRecordStateInAsync, getStateFromAsync, getRecordStateFromAsync, getTrackerInstanceInAsync } from "../connectionToDB/AsyncStorage"
+import { storeTodayDateInAsync, getTodayDateFromAsync, getAllergiesFromAsync, storeAllergiesInAsync } from "../connectionToDB/AsyncStorage"
+import { storeStateInAsync, getStateFromAsync, getRecordStateFromAsync, getTrackerInstanceInAsync } from "../connectionToDB/AsyncStorage"
 import Alarm from "./Alarm";
+import { IP } from "../../files/information"
+import axios from 'axios';
+import getCalories from '../Counters/PerDay';
 
 
 
 
 import { Paragraph, Dialog, Portal, Button, Provider, Modal } from 'react-native-paper';
 import Loader from "../components/loader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function HomeScreen({ navigation, prop }) {
@@ -44,8 +48,9 @@ export default function HomeScreen({ navigation, prop }) {
     const [bloodSugarInstance, setBloodSugarInstance] = useState({})
     const [bloodPressureInstance, setBloodPressureInstance] = useState({})
     const [cholesterolInstance, setCholesterolInstance] = useState({})
+    const [totalCalories, setTotalCalories] = useState(1200)
 
-
+    const ip = `http://${IP}`
 
 
 
@@ -82,6 +87,11 @@ export default function HomeScreen({ navigation, prop }) {
                 .then(async (res) => {
                     console.log("here", res)
                     console.log("state", res.userDetails.state)
+                    //get calories for making diet chart
+                    cal = getCalories(res.userDetails.weight, false, res.userDetails.gender, res.userDetails.heightFeet, res.userDetails.heighInches, res.userDetails.age, res.userDetails.acitivitLevel);
+                    setTotalCalories(cal)
+
+                    //setName
                     setName(res.userDetails.name)
 
                     //also get oral medications for alarm
@@ -120,7 +130,7 @@ export default function HomeScreen({ navigation, prop }) {
 
     const intervalId = setInterval(async () => {
         setAlarmShown(true)
-        console.log("here in interval")
+        //console.log("here in interval")
         //calling for alarm
         arrayInAsync = [
             { "time": "3:38", "name": "med1", "type": "oral", "dosage": "10" },
@@ -147,53 +157,38 @@ export default function HomeScreen({ navigation, prop }) {
                     setAlarmShown(true)
                     setAlarmVisibility(true)
                     setTimeout(() => { setAlarmVisibility(false) }, 5000)
-
                 }
             }
-
         });
     }, 60000); // Run every minute
 
-    const intervalId2 = setInterval(async () => {
-
-        console.log("here in interval 2 for day changing setup")
+    async function callbackForDayChange() {
+       // console.log("here in timeout 2 for day changing setup")
         //when the date changes
         const currentDate = new Date().getDate();
-        console.log("today current date is=", currentDate)
+       // console.log("today current date is=", currentDate)
         const dateInAsyc = (await getTodayDateFromAsync())
-        console.log("dateInAsyc is=", dateInAsyc)
+       // console.log("dateInAsyc is=", dateInAsyc)
         if (dateInAsyc !== currentDate) {
             //set todayDate in Async
             await storeTodayDateInAsync()
-
             console.log("before changing date is ", dateInAsyc)
             console.log("new date is ", currentDate)
             console.log("states before changing to new date are  ", store.getState())
 
-            //state setting for diet
-            //if true change them to false for day because day is changed
-            if (!store.getState()) dispatch(setAuthentication())
-            if (store.getState().todayBreakfastDone) dispatch(setBreakfastToday())
-            if (store.getState().todayLunchDone) dispatch(setLunchToday())
-            if (store.getState().todaySnackOneDone) dispatch(setSnackOneToday())
-            if (store.getState().todaySnackTwoDone) dispatch(setSnackTwoToday())
-            if (store.getState().todayDinnerDone) dispatch(setDinnerToday())
-
             //add todayExerciseDone to record to mark todays exercise is done(true)/skip(false)
             getRecordStateFromAsync()
-                .then(records => {
+                .then(async (records) => {
                     console.log("records got before updating state when change date is ", records)
                     recordProcessed = records
                     recordProcessed.push(store.getState().todayExerciseDone)
-                    storeRecordStateInAsync(recordProcessed)
+                    //getting the actual state from Async
+                    let state = await getStateFromAsync()
+                    state.record = recordProcessed
+                    await storeStateInAsync(state)
                 })
+                .catch(err => { console.log("error in getRecordStateFromAsync1 in HomeScreen") })
 
-            //dispatch(setExerciseRecord())
-
-            //if todayExerciseDone is true then update the state to false
-            if (store.getState().todayExerciseDone) {
-                dispatch(setExerciseToday())
-            }
 
             //update state in db if todayExerciseDone is false
             if (!(store.getState().todayExerciseDone)) {
@@ -208,10 +203,74 @@ export default function HomeScreen({ navigation, prop }) {
                         Alert.alert("Error", "Connection Lost! Try Again")
                     })
             }
+            //state setting for diet
+            //if true change them to false for day because day is changed
+            if (!store.getState()) dispatch(setAuthentication())
+            if (store.getState().todayBreakfastDone) dispatch(setBreakfastToday())
+            if (store.getState().todayLunchDone) dispatch(setLunchToday())
+            if (store.getState().todaySnackOneDone) dispatch(setSnackOneToday())
+            if (store.getState().todaySnackTwoDone) dispatch(setSnackTwoToday())
+            if (store.getState().todayDinnerDone) dispatch(setDinnerToday())
+
+
+            //if todayExerciseDone is true then update the state to false
+            if (store.getState().todayExerciseDone) {
+                dispatch(setExerciseToday())
+            }
             //Now set the date
             setDate(currentDate);
+
+            //Now again updating the state in Async
+            //add todayExerciseDone to record to mark todays exercise is done(true)/skip(false)
+            getRecordStateFromAsync()
+                .then(async (records) => {
+                    console.log("records got from Async is ", records)
+                    //getting the actual state from Async
+                    let state = await getStateFromAsync()
+                    state.record = records
+                    await storeStateInAsync(state)
+                })
+                .catch(err => { console.log("error in getRecordStateFromAsync 2 in HomeScreen") })
+
+            //when day changes also get new diet Plan and store it in Async
+
+            getAllergiesFromAsync("food")
+                .then(allergies => {
+                    array = allergies.map(val => val.name)
+                    console.log("********", array, "********")
+                    axios.post(ip + ':8000/dietPlan', { 'calories': totalCalories, 'alergies': array })
+                        .then(async (response) => {
+                            console.log("When day changes diet plan got is ", response.data)
+                            //now store dietChart in Async
+                            await AsyncStorage.setItem(`@dietChart`, JSON.stringify(response.data))
+                            const storedDate = await AsyncStorage.getItem(`@dietChart`)
+                            const parsed = JSON.parse(storedDate)
+                            console.log(`In Asyncstorage stored diet chart is = ${parsed}`)
+                        })
+                        .catch((err) => {
+                            console.log(err, "error in useEffect in HomeScreen for getting recipes catch 1")
+                        })
+                })
+                .catch(err => {
+                    console.log(err, "error in useEffect in HomeScreen for getting recipes catch 2")
+                })
+
+            //make add meal content in async null here
+            AsyncStorage.setItem(`@Breakfast`, JSON.stringify(obj))
+            try {
+                await AsyncStorage.removeItem("@Breakfast");
+                await AsyncStorage.removeItem("@Dinner");
+                await AsyncStorage.removeItem("@Lunch");
+                await AsyncStorage.removeItem("@Snack1");
+                await AsyncStorage.removeItem("@Snack2");
+                console.log('Data for add meal removed successfully');
+              } catch (error) {
+                console.log('Error removing data for add meal in HomeScreen:', error);
+              }
         }
-    }, 300000); // Run every minute
+        setTimeout(callbackForDayChange, 30000)
+    };
+    setTimeout(callbackForDayChange, 30000)//runs every 30 mins
 
 
 

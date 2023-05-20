@@ -64,7 +64,7 @@ export const Recipe=({navigation, route})=>{
                     <Text style={[styles.title, {marginBottom:10}]}>Ingredients</Text>
                     {ingredient.map((element, index)=>{
                         return(
-                            <View style={{width: '90%', height: 50, borderBottomWidth: 1, borderColor:'lightgrey'}}>
+                            <View key={index} style={{width: '90%', height: 50, borderBottomWidth: 1, borderColor:'lightgrey'}}>
                                 <Text style={styles.ingre}>{element}</Text>
                             </View>
                         )
@@ -74,7 +74,7 @@ export const Recipe=({navigation, route})=>{
                     <Text style={[styles.title, {marginBottom:10}]}>Method</Text>
                     {method.map((element, index)=>{
                         return(
-                            <View style={{width: '90%', borderBottomWidth: 1, borderColor:'lightgrey'}}>
+                            <View key={index} style={{width: '90%', borderBottomWidth: 1, borderColor:'lightgrey'}}>
                                 <Text style={{fontSize: 20, fontWeight: 'bold'}}>Step {index+1}</Text>
                                 <Text style={styles.method}>{element}</Text>
                             </View>
