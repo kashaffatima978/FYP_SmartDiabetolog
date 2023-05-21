@@ -104,6 +104,44 @@ export default AddOralMedicine = function ({ navigation, route }) {
             }
           };
 
+          openLibrary = () => {
+            const options: ImageLibraryOptions = {
+              mediaType: 'photo',
+              quality: 1
+            };
+        
+            launchImageLibrary(options, async (response) => {
+              if (response.didCancel) {
+                console.log('User cancelled image picker')
+              }
+              else if (response.error) {
+                console.log('ImagePicker Error: ', response.error)
+              }
+              else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton)
+              }
+              else {
+                console.log(response)
+                const formData = new FormData();
+                formData.append('file', { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type});
+                //axios request towards api
+                axios.post(ip+':8000/ReadMedicineName', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+                .then((response)=>{
+                    console.log("This is the response from medication ocr detection ",response.data)
+                    data = response.data;
+                    setName(data.toString())
+
+                })
+                .catch((err)=>{console.log('error in sending medication image:', err)})
+              }
+              }
+            )
+          }
+
     useEffect(() => {
         if (mount === 0) {
             //setLoader(true)
@@ -223,11 +261,13 @@ export default AddOralMedicine = function ({ navigation, route }) {
 
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
                     <Icon name="heartbeat" size={25} style={styles.icon} />
-                    <View style={{ width: "75%" }}>
+                    <View style={{ width: "55%" }}>
                         <Text style={styles.label}>Name</Text>
                         <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Medicine Name" placeholderTextColor={"gray"} />
                     </View>
                     <TouchableOpacity onPress={requestCameraPermission} ><Icon name="camera" size={27} style={{marginVertical: "50%", marginHorizontal:"3%"}}/></TouchableOpacity>
+                    <TouchableOpacity onPress={openLibrary} ><Icon name="images" size={27} style={{marginVertical: "50%", marginHorizontal:"3%"}}/></TouchableOpacity>
+
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
