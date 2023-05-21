@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
-
+import {storeUserInformation} from "../connectionToDB/AsyncStorage"
 
 const GenderSelectionPage = ({navigation}) => {
   const [selectedGender, setSelectedGender] = useState(null);
@@ -9,25 +9,30 @@ const GenderSelectionPage = ({navigation}) => {
     setSelectedGender(gender);
   };
 
+  const addingGender = ()=>{
+    storeUserInformation('Gender', selectedGender);
+    navigation.navigate('AgeAndActivity');
+  }
+
   return (
     <View style={styles.container}>
         <Text style={styles.title}>Select Height:</Text>
         <Text style={styles.selectedWeightText}>Selected Gender:<Text style={{color: '#6A6DB0', fontWeight: 'bold'}}> {selectedGender}</Text></Text>
       <TouchableOpacity
         style={[styles.genderImageContainer, selectedGender === 'male' && styles.selectedGenderImageContainer]}
-        onPress={() => handleGenderSelection('male')}
+        onPress={() => handleGenderSelection('Male')}
       >
         <Image source={require('../../../assets/Images/man.jpg')} style={styles.genderImage} resizeMode='contain' />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.genderImageContainer, selectedGender === 'female' && styles.selectedGenderImageContainer]}
-        onPress={() => handleGenderSelection('female')}
+        onPress={() => handleGenderSelection('Female')}
       >
         <Image source={require('../../../assets/Images/women.jpg')} style={styles.genderImage} resizeMode='contain'  />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.saveButtonContainer} onPress={()=>{navigation.navigate('AgeAndActivity')}}>
+      <TouchableOpacity style={styles.saveButtonContainer} onPress={addingGender}>
               <Text style={styles.saveButtonText} >Next</Text>
         </TouchableOpacity>
     </View>

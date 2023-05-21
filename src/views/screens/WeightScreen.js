@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
-
+import {storeUserInformation} from "../connectionToDB/AsyncStorage"
 const WeightScreen = ({navigation}) => {
   const [selectedWeight, setSelectedWeight] = useState(50);
 
   const weightOptions = Array.from({ length: 191 }, (_, index) => index + 10);
+  const addingWeight = ()=>{
+    storeUserInformation('weight', selectedWeight)
+    navigation.navigate('HeightScreen')
+  }
   
   return (
     <View style={styles.container}>
@@ -32,7 +36,7 @@ const WeightScreen = ({navigation}) => {
 
       </View>
 
-      <TouchableOpacity style={styles.saveButtonContainer} onPress={()=>{navigation.navigate('HeightScreen')}}>
+      <TouchableOpacity style={styles.saveButtonContainer} onPress={addingWeight}>
               <Text style={styles.saveButtonText} >Next</Text>
         </TouchableOpacity>
       
