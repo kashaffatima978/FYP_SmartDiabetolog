@@ -58,6 +58,7 @@ import GenderSelectionPage from "../screens/GenderSelectionPage";
 import AgeAndActivity from "../screens/AgeAndActivity";
 import Chat from "../screens/chat";
 import Alarm from "../screens/Alarm";
+import ForgetPasswordEnterCode from "../screens/ForgetPAsswordOTP";
 
 export default function StackNav() {
   const [screen, setScreen] = useState("FirstScreen")
@@ -132,6 +133,7 @@ export default function StackNav() {
               <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions} />
               <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions} />
               <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+              <Stack.Screen name="ForgetPasswordEnterCode" component={ForgetPasswordEnterCode} />
               <Stack.Screen name="EnterCode" component={EnterCode} />
               <Stack.Screen name="Retinopathy" component={Retinopathy} />
               <Stack.Screen name="Login" component={LoginScreen} />
@@ -189,6 +191,7 @@ export default function StackNav() {
               <Stack.Screen name="AddAllergicReactions" component={AddAllergicReactions} />
               <Stack.Screen name="FoodAllergicReactions" component={FoodAllergicReactions} />
               <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+              <Stack.Screen name="ForgetPasswordEnterCode" component={ForgetPasswordEnterCode} />
               <Stack.Screen name="EnterCode" component={EnterCode} />
               <Stack.Screen name="Retinopathy" component={Retinopathy} />
             </>

@@ -142,6 +142,31 @@ exports.sendOTP = (token) => {
        })
 }
 
+//send OTP code to email of the user
+exports.sendOTPForForgetPassword = (email) => {
+       //recieves token from register
+       console.log("email is ", email)
+       console.log("In forget password sendOTP")
+       return new Promise((resolve, reject) => {
+              axios.post(`${ip}:3000/otp/sendemail/forgetpass`, { "email": email })
+                     .then((res) => {
+                            console.log(res.data);
+                            storeOTP(res.data)
+                                   .then(() => { resolve() })
+                                   .catch((err) => {
+                                          console.log("sendOTPForForgetPassword error", err);
+                                          reject(err)
+                                   })
+                     })
+                     .catch((err) => {
+                            console.log("sendOTP error", err);
+                            reject(err)
+                     })
+       })
+}
+
+
+
 //store OTP Code send to email in AsyncStorage
 const storeOTP = (data) => {
        return new Promise((resolve, reject) => {
@@ -200,25 +225,49 @@ exports.verifyUser = async () => {
 
 }
 
+//change password
+exports.changePassword = async (email, password) => {
+       return new Promise(async (resolve, reject) => {
+
+              axios.patch(`${ip}:3000/changePassword`,
+                     {
+                            "email": email,
+                            "password": password
+                     })
+                     .then((res) => {
+                            if (res.data.status !== undefined) {
+                                   console.log("password successfully changed");
+                                   console.log(res.data)
+                                   resolve(res.data)
+                            }
+                     })
+                     .catch((err) => {
+                            console.log("Error: changePassword= ", err)
+                            reject(err)
+                     })
+       })
+
+}
+
 //store the  user state
 exports.storeUserState = async (state) => {
        var state = state
-       var records=[]
-       
+       var records = []
+
        getRecordStateFromAsync()
               .then(async (record) => {
                      //if date is 1, new month starts then change record to empty []
-                     if((new Date().getDate())===1){
-                            record=[]
+                     if ((new Date().getDate()) === 1) {
+                            record = []
                      }
 
                      console.log("record before updating in Async after exercise done ", record)
                      record.push(store.getState().todayExerciseDone)
                      console.log("record before updating in Async after exercise done ", record)
-                     state.record=record
-                      await storeStateInAsync(state)
+                     state.record = record
+                     await storeStateInAsync(state)
 
-                     
+
                      return new Promise(async (resolve, reject) => {
 
                             const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
@@ -226,7 +275,7 @@ exports.storeUserState = async (state) => {
                                    { "state": state },
                                    { headers: { "Authorization": "Bearer " + token } })
                                    .then(async (res) => {
-              
+
                                           if (res.data.status !== undefined) {
                                                  console.log("changes successfully updated in user state");
                                                  console.log(res.data)
@@ -239,20 +288,20 @@ exports.storeUserState = async (state) => {
                                           reject(err)
                                    })
                      })
-              
-                     
-                    // await storeRecordStateInAsync(record)
+
+
+                     // await storeRecordStateInAsync(record)
                      //console.log("the STATE is ", state)
 
                      //state["record"] = record
                      //console.log("After updating the state with the new record after excercise being done, the STATE is ", state)
               })
-              .catch(err => { console.log("Error in storeUserState in authentication catchA",err) })
+              .catch(err => { console.log("Error in storeUserState in authentication catchA", err) })
        //state.record=record
        //console.log("now state before updation in db is",state)
-      
 
-      
+
+
 }
 
 //store the  user state while registeration

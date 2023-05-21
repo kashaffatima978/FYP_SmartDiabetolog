@@ -13,6 +13,8 @@ import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import axios from "axios";
+import { IP } from "../../files/information"
 
 import {
     addAllergicReaction, updateAllergicReaction, deleteAllergicReaction,
@@ -23,13 +25,14 @@ import {
 
 
 export default AddAllergicReactions = function ({ navigation, route }) {
-    const {id}=route.params.id
+    const { id } = route.params.id
+    const ip = `http://${IP}`
     const [loader, setLoader] = useState(false)
 
     const [mount, setMount] = useState(0)
     const loadDataOnlyOnce = () => {
 
-        if (route.params.id!=="undefined") {
+        if (route.params.id !== "undefined") {
             setLoader(true)
             viewParticularAllergicReaction(route.params.id)
                 .then((res) => {
@@ -40,10 +43,11 @@ export default AddAllergicReactions = function ({ navigation, route }) {
                     setDescription(res.description)
                     setLoader(false)
                 })
-                .catch(err => { 
+                .catch(err => {
                     setLoader(false);
                     alert("Connection Lost")
-                    console.log("Error in loadDataOnlyOnce in AddAllergicReactions ", err) })
+                    console.log("Error in loadDataOnlyOnce in AddAllergicReactions ", err)
+                })
         }
 
     };
@@ -61,18 +65,52 @@ export default AddAllergicReactions = function ({ navigation, route }) {
 
     const saveReaction = () => {
         setLoader(true)
-        addAllergicReaction(name, symtoms, type, description)
+
+        if (type === "medication") {
+            //if type is medication fet the active agents for medicine
+        axios.post(ip + ':8000/getActiveAgent', { 'med': name })
+        .then((response) => {
+            console.log("When active agent got is ", response.data)
+            const agentsGot = response.data
+            console.log(agentsGot, typeof (agentsGot))       
+            //now add allergic Reaction in DB
+            addAllergicReaction(name, symtoms, type, description,agentsGot)
             .then((data) => {
                 console.log("adding allergic reaction", data);
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { 
+            .catch((err) => {
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
-                console.log("Error in saveReaction in AddReaction", err) 
+                console.log("Error in saveReaction in AddReaction", err)
             })
+            
+        })
+        .catch((err) => {
+            console.log(err, "error in AddAllergicReaction for getting active agents")
+            setLoader(false)
+            navigation.navigate("AllergicReactionMain")
+            alert("Connection Lost! Try Again")
+        })
+
+        }
+
+        else {
+            addAllergicReaction(name, symtoms, type, description,[])
+            .then((data) => {
+                console.log("adding allergic reaction", data);
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
+            })
+            .catch((err) => {
+                setLoader(false)
+                navigation.navigate("AllergicReactionMain")
+                alert("Connection Lost! Try Again")
+                console.log("Error in saveReaction in AddReaction", err)
+            })
+        }
     }
 
     const updateReaction = () => {
@@ -83,11 +121,12 @@ export default AddAllergicReactions = function ({ navigation, route }) {
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { 
+            .catch((err) => {
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
-                console.log("Error in updateReaction in AddInsulinMed", err) })
+                console.log("Error in updateReaction in AddInsulinMed", err)
+            })
     }
     const deleteReaction = () => {
         setLoader(true)
@@ -97,15 +136,16 @@ export default AddAllergicReactions = function ({ navigation, route }) {
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
             })
-            .catch((err) => { 
+            .catch((err) => {
                 setLoader(false)
                 navigation.navigate("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
-                console.log("Error in deleteReaction in AddInsulinMed", err) })
+                console.log("Error in deleteReaction in AddInsulinMed", err)
+            })
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
-             <Loader visible={loader}></Loader>
+            <Loader visible={loader}></Loader>
             <Heading name="Add Allergic Reaction" />
             <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 
@@ -173,7 +213,7 @@ export default AddAllergicReactions = function ({ navigation, route }) {
 
 
 
-                    {route.params.id==="undefined" ?
+                    {route.params.id === "undefined" ?
                         (<MyButton title="Save" onPress={saveReaction}></MyButton>)
                         :
                         (

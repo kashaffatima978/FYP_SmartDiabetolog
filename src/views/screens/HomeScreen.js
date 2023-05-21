@@ -310,7 +310,7 @@ export default function HomeScreen({ navigation, prop }) {
                 <View style={{ marginTop: 16, padding: 20 }}>
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Daily Inputs</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <Pressable onPress={() => { navigation.navigate('WeightScreen') }}>
+                        <Pressable onPress={() => { navigation.navigate('Tracker') }}>
                             <View style={{
                                 backgroundColor: "#6A6DB0",
                                 width: 150,
