@@ -26,7 +26,7 @@ export default function MainExercisePage({ navigation }) {
             // setStates(async () => { (await getStateFromAsync()) })
             // setRecord(async () => { (await getRecordStateFromAsync()) })
             // setMount(old => { old++ })
-
+            
             getStateFromAsync()
                 .then(states => {
                     setStates(states)

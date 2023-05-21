@@ -87,8 +87,13 @@ export default function HomeScreen({ navigation, prop }) {
                 .then(async (res) => {
                     console.log("here", res)
                     console.log("state", res.userDetails.state)
+                    //relating calories with dietchart
+                    
+
+
                     //get calories for making diet chart
                     cal = getCalories(res.userDetails.weight, false, res.userDetails.gender, res.userDetails.heightFeet, res.userDetails.heighInches, res.userDetails.age, res.userDetails.acitivitLevel);
+                    
                     setTotalCalories(cal)
 
                     //setName
@@ -117,14 +122,68 @@ export default function HomeScreen({ navigation, prop }) {
                     console.log(ch.ldl)
                     setCholesterolInstance(() => ch)
 
+                    if(bs.dataUnit=='mmol/L'){
+                        range = bs.concentration;
+                        age = res.userDetails.age;
+
+                        if((age<6) && (range < 6)){
+                            //low
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if((age <6) && (range > 300)){
+                            setTotalCalories(totalCalories-100)
+                        }
+                        else if((age >=6 && age <= 19) && range <70){
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if((age >=6 && age <= 19)&& range > 300){
+                            setTotalCalories(totalCalories-100)
+                        }
+                        else if(age > 20 && range <70  ){
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if(age > 20 && range > 400  ){
+                            setTotalCalories(totalCalories-100)
+                        }
+                    }
+                    else{
+
+                        range = parseInt(bs.concentration*18) ;
+                        age = res.userDetails.age;
+
+                        if((age<6) && (range < 6)){
+                            //low
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if((age <6) && (range > 300)){
+                            setTotalCalories(totalCalories-100)
+                        }
+                        else if((age >=6 && age <= 19) && range <70){
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if((age >=6 && age <= 19)&& range > 300){
+                            setTotalCalories(totalCalories-100)
+                        }
+                        else if(age > 20 && range <70  ){
+                            setTotalCalories(totalCalories+100)
+                        }
+                        else if(age > 20 && range > 400  ){
+                            setTotalCalories(totalCalories-100)
+                        }
+
+                    }
+                
                 })
                 .catch(err => { console.log("Error in Home screen", err) })
 
-
+         
+                
 
         }
         // Clean up the interval when the component unmounts
         // return () => clearInterval(intervalId);
+        
+
     }, [date, animatedProgress, bloodSugar]);
 
     const intervalId = setInterval(async () => {

@@ -68,6 +68,9 @@ export default function getCalories(weight, pounds, gender, heightfeet,heightInc
             break;
     }
     calories = Math.round(calories)
+    
+
+
     console.log("**************************************************************8", calories)
     return calories
     
