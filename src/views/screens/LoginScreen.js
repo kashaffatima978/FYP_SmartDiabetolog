@@ -193,7 +193,7 @@ export default function LoginScreen({ navigation }) {
                     value={inputList.password}
                     onFocus={() => { handleErrorMessage(null, "password") }}
                 />
-                <TouchableOpacity onPress={() => { navigation.navigate("ForgetPassword") }}>
+                <TouchableOpacity onPress={() => { navigation.navigate("ForgetPasswordEnterCode") }}>
                     <Text >Forgot password?</Text>
                 </TouchableOpacity>
                 <MyButton title="Login" onPress={validation} />
