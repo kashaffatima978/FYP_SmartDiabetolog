@@ -4,7 +4,7 @@ import { IP } from "../../files/information"
 const ip = `http://${IP}`
 
 //add an allergic reaction 
-exports.addAllergicReaction= async (name, symtoms,type, description) => {
+exports.addAllergicReaction= async (name, symtoms,type, description,active_agent) => {
     return new Promise(async (resolve, reject) => {
         const token = (JSON.parse(await AsyncStorage.getItem("@token")).token)
         console.log("token in addAllergicReaction is", token)
@@ -13,7 +13,8 @@ exports.addAllergicReaction= async (name, symtoms,type, description) => {
                 "name": name,
                 "symtoms": symtoms,
                 "type": type,
-                "description":description
+                "description":description,
+                "active_agent":active_agent
             },
             { headers: { "Authorization": "Bearer " + token } },
         )

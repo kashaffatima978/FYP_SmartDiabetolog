@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput, Image } from "react-native";
+import { View, Text, SafeAreaView,Alert, StyleSheet, FlatList, Button, TouchableOpacity, ScrollView, TextInput, Image } from "react-native";
 import generalStyles from "../../files/generalStyle";
 import { MainHeading } from "../components/mainHeading";
 import colors from "../../files/Colors";
@@ -12,12 +12,12 @@ import SelectDropdown from "react-native-select-dropdown";
 import Loader from '../components/loader';
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { PermissionsAndroid } from 'react-native';
 import { addOralMedicationToPrescription, getOralMedicationDetails, updateOralMedicationDetails, deleteOralMedicationDetails } from "../connectionToDB/prescription"
-import {storeAllergiesInAsync} from "../connectionToDB/AsyncStorage"
 import axios from "axios";
-import {IP} from "../../files/information"
+import { IP } from "../../files/information"
+import { getAllergiesFromAsync, storeAllergiesInAsync } from "../connectionToDB/AsyncStorage"
 
 export default AddOralMedicine = function ({ navigation, route }) {
     const { title, id } = route.params
@@ -50,64 +50,75 @@ export default AddOralMedicine = function ({ navigation, route }) {
         }
 
     };
-        
-        const requestCameraPermission = async () => {
-            try {
-              const granted = await PermissionsAndroid.request(
+
+    const requestCameraPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.CAMERA,
                 {
-                  title: "App Camera Permission",
-                  message:"App needs access to your camera ",
-                  buttonNeutral: "Ask Me Later",
-                  buttonNegative: "Cancel",
-                  buttonPositive: "OK"
+                    title: "App Camera Permission",
+                    message: "App needs access to your camera ",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
                 }
-              );
-              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log("Camera permission given");
-                const options= {
+                const options = {
                     quality: 1,
                     cameraType: 'back'
                 };
                 launchCamera(options)
-                .then((response)=>{
-                 
-                    if (response.didCancel) {
-                        console.log('User cancelled image picker');
-                      } else if (response.error) {
-                        console.log('ImagePicker Error: ', response.error);
-                      } else {
-                        console.log('we got the image ');
-                        console.log(response.assets[0])
-                        console.log(response.assets[0].uri);
-                        //sending image 
-                        const formData = new FormData();
-                        formData.append('file', { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type, width: response.assets[0].width, height: response.assets[0].height });
-                        //axios request towards api
-                        axios.post(ip+':8000/ReadMedicineName', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                            },
-                        })
-                        .then((response)=>{
-                            console.log(response.text)
-                        })
-                        .catch((err)=>{console.log('error in sending medication image:', err)})
-                      }
-                })
-                .catch(err=>{console.log('image not given', err)});
-              } else {
+                    .then((response) => {
+
+                        if (response.didCancel) {
+                            console.log('User cancelled image picker');
+                        } else if (response.error) {
+                            console.log('ImagePicker Error: ', response.error);
+                        } else {
+                            console.log('we got the image ');
+                            console.log(response.assets[0])
+                            console.log(response.assets[0].uri);
+                            //sending image 
+                            const formData = new FormData();
+                            formData.append('file', { uri: response.assets[0].uri, name: response.assets[0].fileName, type: response.assets[0].type, width: response.assets[0].width, height: response.assets[0].height });
+                            //axios request towards api
+                            axios.post(ip + ':8000/ReadMedicineName', formData, {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                },
+                            })
+                                .then((response) => {
+                                    console.log(response.text)
+                                })
+                                .catch((err) => { console.log('error in sending medication image:', err) })
+                        }
+                    })
+                    .catch(err => { console.log('image not given', err) });
+            } else {
                 console.log("Camera permission denied");
-              }
-            } catch (err) {
-              console.warn(err);
             }
-          };
+        } catch (err) {
+            console.warn(err);
+        }
+    };
 
     useEffect(() => {
         if (mount === 0) {
             //setLoader(true)
-            loadDataOnlyOnce();
+            //first get medications stored in Async to check the active agents
+            getAllergiesFromAsync("medication")
+                .then(allergies => {
+
+                    array = (allergies.map(val => val.active_agent)).flat()
+                    console.log("@@@@@@@@@@@@@@@@@@@Set active agents are", array)
+                    setMedicationAllergies(() => (array))
+                    loadDataOnlyOnce();
+                })
+                .catch(err => {
+                    console.log(err, "error in useEffect in AddOralMedication for getting active agents of medications from ASYNC")
+                })
             setMount((oldVal) => oldVal++);
         }
     }, [mount]);
@@ -118,22 +129,81 @@ export default AddOralMedicine = function ({ navigation, route }) {
     const [dosage, setDosage] = useState("")
     const [hour, setHour] = useState("00")
     const [minute, setMinute] = useState("00")
+    const [medicationAllergies, setMedicationAllergies] = useState([])
 
     const saveOralMedicine = () => {
         setLoader(true)
-        const time = `${hour}:${minute}`
-        addOralMedicationToPrescription(id, name, dosage, units, type, time)
-            .then((data) => {
-                console.log("adding oral medication", data);
-                setLoader(false)
-                navigation.replace("AddNewPrescription", { "title": title, "id": id });
+        //first get active agent for the medicine added
+        axios.post(ip + ':8000/getActiveAgent', { 'med': name })
+            .then((response) => {
+                console.log("When active agent got is ", response.data)
+                const agentsGot = response.data
+                console.log(agentsGot, typeof (agentsGot))
+                //check if user is allergic to medication or not
+                for (j = 0; j < medicationAllergies.length; j++) {
+                    element = medicationAllergies[j]
+                    matched = false
+                    let trimmedStr = element.replace(/\s/g, "");
+                    console.log("1", trimmedStr)
+                    for (i = 0; i < agentsGot.length; i++) {
+                        const element2 = agentsGot[i]
+                        console.log("KKKKK")
+                        let trimmedStr2 = element2.replace(/\s/g, "");
+                        console.log(trimmedStr2)
+                        if (trimmedStr === trimmedStr2) {
+                            //alert(`You are allergic to ${name}`)
+                            matched = true
+                            Alert.alert(
+                                'Warning',
+                                `You are allergic to ${name}`,
+                                [
+                                    { text: 'OK', onPress: () => console.log('OK Pressed') }
+                                ],
+                                {
+                                    // Override the container style
+                                    containerStyle: styles.container1,
+                                    // Override the title style
+                                    titleStyle: styles.title,
+                                    // Override the message style
+                                    messageStyle: styles.message
+                                }
+                            )
+                            break
+                        }
+                    }
+                    if(matched){
+                        break
+                    }
+
+
+                };
+
+                //now add medication in DB
+                const time = `${hour}:${minute}`
+                addOralMedicationToPrescription(id, name, dosage, units, type, time)
+                    .then((data) => {
+                        console.log("adding oral medication", data);
+                        setLoader(false)
+                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
+                    })
+                    .catch((err) => {
+                        console.log("Error in add in Prescription", err)
+                        setLoader(false)
+                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                        alert("Connection Lost! Try Again")
+                    })
+
             })
             .catch((err) => {
-                console.log("Error in add in Prescription", err)
+                console.log(err, "error in AddAllergicReaction for getting active agents")
                 setLoader(false)
                 navigation.navigate("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
             })
+
+
+
+
     }
 
     const deleteOralMedicine = () => {
@@ -227,7 +297,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                         <Text style={styles.label}>Name</Text>
                         <TextInput value={name} onChangeText={text => { setName(text) }} style={styles.input} placeholder="Enter Medicine Name" placeholderTextColor={"gray"} />
                     </View>
-                    <TouchableOpacity onPress={requestCameraPermission} ><Icon name="camera" size={27} style={{marginVertical: "50%", marginHorizontal:"3%"}}/></TouchableOpacity>
+                    <TouchableOpacity onPress={requestCameraPermission} ><Icon name="camera" size={27} style={{ marginVertical: "50%", marginHorizontal: "3%" }} /></TouchableOpacity>
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: 20 }}>
@@ -337,7 +407,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
 
                 </SafeAreaView>
 
-                
+
 
 
 
@@ -425,5 +495,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 3,
         // elevation: 5,
+    },
+    container1: {
+        backgroundColor: 'yellow',
+        borderRadius: 10,
+        padding: 20,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    message: {
+        fontSize: 16,
     },
 });
