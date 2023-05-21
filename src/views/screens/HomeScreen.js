@@ -98,8 +98,8 @@ export default function HomeScreen({ navigation, prop }) {
                     getAllergiesFromAsync("oralMedications")
                         .then(ress => { console.log("Oral medications for alarms in HomeScreen= ", ress); setMedicationForAlarm(() => ress) })
                         .catch(err => { console.log("Error in getAllergiesFromAsync in HomeScreen while getting oralMedications ", err) })
-                    if (res.userDetails.weight == undefined || res.userDetails.age || undefined || res.userDetails.heightFeet == undefined) {
-                        navigation.navigate('Tracker')
+                    if (res.userDetails.weight === undefined || res.userDetails.age === undefined || res.userDetails.heightFeet === undefined) {
+                        navigation.navigate('WeightScreen')
                     }
 
                     const bs = await getTrackerInstanceInAsync("bloodsugar")

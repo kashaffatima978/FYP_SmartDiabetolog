@@ -20,14 +20,14 @@ const GenderSelectionPage = ({navigation}) => {
         <Text style={styles.selectedWeightText}>Selected Gender:<Text style={{color: '#6A6DB0', fontWeight: 'bold'}}> {selectedGender}</Text></Text>
       <TouchableOpacity
         style={[styles.genderImageContainer, selectedGender === 'male' && styles.selectedGenderImageContainer]}
-        onPress={() => handleGenderSelection('male')}
+        onPress={() => handleGenderSelection('Male')}
       >
         <Image source={require('../../../assets/Images/man.jpg')} style={styles.genderImage} resizeMode='contain' />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.genderImageContainer, selectedGender === 'female' && styles.selectedGenderImageContainer]}
-        onPress={() => handleGenderSelection('female')}
+        onPress={() => handleGenderSelection('Female')}
       >
         <Image source={require('../../../assets/Images/women.jpg')} style={styles.genderImage} resizeMode='contain'  />
       </TouchableOpacity>
