@@ -1,12 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-
+import {storeUserInformation, getAsyncUserInformation} from "../connectionToDB/AsyncStorage"
+import { editProfileInformation, getProfileInformation} from "../connectionToDB/profile"
 
 
 const AgeAndActivity = ({navigation}) => {
   const [selectedAge, setSelectedAge] = useState('');
   const [selectedActivityLevel, setSelectedActivityLevel] = useState('');
+  const [inputList, setInputList] = useState({
+    "name": "",
+    "email": "",
+    "diabetesType":""
+  });
+  const [userInfo, setUserInfo] = useState({
+    "weight":"",
+    "height":"",
+    "Gender":"",
+
+  })
+
+  const [mount, setMount] = useState(0);
+  const [obj, setObj] = useState({})
+
+  const loadDataOnlyOnce = async () => {
+    getProfileInformation()
+      .then((res) => {
+        console.log("here", res)
+        console.log("state", res.userDetails.state)
+        setInputList(() => {
+          return {
+            "name": res.userDetails.name,
+            "email": res.userDetails.email,
+            "diabetesType": res.userDetails.diabetesType,
+          }
+        });
+      })
+      .catch(err => { console.log("Error in age activity screen", err) })
+  };
+  useEffect(() => {
+    if (mount === 0) {
+      loadDataOnlyOnce();
+      getAsyncUserInformation()
+      .then((res)=>{
+        console.log('in userEffect',res.weight);
+        setUserInfo(() => ({ "weight": res.weight, "height": res.height, "Gender": res.Gender }));
+        console.log('this is user infooooo', userInfo)
+      })
+      .catch((err)=>console.log(err))
+      // console.log('this is user infooooo', userInfo)
+  
+      setMount(1);
+    }
+  }, [mount]);
+
 
   const handleAgeChange = (age) => {
     setSelectedAge(age);
@@ -15,6 +62,18 @@ const AgeAndActivity = ({navigation}) => {
   const handleActivityLevelChange = (activityLevel) => {
     setSelectedActivityLevel(activityLevel);
   };
+
+  const addingAll =()=>{
+    console.log('This is selected age and activity level ',selectedAge, selectedActivityLevel)
+    const heightInInches = parseFloat(userInfo.height); // Assuming the height is given in inches
+    const feet = Math.floor(heightInInches); // Calculate the feet (rounding down)
+    const inches =  parseInt(heightInInches % 1 * 10);; // Calculate the remaining inches
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&', heightInInches, feet, inches)
+    editProfileInformation(inputList.name, inputList.email, userInfo.weight, feet, 
+      inches, inputList.diabetesType, selectedActivityLevel, userInfo.Gender,  selectedAge )
+      .then((data) => { console.log("abc", data.data) ;navigation.navigate("Profile")})
+      .catch((err) => { console.log("Error in update in Activity aage screen", err) })
+  }
 
   return (
     <View style={styles.container}>
@@ -38,12 +97,12 @@ const AgeAndActivity = ({navigation}) => {
             style={styles.picker}
             onValueChange={(itemValue) => handleActivityLevelChange(itemValue)}
           >
-            <Picker.Item label="Select Activity Level" value="" />
-            <Picker.Item label="Very Light" value="veryLight" />
-            <Picker.Item label="Light" value="light" />
-            <Picker.Item label="Medium" value="medium" />
-            <Picker.Item label="Hard" value="hard" />
-            <Picker.Item label="Very Hard" value="veryHard" />
+            <Picker.Item label="Select Activity Level" value="Light" />
+            <Picker.Item label="Very Light" value="Very Light" />
+            <Picker.Item label="Light" value="Light" />
+            <Picker.Item label="Moderate" value="Moderate" />
+            <Picker.Item label="Heavy" value="Heavy" />
+            <Picker.Item label="Very Heavy" value="Very Heavy" />
           </Picker>
           {selectedActivityLevel !== '' && (
             <Text style={styles.selectedText}>
@@ -52,7 +111,7 @@ const AgeAndActivity = ({navigation}) => {
           )}
         </>
       )}
-        <TouchableOpacity style={styles.saveButtonContainer} onPress={()=>{navigation.navigate('Home')}}>
+        <TouchableOpacity style={styles.saveButtonContainer} onPress={addingAll}>
               <Text style={styles.saveButtonText} >Done</Text>
         </TouchableOpacity>
     </View>

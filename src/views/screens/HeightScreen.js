@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {storeUserInformation} from "../connectionToDB/AsyncStorage"
+
 
 const HeightScreen = ({navigation}) => {
   const [selectedWeight, setSelectedWeight] = useState(5.5);
 
 
   const HeightOptions = Array.from({ length: 61 }, (_, index) => parseFloat((2 + index / 10).toFixed(2)));  
+  const addingHeight = ()=>{
+    storeUserInformation('height', selectedWeight)
+    navigation.navigate('GenderSelectionPage')
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select Height:</Text>
@@ -32,7 +38,7 @@ const HeightScreen = ({navigation}) => {
 
       </View>
 
-      <TouchableOpacity style={styles.saveButtonContainer} onPress={()=>{navigation.navigate('GenderSelectionPage')}}>
+      <TouchableOpacity style={styles.saveButtonContainer} onPress={addingHeight}>
               <Text style={styles.saveButtonText} >Next</Text>
         </TouchableOpacity>
       

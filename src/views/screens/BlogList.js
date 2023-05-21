@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'lavender'
   },
   blogItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#acc',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#acc',
     paddingVertical: 10,
     marginBottom: 10
   },

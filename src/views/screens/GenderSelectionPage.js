@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
-
+import {storeUserInformation} from "../connectionToDB/AsyncStorage"
 
 const GenderSelectionPage = ({navigation}) => {
   const [selectedGender, setSelectedGender] = useState(null);
@@ -8,6 +8,11 @@ const GenderSelectionPage = ({navigation}) => {
   const handleGenderSelection = (gender) => {
     setSelectedGender(gender);
   };
+
+  const addingGender = ()=>{
+    storeUserInformation('Gender', selectedGender);
+    navigation.navigate('AgeAndActivity');
+  }
 
   return (
     <View style={styles.container}>
@@ -27,7 +32,7 @@ const GenderSelectionPage = ({navigation}) => {
         <Image source={require('../../../assets/Images/women.jpg')} style={styles.genderImage} resizeMode='contain'  />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.saveButtonContainer} onPress={()=>{navigation.navigate('AgeAndActivity')}}>
+      <TouchableOpacity style={styles.saveButtonContainer} onPress={addingGender}>
               <Text style={styles.saveButtonText} >Next</Text>
         </TouchableOpacity>
     </View>

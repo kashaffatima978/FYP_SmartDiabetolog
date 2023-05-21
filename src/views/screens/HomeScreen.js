@@ -98,9 +98,8 @@ export default function HomeScreen({ navigation, prop }) {
                     getAllergiesFromAsync("oralMedications")
                         .then(ress => { console.log("Oral medications for alarms in HomeScreen= ", ress); setMedicationForAlarm(() => ress) })
                         .catch(err => { console.log("Error in getAllergiesFromAsync in HomeScreen while getting oralMedications ", err) })
-                    if (res.userDetails.weight == undefined || res.userDetails.age == undefined || res.userDetails.heightFeet == undefined) {
-                        Alert.alert("Set Your Profile", "Thank you!")
-                        navigation.navigate('Profile')
+                    if (res.userDetails.weight == undefined || res.userDetails.age || undefined || res.userDetails.heightFeet == undefined) {
+                        navigation.navigate('Tracker')
                     }
 
                     const bs = await getTrackerInstanceInAsync("bloodsugar")
@@ -311,7 +310,7 @@ export default function HomeScreen({ navigation, prop }) {
                 <View style={{ marginTop: 16, padding: 20 }}>
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Daily Inputs</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <Pressable onPress={() => { navigation.navigate('Tracker') }}>
+                        <Pressable onPress={() => { navigation.navigate('WeightScreen') }}>
                             <View style={{
                                 backgroundColor: "#6A6DB0",
                                 width: 150,

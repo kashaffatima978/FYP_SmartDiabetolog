@@ -263,3 +263,53 @@ exports.AddMealInAsync = (name, calories, type) => {
     })
 }
 
+let originalObject = {};
+
+exports.storeUserInformation = async (type, value) => {
+  const updatedObject = {
+    ...originalObject,
+    [type]: value,
+  };
+  originalObject = updatedObject;
+  console.log(originalObject);
+  const stringifiedObject = JSON.stringify(updatedObject);
+  try {
+    await AsyncStorage.setItem('@userInformation:key', stringifiedObject);
+    console.log('User', type, 'stored in AsyncStorage');
+  } catch (error) {
+    console.log('Error while saving userInformation in AsyncStorage:', error);
+  }
+};
+
+exports.getAsyncUserInformation = async ()=>{
+    return new Promise((resolve, reject) => {
+        AsyncStorage.getItem("@userInformation:key")
+            .then((res) => {
+                const parsed = JSON.parse(res)
+                console.log('Retrieved object:', parsed);
+                if (parsed === null) {
+                    resolve({})
+                }
+                resolve(parsed)
+            }).catch((err) => {
+                console.log('Error retrieving object:', err);
+                reject(err)
+            })
+    })
+
+
+
+
+//     AsyncStorage.getItem('@userInformation:key')
+//   .then(objectString => {
+//     if (objectString) {
+//         const retrievedObject = JSON.parse(objectString);
+//         console.log('Retrieved object:', retrievedObject);
+//         retrievedObject
+//     }
+//   })
+//   .catch(error => {
+//     console.log('Error retrieving object:', error);
+//   });
+
+}
