@@ -12,10 +12,10 @@ export default function FirstScreen({navigation}){
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
     const LoginOpen= ()=>{
-        navigation.navigate('Login');
+        navigation.replace('Login');
     }
     const RegisterOpen= ()=>{
-        navigation.navigate('Registration');
+        navigation.replace('Registration');
     }
 
     return(

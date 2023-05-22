@@ -48,7 +48,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                     console.log("Error in loadDataOnlyOnce in viewLongInsulin ", err)
                     setLoader(false)
                     alert("Connection Lost! Try Again")
-                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                    navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 })
         }
         if (route.params.fastInsulinID) {
@@ -67,7 +67,7 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
                     console.log("Error in loadDataOnlyOnce in viewFastInsulin ", err)
                     setLoader(false)
                     alert("Connection Lost! Try Again")
-                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                    navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 })
         }
 
@@ -187,13 +187,13 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding long insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in saveLong in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
 
@@ -203,13 +203,13 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("updating long insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in updateLong in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
     const deleteLong = () => {
@@ -218,13 +218,13 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("deleting long insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in deleteLong in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
 
@@ -234,13 +234,13 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding fast insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in saveFast in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
 
@@ -250,14 +250,14 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("updating fast insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 //navigation.replace(navigation.dangerouslyGetState().routes[navigation.dangerouslyGetState().index - 1].key, { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in updateFast in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
     const deleteFast = () => {
@@ -266,13 +266,13 @@ export default AddInsulinMedicine = function ({ navigation, route }) {
             .then((data) => {
                 console.log("deleting fast insulin medication", data);
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
             .catch((err) => {
                 console.log("Error in deleteFast in AddInsulinMed", err)
                 setLoader(false)
                 alert("Connection Lost! Try Again")
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
             })
     }
     return (

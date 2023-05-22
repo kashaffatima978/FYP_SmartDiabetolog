@@ -149,7 +149,7 @@ export default function AddCholesterol({ navigation, route }) {
                     <Icon name="notes-medical" size={25} style={styles.icon} />
                     <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Triglycerides</Text>
-                        <TextInput style={styles.input} keyboardType={"numeric"} value={`${inputList.triglycerides}`} multiline={true} placeholder="Enter your Triglycerides reading" onChangeText={text => handleOnTextChange(text, "triglycerides")} />
+                        <TextInput style={styles.input} maxLength={3} keyboardType={"numeric"} value={`${inputList.triglycerides}`} multiline={true} placeholder="Enter your Triglycerides reading" onChangeText={text => handleOnTextChange(text, "triglycerides")} />
                     </View>
                 </View>
 

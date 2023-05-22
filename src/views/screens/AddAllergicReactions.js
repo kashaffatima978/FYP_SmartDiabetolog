@@ -78,11 +78,11 @@ export default AddAllergicReactions = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding allergic reaction", data);
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
             })
             .catch((err) => {
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
                 console.log("Error in saveReaction in AddReaction", err)
             })
@@ -91,7 +91,7 @@ export default AddAllergicReactions = function ({ navigation, route }) {
         .catch((err) => {
             console.log(err, "error in AddAllergicReaction for getting active agents")
             setLoader(false)
-            navigation.navigate("AllergicReactionMain")
+            navigation.replace("AllergicReactionMain")
             alert("Connection Lost! Try Again")
         })
 
@@ -102,11 +102,11 @@ export default AddAllergicReactions = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding allergic reaction", data);
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
             })
             .catch((err) => {
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
                 console.log("Error in saveReaction in AddReaction", err)
             })
@@ -119,11 +119,11 @@ export default AddAllergicReactions = function ({ navigation, route }) {
             .then((data) => {
                 console.log("updating AllergicReaction medication", data);
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
             })
             .catch((err) => {
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
                 console.log("Error in updateReaction in AddInsulinMed", err)
             })
@@ -134,11 +134,11 @@ export default AddAllergicReactions = function ({ navigation, route }) {
             .then((data) => {
                 console.log("deleting AllergicReaction medication", data);
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
             })
             .catch((err) => {
                 setLoader(false)
-                navigation.navigate("AllergicReactionMain")
+                navigation.replace("AllergicReactionMain")
                 alert("Connection Lost! Try Again")
                 console.log("Error in deleteReaction in AddInsulinMed", err)
             })

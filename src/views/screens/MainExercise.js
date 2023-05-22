@@ -8,8 +8,11 @@ import { Heading } from '../components/Heading'
 import axios from "axios";
 import { IP } from "../../files/information"
 import { storeStateInAsync, getStateFromAsync, getRecordStateFromAsync } from "../connectionToDB/AsyncStorage"
+import { useDispatch } from "react-redux/es/exports";
+import { setAuthentication } from "../../redux/reduxActions";
 
 export default function MainExercisePage({ navigation }) {
+    dispatch=useDispatch()
     const ip = `http://${IP}`
     days = [...Array(31).keys()]
     month = (new Date()).getMonth()
@@ -26,7 +29,8 @@ export default function MainExercisePage({ navigation }) {
             // setStates(async () => { (await getStateFromAsync()) })
             // setRecord(async () => { (await getRecordStateFromAsync()) })
             // setMount(old => { old++ })
-            
+            dispatch(setAuthentication())
+
             getStateFromAsync()
                 .then(states => {
                     setStates(states)
@@ -84,7 +88,7 @@ export default function MainExercisePage({ navigation }) {
                 style={{alignSelf:"flex-end",marginRight:"4%",backgroundColor:"#282A71",width:50,height:50,borderRadius:100,justifyContent:"center",alignItems:"center"}}>
                     <Text>Activity</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity onPress={() => navigation.navigate("ExerciseSetting")}
+                <TouchableOpacity onPress={() => navigation.replace("ExerciseSetting")}
                     style={{ alignSelf: "flex-end", marginRight: "4%", backgroundColor: "#282A71", width: 50, height: 50, borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
                     <Icon name="list" style={styles.iconStyle}></Icon>
                 </TouchableOpacity>
@@ -114,10 +118,10 @@ export default function MainExercisePage({ navigation }) {
                                                             onPress={
                                                                 () => {
                                                                     if (today == 1 || today == 3 || today == 5 || today==0) {
-                                                                        navigation.navigate("ExerciseActivityOrRest", { "day": val + 1, "exercises": exercises })
+                                                                        navigation.replace("ExerciseActivityOrRest", { "day": val + 1, "exercises": exercises })
                                                                     }
                                                                     if (today == 2 || today == 4) {
-                                                                        navigation.navigate("MainExerciseStartPage", { "day": val + 1, "exercises": exercises })
+                                                                        navigation.replace("MainExerciseStartPage", { "day": val + 1, "exercises": exercises })
                                                                     }
 
                                                                 }

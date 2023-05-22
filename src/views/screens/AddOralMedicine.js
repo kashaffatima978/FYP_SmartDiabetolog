@@ -44,7 +44,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                 .catch(err => {
                     console.log("Error in loadDataOnlyOnce in AddNewPrescription ", err)
                     setLoader(false)
-                    navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                    navigation.replace("AddNewPrescription", { "title": title, "id": id });
                     alert("Connection Lost! Try Again")
                 })
         }
@@ -227,7 +227,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     .catch((err) => {
                         console.log("Error in add in Prescription", err)
                         setLoader(false)
-                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
                         alert("Connection Lost! Try Again")
                     })
 
@@ -235,7 +235,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
             .catch((err) => {
                 console.log(err, "error in AddAllergicReaction for getting active agents")
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
             })
 
@@ -256,7 +256,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
             .catch((err) => {
                 console.log("Error in update in deleteOralMedicine", err)
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
             })
     }
@@ -275,7 +275,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
             .catch((err) => {
                 console.log("Error in updatein updateOralMedicine", err)
                 setLoader(false)
-                navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                navigation.replace("AddNewPrescription", { "title": title, "id": id });
                 alert("Connection Lost! Try Again")
             })
     }

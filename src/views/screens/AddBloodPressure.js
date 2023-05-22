@@ -61,7 +61,7 @@ export default function AddBloodPressure({ navigation, route }) {
         setLoader(true)
         addBloodPressureRecord(inputList.disystolic, inputList.systolic, inputList.description)
         setLoader(false)
-        navigation.navigate("ViewBloodPressure")
+        navigation.replace("ViewBloodPressure")
     }
 
     const update = () => {
@@ -119,7 +119,7 @@ export default function AddBloodPressure({ navigation, route }) {
                     <Icon name="heartbeat" size={25} style={styles.icon} />
                     <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Disystolic Pressure</Text>
-                        <TextInput style={styles.input} placeholder="Enter your disystolic pressure" value={`${inputList.disystolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "disystolic")} />
+                        <TextInput style={styles.input} maxLength={3} keyboardType="numeric" placeholder="Enter your disystolic pressure" value={`${inputList.disystolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "disystolic")} />
                     </View>
                 </View>
 
@@ -138,7 +138,7 @@ export default function AddBloodPressure({ navigation, route }) {
                     <Icon name="heartbeat" size={25} style={styles.icon} />
                     <View style={{ width: "85%" }}>
                         <Text style={styles.label}>Systolic Pressure</Text>
-                        <TextInput style={styles.input} multiline={false} placeholder="Enter your Systolic pressure" value={`${inputList.systolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "systolic")} />
+                        <TextInput style={styles.input} maxLength={3} keyboardType="numeric" multiline={false} placeholder="Enter your Systolic pressure" value={`${inputList.systolic}`} maxlength={3} onChangeText={text => handleOnTextChange(text, "systolic")} />
                     </View>
                 </View>
 

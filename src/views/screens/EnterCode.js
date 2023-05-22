@@ -3,11 +3,13 @@ import { View, Button, Text, StyleSheet, SafeAreaView, ScrollView, Keyboard, Ale
 import { MyButton } from "../components/button";
 import { getOTP, sendOTP, verifyUser } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loader from "../components/loader";
 
 
 export default function EnterCode({ props, navigation }) {
   const [time, setTime] = React.useState(120);
   const timerRef = React.useRef(time);
+  const [loader, setLoader] = useState(false)
   const [OTP, setOTP] = useState(
     {
       one: "",
@@ -43,14 +45,17 @@ export default function EnterCode({ props, navigation }) {
 
   //get otp again
   const sendOTPAgain = () => {
-     AsyncStorage.getItem("@registerToken").then(res=>{
-      console.log("Again otp ",JSON.parse(res).token)
+    setLoader(true)
+    AsyncStorage.getItem("@registerToken").then(res => {
+      console.log("Again otp ", JSON.parse(res).token)
       sendOTP(JSON.parse(res).token)
-     })
+      setLoader(false)
+    })
     //sendOTP((JSON.parse(await AsyncStorage.getItem("@registerToken")).token))
   }
 
   const submitOTP = async () => {
+    setLoader(true)
     const userOTP = JSON.stringify(`${OTP.one}${OTP.two}${OTP.three}${OTP.four}`)
     console.log("User added OTP is ", userOTP)
     console.log(typeof userOTP)
@@ -64,17 +69,21 @@ export default function EnterCode({ props, navigation }) {
         .then((res) => {
           console.log(res)
           alert("User SuccessFully Registered")
-          navigation.navigate("Login")
+          setLoader(false)
+          navigation.replace("Login")
         })
         .catch((err) => {
           console.log("Error while verifying user", err)
           Alert.alert("Error", "Connection Lost! Try Again")
+          setLoader(false)
+          navigation.replace("Login")
         })
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <Loader visible={loader}></Loader>
       <Text style={styles.heading}>Enter recieved code:</Text>
       <View style={styles.codeBox}>
         <TextInput style={styles.codeItem} maxLength={1} keyboardType='numeric' onChangeText={(text) => handleOnChange(text, "one")}></TextInput>

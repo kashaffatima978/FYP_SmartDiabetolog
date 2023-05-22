@@ -4,7 +4,7 @@ import { MyButton } from "../components/button";
 import { getOTP, sendOTP, verifyUser,sendOTPForForgetPassword } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Input } from "../components/input";
-
+import Loader from "../components/loader";
 export default function ForgetPasswordEnterCode({ props, navigation }) {
     const [time, setTime] = React.useState(120);
     const [email, setEmail] = useState()
@@ -18,6 +18,7 @@ export default function ForgetPasswordEnterCode({ props, navigation }) {
         }
     )
     const [otpMatched, setOtpMatched] = useState(false)
+    const [loader,setLoader]=useState(false)
 
 
 
@@ -44,14 +45,18 @@ export default function ForgetPasswordEnterCode({ props, navigation }) {
 
     //get otp again
     const sendOTPForget = async() => {
-       
-           try{await sendOTPForForgetPassword(email)}
+        setLoader(true)
+           try{
+            await sendOTPForForgetPassword(email)
+            setLoader(false)
+        }
            catch(err){console.log(err,"error in sendOTPForget in ForgetPAsswordOTP screen")}
         
         //sendOTP((JSON.parse(await AsyncStorage.getItem("@registerToken")).token))
     }
 
     const submitOTP = async () => {
+        setLoader(true)
         const userOTP = JSON.stringify(`${OTP.one}${OTP.two}${OTP.three}${OTP.four}`)
         console.log("User added OTP is ", userOTP)
         console.log(typeof userOTP)
@@ -61,16 +66,19 @@ export default function ForgetPasswordEnterCode({ props, navigation }) {
         if (sendotp === userOTP) {
             console.log("otp matched")
             setOtpMatched(true)
-            navigation.navigate("ForgetPassword",{"email":email})
+            setLoader(false)
+            navigation.replace("ForgetPassword",{"email":email})
         }
         else{
             alert("Wrong OTP")
-            navigation.navigate("Login")
+            setLoader(false)
+            navigation.replace("Login")
         }
     }
 
     return (
         <SafeAreaView style={styles.container}>
+            <Loader visible={loader} ></Loader>
             <Text style={styles.heading}>Forget Password:</Text>
             <View style={styles.emailInput}>
                 <Input
