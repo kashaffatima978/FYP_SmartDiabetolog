@@ -4,7 +4,7 @@ import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Card from "../components/cards";
 import { Heading } from "../components/Heading";
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // import ViewBloodSugar from "./ViewBloodSugar";
@@ -18,6 +18,7 @@ export default function TrackerScreen({navigation}){
     return(
 
         <View style={styles.container}>
+            
             <Heading name="Tracker"/>
             {/* <Tab.Navigator>
                 <Tab.Screen name="BloodSugar" component={ViewBloodSugar} />
@@ -46,6 +47,13 @@ export default function TrackerScreen({navigation}){
                 }}>
                     <Card style={styles.card} title="Cholesterol" imageSource={require("../../../assets/Images/cholestrol.jpg")}/>
                 </TouchableOpacity>
+
+                <TouchableOpacity style={{height:"5%",backgroundColor:"#6A6DD0",width:"10%",marginLeft:"2%",alignItems:"center",justifyContent:"center" }} onPress={()=>{
+                    navigation.replace("Home")
+                }}>
+                    <Icon name="long-arrow-left" style={styles.iconStyle}></Icon>
+                </TouchableOpacity>
+                
             </ScrollView>
 
         </View>
@@ -67,6 +75,11 @@ scroll:{
 cardStyle:{
     margin: 15,
     backgroundColor: 'green'
+}, 
+iconStyle:{
+    fontSize:18,
+    color:'white',
+    marginHorizontal:5
 }
 })
 

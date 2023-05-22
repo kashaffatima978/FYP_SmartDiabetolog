@@ -57,15 +57,25 @@ export default function MainExercisePage({ navigation }) {
                                 })
                                 .catch((err) => {
                                     console.log(err)
+                                    alert("Connection Lost! Try again")
+                                    navigation.replace("Home")
                                 })
 
 
 
 
                         })
-                        .catch(err => { console.log("error in Main Exercise in useEffect getRecordStateFromAsync",err) })
+                        .catch(err => { 
+                            console.log("error in Main Exercise in useEffect getRecordStateFromAsync",err)
+                            alert("Connection Lost! Try again")
+                            navigation.replace("Home")
+                         })
                 })
-                .catch(err => { console.log("error in Main Exercise in useEffect getStateFromAsync") })
+                .catch(err => { 
+                    console.log("error in Main Exercise in useEffect getStateFromAsync")
+                    alert("Connection Lost! Try again")
+                    navigation.replace("Home")
+                 })
 
         }
 

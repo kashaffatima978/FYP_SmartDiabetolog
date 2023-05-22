@@ -188,22 +188,22 @@ export default function HomeScreen({ navigation, prop }) {
 
     const intervalId = setInterval(async () => {
         setAlarmShown(true)
-        //console.log("here in interval")
+        console.log("here in interval")
         //calling for alarm
         arrayInAsync = [
             { "time": "3:38", "name": "med1", "type": "oral", "dosage": "10" },
             { "time": "12:52", "name": "med2", "type": "insulin", "dosage": "10" }]
         medicationForAlarm.forEach(element => {
-            hoursInArray = element.time.split(":")[0]
-            currentHours = new Date().getHours()
-            minutesInArray = element.time.split(":")[1]
-            currentMinutes = new Date().getMinutes()
+            hoursInArray = parseInt(element.time.split(":")[0])
+            currentHours = parseInt(new Date().getHours())
+            minutesInArray = parseInt(element.time.split(":")[1])
+            currentMinutes = parseInt(new Date().getMinutes())
 
-            //console.log(`current hours=${currentHours} hour in array=${hoursInArray}`)
-            // console.log((currentHours == hoursInArray))
-            // console.log(`current minutes=${currentMinutes} minutes in array=${minutesInArray}`)
-            // console.log((currentMinutes == minutesInArray))
-            //console.log(((hoursInArray == currentHours) && (minutesInArray == currentMinutes)))
+            // console.log(`current hours=${currentHours} hour in array=${hoursInArray}`)
+            //  console.log((currentHours == hoursInArray))
+            //  console.log(`current minutes=${currentMinutes} minutes in array=${minutesInArray}`)
+            //  console.log((currentMinutes == minutesInArray))
+            // console.log(((hoursInArray == currentHours) && (minutesInArray == currentMinutes)))
 
             if (((hoursInArray == currentHours) && (minutesInArray == currentMinutes))) {
                 console.log("In if")
@@ -328,7 +328,7 @@ export default function HomeScreen({ navigation, prop }) {
         }
         setTimeout(callbackForDayChange, 30000)
     };
-    setTimeout(callbackForDayChange, 30000)//runs every 30 mins
+    setTimeout(callbackForDayChange, 300000)//runs every 30 mins
 
 
 
@@ -369,7 +369,7 @@ export default function HomeScreen({ navigation, prop }) {
                 <View style={{ marginTop: 16, padding: 20 }}>
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Daily Inputs</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                        <Pressable onPress={() => { navigation.navigate('Tracker') }}>
+                        <Pressable onPress={() => { navigation.replace('Tracker') }}>
                             <View style={{
                                 backgroundColor: "#6A6DB0",
                                 width: 150,
@@ -504,7 +504,7 @@ export default function HomeScreen({ navigation, prop }) {
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Health care</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {/* navigation.navigate('ExerciseActivityOrRest', { "day": 16 }) */}
-                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => { navigation.navigate('Prescription') }}>
+                        <Pressable style={[styles.smallBoxes, { backgroundColor: "#e3d5ca" }]} onPress={() => { navigation.replace('Prescription') }}>
                             <Text style={[styles.boxText, { color: '#A4907C' }]}>Medication</Text>
                         </Pressable>
 

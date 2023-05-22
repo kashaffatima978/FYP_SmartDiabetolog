@@ -68,6 +68,7 @@ export default MainExerciseStartPage = ({ navigation, route }) => {
             .catch((err) => {
                 console.log("Error while state storing after exercise being done", err)
                 Alert.alert("Error", "Connection Lost! Try Again")
+                navigation.replace("Home")
             })
             
 

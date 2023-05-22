@@ -6,7 +6,7 @@ import { Heading } from "../components/Heading";
 import Fab from '../components/Fab';
 import { addPrescription, viewPrescriptions } from "../connectionToDB/prescription"
 import { getAllergiesFromAsync } from "../connectionToDB/AsyncStorage"
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export default function Prescription({ navigation }) {
@@ -60,8 +60,8 @@ export default function Prescription({ navigation }) {
                 renderItem={({ item }) => {
                     return (
 
-                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddNewPrescription", { "id": item._id, "title": item.title }) }}>
-                            <Card style={[{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10, marginTop: 10, borderRadius: 5 },
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddNewPrescription", { "id": item._id, "title": item.title }) }}>
+                            <Card style={[{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 },
                             { borderWidth: 2, borderColor: currentPrescriptionid.id === item._id ? "grey" : "white" }]}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text>
@@ -89,11 +89,17 @@ export default function Prescription({ navigation }) {
                 addPrescription(title)
                     .then((data) => {
                         console.log("adding prescription", data);
-                        navigation.replace("AddNewPrescription", { "title": title, "id": data.prescription._id });
+                        navigation.navigate("AddNewPrescription", { "title": title, "id": data.prescription._id });
                     })
                     .catch((err) => { console.log("Error in add in Prescription", err) })
 
             }} />
+
+            <TouchableOpacity style={{ height: "5%", backgroundColor: "#6A6DD0", width: "10%", marginLeft: "2%",alignItems:"center",justifyContent:"center" }} onPress={() => {
+                navigation.replace("Home")
+            }}>
+                <Icon name="long-arrow-left" style={styles.iconStyle}></Icon>
+            </TouchableOpacity>
 
 
         </SafeAreaView>
@@ -179,7 +185,7 @@ const styles = StyleSheet.create({
     titleText: {
         color: 'white',
         fontSize: 15,
-        
+
     },
     para: {
         fontSize: 16,
