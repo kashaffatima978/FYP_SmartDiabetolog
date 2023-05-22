@@ -18,7 +18,7 @@ import Loader from '../components/loader';
 import { IP } from "../../files/information"
 import { Button } from 'react-native-paper';
 import { FAB } from 'react-native-paper';
-import { store } from "../../redux/reduxActions";
+import { setAuthentication, store } from "../../redux/reduxActions";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setBreakfastToday, setLunchToday, setDinnerToday, setSnackOneToday, setSnackTwoToday } from "../../redux/reduxActions";
 import getCalories from '../Counters/PerDay';
@@ -41,7 +41,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default DietChartMain = function ({ navigation }) {
   const dispatch = useDispatch()
   const Tab = createMaterialTopTabNavigator();
-  const [consumedCalories, setCosumedCalories] = useState(500)
+  const [consumedCalories, setCosumedCalories] = useState(0)
   const [totalCalories, setTotalCalories] = useState(1200)
   const [breakfast, setBreakfast] = useState([])
   const [snack1, setSnack1] = useState([])
@@ -118,6 +118,41 @@ export default DietChartMain = function ({ navigation }) {
       setSnack2(parsed.snack2)
       setDinner(parsed.dinner)
       setGotDiet(true)
+
+      //setting the taken calories without add meal
+        dispatch(setAuthentication())
+        if ((store.getState().todayBreakfastDone)) {
+          console.log(parsed.breakfast)
+            setCosumedCalories(old => ((parseInt(old) + parseInt(((parsed.breakfast)[1])))))
+            //alert(consumedCalories)
+            console.log("Cosumed calories are", consumedCalories)
+        }
+        if ((store.getState().todayLunchDone)) {
+          console.log(parsed.lunch)
+            setCosumedCalories(old => ((parseInt(old) + parseInt(((parsed.lunch)[1])))))
+            //alert(consumedCalories)
+            console.log("Cosumed calories are", consumedCalories)
+        }
+        if ((store.getState().todayDinnerDone)) {
+          console.log(parsed.dinner)
+            setCosumedCalories(old => ((parseInt(old) + parseInt(((parsed.dinner)[1])))))
+            //alert(consumedCalories)
+            console.log("Cosumed calories are", consumedCalories)
+        }
+        if ((store.getState().todaySnackOneDone)) {
+          console.log(parsed.snack1)
+            setCosumedCalories(old => ((parseInt(old) + parseInt(((parsed.snack1)[1])))))
+            //alert(consumedCalories)
+            console.log("Cosumed calories are", consumedCalories)
+        }
+        if ((store.getState().todaySnackTwoDone)) {
+          console.log(parsed.snack2)
+            setCosumedCalories(old => ((parseInt(old) + parseInt(((parsed.snack2)[1])))))
+            //alert(consumedCalories)
+            console.log("Cosumed calories are", consumedCalories)
+        }
+
+
       setLoader(false)
     }
   }
@@ -167,10 +202,12 @@ export default DietChartMain = function ({ navigation }) {
     setDinnerFromAddMeal(parsed5)
 
 
+
   };
 
   useEffect(() => {
     loadDataOnlyOnce();
+
 
   }, []);
 
