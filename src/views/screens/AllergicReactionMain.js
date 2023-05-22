@@ -87,7 +87,7 @@ export default function AllergicReactionMain({ navigation, route }) {
                     data={foodReactions}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddAllergicReactions", { "id": item._id }) }}>
+                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddAllergicReactions", { "id": item._id }) }}>
                                 <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                     <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                         <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)} </Text>
@@ -133,7 +133,7 @@ export default function AllergicReactionMain({ navigation, route }) {
                     data={medicationReactions}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddAllergicReactions", { "id": item._id }) }}>
+                            <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddAllergicReactions", { "id": item._id }) }}>
                                 <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                     <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                         <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)} </Text>
@@ -184,7 +184,7 @@ export default function AllergicReactionMain({ navigation, route }) {
                 <Tab.Screen name="Medication" component={Medication} />
 
             </Tab.Navigator >
-            <Fab onPress={() => { navigation.navigate("AddAllergicReactions", { "id": "undefined" }) }}></Fab>
+            <Fab onPress={() => { navigation.replace("AddAllergicReactions", { "id": "undefined" }) }}></Fab>
 
         </SafeAreaView>
     );

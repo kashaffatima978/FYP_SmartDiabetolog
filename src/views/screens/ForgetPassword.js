@@ -28,7 +28,7 @@ export default function ForgetPassword({ navigation,route }) {
             setError("")
             await changePassword(route.params.email,password)
             setLoader(false)
-            navigation.navigate("Login");
+            navigation.replace("Login");
             alert("Password successfully changed")
         }
         else{
@@ -36,7 +36,8 @@ export default function ForgetPassword({ navigation,route }) {
         }}
         catch(err){
             console.log(err,"error in ForgetPAssword")
-            navigation.navigate("Login");
+            setLoader(false)
+            navigation.replace("Login");
             alert("Connection Lost! Try Again")
         }
     }

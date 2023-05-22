@@ -24,8 +24,6 @@ export default AddMeal = function ({ navigation }) {
   const [side, setSide] = useState(null)
   const [foodTime, setFoodTime] = useState('Breakfast')
   const ip = `http://${IP}`
-  const [name, setName] = useState()
-  const [calories, setCalories] = useState(0)
   const [loader, setLoader] = useState(false)
 
   const dispatch = useDispatch()
@@ -117,23 +115,7 @@ export default AddMeal = function ({ navigation }) {
       console.warn(err);
     }
   }
-  const onSave = async () => {
-    setLoader(true)
-    //name,calories,type
-    console.log(name)
-    //changing the state of food type in redux
-    dispatch(setAuthentication())
-    switch (foodTime) {
-      case "Breakfast": if (!(store.getState().todayBreakfastDone)) { dispatch(setBreakfastToday()) }; break;
-      case "Lunch": if (!(store.getState().todayLunchDone)) { dispatch(setLunchToday()) }; break;
-      case "Dinner": if (!(store.getState().todayDinnerDone)) { dispatch(setDinnerToday()) }; break;
-      case "Snack1": if (!(store.getState().todaySnackOneDone)) { dispatch(setSnackOneToday()) }; break;
-      case "Snack2": if (!(store.getState().todaySnackTwoDone)) { dispatch(setSnackTwoToday()) }; break;
-    }
-    await AddMealInAsync(name, calories, foodTime)
-    setLoader(false);
-    navigation.navigate("Diet")
-  }
+
   const sideImage = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -156,16 +138,16 @@ export default AddMeal = function ({ navigation }) {
           .then((response) => {
 
             if (response.didCancel) {
-                console.log('User cancelled image picker');
-              } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-              } else {
-                console.log('we got the top food image ');
-                setSide(response)
-                console.log(side)
-              }
-        })
-        .catch(err=>{console.log('image not given', err)});
+              console.log('User cancelled image picker');
+            } else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            } else {
+              console.log('we got the top food image ');
+              setSide(response)
+              console.log(side)
+            }
+          })
+          .catch(err => { console.log('image not given', err) });
       } else {
         console.log("Camera permission denied");
       }
@@ -174,38 +156,38 @@ export default AddMeal = function ({ navigation }) {
     }
   }
 
-  const predict =async ()=>{
-    if(top !== null && side !== null){
+  const predict = async () => {
+    if (top !== null && side !== null) {
       setLoader(true)
       const formData = new FormData();
-        formData.append('top', { uri: top.assets[0].uri, name: top.assets[0].fileName, type: top.assets[0].type});
-        formData.append('side', { uri: side.assets[0].uri, name: side.assets[0].fileName, type: side.assets[0].type});
-        console.log(formData)
+      formData.append('top', { uri: top.assets[0].uri, name: top.assets[0].fileName, type: top.assets[0].type });
+      formData.append('side', { uri: side.assets[0].uri, name: side.assets[0].fileName, type: side.assets[0].type });
+      console.log(formData)
 
-        axios.post(ip+':8000/getVolume', formData, {
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          },
+      axios.post(ip + ':8000/getVolume', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then((response) => {
+          data = response.data.info; // Access the response data directly
+          console.log(data)
+          arr = data.split(':')
+          const name = (arr[1].split(','))[0]
+          cal = (arr[2].split(','))[0]
+          console.log('name of dish ', name)
+          console.log('calories of the dish', cal)
+          navigation.navigate('Manual', {
+            name: name,
+            cal: cal
           })
-          .then((response) => {
-            data = response.data.info; // Access the response data directly
-            console.log(data)
-            arr = data.split(':')
-            const name = (arr[1].split(','))[0]
-            cal = (arr[2].split(','))[0]
-            console.log('name of dish ',name)
-            console.log('calories of the dish',cal) 
-            navigation.navigate('Manual',{
-              name:name,
-              cal: cal
-            })
 
 
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-    setLoader(false)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      setLoader(false)
 
     }
     else {
@@ -213,25 +195,43 @@ export default AddMeal = function ({ navigation }) {
     }
   }
 
-  const Manual = ({ route, navigation}) => {
+  const Manual = ({ route, navigation }) => {
     const [name, setName] = useState(route.params.name || '');
     const [calories, setCalories] = useState(route.params.cal || '');
-    
+
+    const onSave = async () => {
+      setLoader(true)
+      //name,calories,type
+      console.log("name=", name)
+      //changing the state of food type in redux
+      dispatch(setAuthentication())
+      switch (foodTime) {
+        case "Breakfast": if (!(store.getState().todayBreakfastDone)) { dispatch(setBreakfastToday()) }; break;
+        case "Lunch": if (!(store.getState().todayLunchDone)) { dispatch(setLunchToday()) }; break;
+        case "Dinner": if (!(store.getState().todayDinnerDone)) { dispatch(setDinnerToday()) }; break;
+        case "Snack1": if (!(store.getState().todaySnackOneDone)) { dispatch(setSnackOneToday()) }; break;
+        case "Snack2": if (!(store.getState().todaySnackTwoDone)) { dispatch(setSnackTwoToday()) }; break;
+      }
+      await AddMealInAsync(name, calories, foodTime)
+      setLoader(false);
+      navigation.navigate("Diet")
+    }
+
     return (
       <>
-       <Loader visible={loader}></Loader>
+        <Loader visible={loader}></Loader>
         <View style={{ flexDirection: 'row', marginTop: 20 }}>
           <Icon name="utensils" size={25} style={styles.icon} />
           <View style={{ width: "85%" }}>
             <Text style={styles.label}>Dish name:</Text>
-            <TextInput style={styles.input} multiline={true} placeholder="Enter dish name" value={name} onChangeText={setName} />
+            <TextInput style={styles.input} multiline={true} placeholder="Enter dish name" value={name} onChangeText={(text) => { console.log(text); setName(text) }} />
           </View>
         </View>
         <View style={{ flexDirection: 'row', marginTop: 20 }}>
           <Icon name="heartbeat" size={25} style={styles.icon} />
           <View style={{ width: "85%" }}>
             <Text style={styles.label}>Calories:</Text>
-            <TextInput style={styles.input} keyboardType="numeric" placeholder="Enter dish calories" value={calories} onChangeText={setCalories} />
+            <TextInput style={styles.input} keyboardType="numeric" placeholder="Enter dish calories" value={calories} onChangeText={(text) => { console.log(text); setCalories(text) }} />
           </View>
         </View>
 
@@ -294,12 +294,12 @@ export default AddMeal = function ({ navigation }) {
               Top
             </Text>
 
-        <OptionsMenu
-            customButton={myIcon}
-            destructiveIndex={1}
-            options={["Camera", "Gallery"]}
-            actions={[topImage, openLibraryTop]}
-        />
+            <OptionsMenu
+              customButton={myIcon}
+              destructiveIndex={1}
+              options={["Camera", "Gallery"]}
+              actions={[topImage, openLibraryTop]}
+            />
 
           </View>
 
@@ -308,12 +308,12 @@ export default AddMeal = function ({ navigation }) {
               Side
             </Text>
 
-        <OptionsMenu
-            customButton={myIcon}
-            destructiveIndex={1}
-            options={["Camera", "Gallery"]}
-            actions={[sideImage, openLibrarySide]}
-        />
+            <OptionsMenu
+              customButton={myIcon}
+              destructiveIndex={1}
+              options={["Camera", "Gallery"]}
+              actions={[sideImage, openLibrarySide]}
+            />
 
           </View>
 
@@ -354,7 +354,7 @@ export default AddMeal = function ({ navigation }) {
         tabBarHideOnKeyboard: true,
 
       })}>
-        <Tab.Screen name="Manual" component={Manual} initialParams={{ name: null, cal: null }}/>
+        <Tab.Screen name="Manual" component={Manual} initialParams={{ name: null, cal: null }} />
 
         <Tab.Screen name="Camera" component={Camera} />
 

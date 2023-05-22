@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, SafeAreaView, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import colors from '../../files/Colors';
 import { getProfileInformation, editProfileInformation, deleteAccount } from "../connectionToDB/profile"
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -67,25 +67,49 @@ export default Profile = function ({navigation}) {
   
 
   const update = () => {
+   setLoader(true)
     editProfileInformation(inputList.name, inputList.email, inputList.weight, inputList.heightFeet, 
       inputList.heightInches, inputList.diabetesType, inputList.activityLevel, inputList.gender,  inputList.age )
-      .then((data) => { console.log("abc", data) ;navigation.navigate("Profile")})
-      .catch((err) => { console.log("Error in update in profile", err) })
+      .then((data) => { 
+        console.log("abc", data) ;
+        setLoader(false)
+        navigation.replace("Profile")})
+      .catch((err) => { 
+        setLoader(false);
+        console.log("Error in update in profile", err)
+      alert("Connection Lost! Try Again.") })
   }
 
   const logout = () => {
-    AsyncStorage.setItem("@token", "").then(async () => {
-      navigation.push("Login")
+    setLoader(true)
+    //AsyncStorage.setItem("@token", "")
+     AsyncStorage.removeItem("@token").then(async () => {
+      navigation.replace("Login")
+      setLoader(false)
     }).catch((err) => {
       console.log("logout error in profile ", err)
+      setLoader(false)
+      navigation.replace("Login")
     })
 
   }
 
   const deleteItem = () => {
+    setLoader(true)
     deleteAccount()
-      .then((data) => { console.log("abc", data) ;navigation.push("Registration")})
-      .catch((err) => { console.log("Error in delete account in profile", err) })
+      .then(async(data) => { 
+        console.log("abc", data) ;
+        await AsyncStorage.removeItem("@token")
+        setLoader(false)
+        navigation.replace("Registration")})
+      .catch((err) => { 
+        console.log("Error in delete account in profile", err)
+        setLoader(false)
+        Alert.alert("Error","Connection Lost! Try again")
+        navigation.replace("Registration")
+        
+     
+       })
   }
 
   return (

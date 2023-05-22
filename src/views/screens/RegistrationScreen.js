@@ -7,7 +7,7 @@ import { MainHeading } from "../components/mainHeading";
 import Loader from "../components/loader";
 import generalStyles from "../../files/generalStyle";
 import colors from "../../files/Colors";
-import { registeration, sendOTP,storeUserStateWhileRegisteration } from "../connectionToDB/authentication"
+import { registeration, sendOTP, storeUserStateWhileRegisteration } from "../connectionToDB/authentication"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../../redux/reduxActions";
 import { useDispatch } from "react-redux/es/exports";
@@ -30,6 +30,7 @@ export const Registeration = function ({ navigation }) {
 
     //Validation Function called whenever register button is clicked
     const validation = () => {
+        setLoader(true)
         //register needs to remove from here
         register();
         //first close the keyboard
@@ -119,10 +120,13 @@ export const Registeration = function ({ navigation }) {
                                     })
 
 
-                                navigation.navigate("EnterCode");
+                                setLoader(false)
+                                navigation.replace("EnterCode");
                             }
                             catch (error) {
-                                Alert.alert("Error", "Something went wrong")
+                                console.log(error)
+                                setLoader(false)
+                                Alert.alert("Error", "Connection Lost! Try Again")
                             }
                         }
                             , 4000)
@@ -130,13 +134,16 @@ export const Registeration = function ({ navigation }) {
                     .catch((err) => {
                         console.log("Error in register screen")
                         console.log(err)
-                        alert("Network Error,Try Again")
+                        setLoader(false)
+                        Alert.alert("Error", "Connection Lost! Try Again")
                     }
 
                     )
             }).catch((err) => {
                 console.log("Eerror in register screen")
                 console.log(err)
+                setLoader(false)
+                Alert.alert("Error", "Connection Lost! Try Again")
             })
 
 
@@ -200,7 +207,7 @@ export const Registeration = function ({ navigation }) {
                         onFocus={() => { handleErrorMessage(null, "cpassword") }}
                     />
                     <MyButton title="Register" onPress={validation} />
-                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                    <TouchableOpacity onPress={() => navigation.replace("Login")}>
                         <Text style={styles.loginText}  >Already have an account? Login</Text>
                     </TouchableOpacity>
 

@@ -135,7 +135,7 @@ export default ExerciseSetting = ({navigation}) => {
                         Alert.alert("Error", "Connection Lost! Try Again")
                     })
 
-                    navigation.navigate("MainExercisePage")
+                    navigation.replace("MainExercisePage")
                 }}
                 style={{alignSelf:"flex-end",marginRight:"4%",margin:"2%",backgroundColor:"#282A71",width:"20%",height:30,alignItems:"center",justifyContent:"center"}}>
                     <Text style={{fontWeight:"bold"}}>OK</Text>

@@ -79,82 +79,81 @@ export default function LoginScreen({ navigation }) {
         setLoader(true);
         signIn(inputList.email, inputList.password)
             .then(() => {
-                setTimeout(() => {
-                    setLoader(false);
-                    //state loading from database
-                    //first get profile info from database
-                    getProfileInformation()
-                        .then(async (res) => {
-                            console.log("state got is ", res.userDetails.state)
-                            //storing whole state and record state in AsycStorage
-                            await storeStateInAsync(res.userDetails.state)
+
+
+                //state loading from database
+                //first get profile info from database
+                getProfileInformation()
+                    .then(async (res) => {
+                        console.log("state got is ", res.userDetails.state)
+                        //storing whole state and record state in AsycStorage
+                        await storeStateInAsync(res.userDetails.state)
 
 
 
-                            //now state storing
-                            //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 
-                            //,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,
-                            //cardio:false,todayExerciseDone:false }
+                        //now state storing
+                        //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 
+                        //,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,
+                        //cardio:false,todayExerciseDone:false }
 
-                            // set states 
-                            dispatch(setAuthentication())
-                            console.log("Before update after login the state is, ", store.getState())
-                            if (res.userDetails.state.neck && !store.getState().neck) dispatch(setNeck())
-                            if (res.userDetails.state.arms && !store.getState().arms) dispatch(setArms())
-                            if (res.userDetails.state.legs && !store.getState().legs) dispatch(setLegs())
-                            if (res.userDetails.state.shoulders && !store.getState().shoulders) dispatch(setShoulders())
-                            if (res.userDetails.state.chest && !store.getState().chest) dispatch(setChest())
-                            if (res.userDetails.state.cardio && !store.getState().cardio) dispatch(setCardio())
-                            if (res.userDetails.state.back && !store.getState().back) dispatch(setBack())
-                            if (res.userDetails.state.waist && !store.getState().waist) dispatch(setWaist())
+                        // set states 
+                        dispatch(setAuthentication())
+                        console.log("Before update after login the state is, ", store.getState())
+                        if (res.userDetails.state.neck && !store.getState().neck) dispatch(setNeck())
+                        if (res.userDetails.state.arms && !store.getState().arms) dispatch(setArms())
+                        if (res.userDetails.state.legs && !store.getState().legs) dispatch(setLegs())
+                        if (res.userDetails.state.shoulders && !store.getState().shoulders) dispatch(setShoulders())
+                        if (res.userDetails.state.chest && !store.getState().chest) dispatch(setChest())
+                        if (res.userDetails.state.cardio && !store.getState().cardio) dispatch(setCardio())
+                        if (res.userDetails.state.back && !store.getState().back) dispatch(setBack())
+                        if (res.userDetails.state.waist && !store.getState().waist) dispatch(setWaist())
 
-                            //state setting for diet
-                            if (res.userDetails.state.todayBreakfastDone && !store.getState().todayBreakfastDone) dispatch(setBreakfastToday())
-                            if (res.userDetails.state.todayLunchDone && !store.getState().todayLunchDone) dispatch(setLunchToday())
-                            if (res.userDetails.state.todaySnackOneDone && !store.getState().todaySnackOneDone) dispatch(setSnackOneToday())
-                            if (res.userDetails.state.todaySnackTwoDone && !store.getState().todaySnackTwoDone) dispatch(setSnackTwoToday())
-                            if (res.userDetails.state.todayDinnerDone && !store.getState().todayDinnerDone) dispatch(setDinnerToday())
-
-
-                            //todayExerciseDone is initially false already
-                            //now set record
-                            //date = (new Date()).getDate()
-
-                            // for (i = 0; i < res.userDetails.state.record.length; i++) {
-                            //     //if an instance for record is true
-                            //     if (res.userDetails.state.record[i]) {
-                            //         dispatch(setExerciseToday())
-                            //         dispatch(setExerciseRecord())
-                            //         dispatch(setExerciseToday())
-                            //     }
-                            //     else {
-                            //         dispatch(setExerciseRecord())
-                            //     }
-                            // }
-
-                            //if today exercise is true then update the state todayExerciseDone
-                            if (res.userDetails.state.todayExerciseDone && !store.getState().todayExerciseDone) {
-                                dispatch(setExerciseToday())
-                            }
+                        //state setting for diet
+                        if (res.userDetails.state.todayBreakfastDone && !store.getState().todayBreakfastDone) dispatch(setBreakfastToday())
+                        if (res.userDetails.state.todayLunchDone && !store.getState().todayLunchDone) dispatch(setLunchToday())
+                        if (res.userDetails.state.todaySnackOneDone && !store.getState().todaySnackOneDone) dispatch(setSnackOneToday())
+                        if (res.userDetails.state.todaySnackTwoDone && !store.getState().todaySnackTwoDone) dispatch(setSnackTwoToday())
+                        if (res.userDetails.state.todayDinnerDone && !store.getState().todayDinnerDone) dispatch(setDinnerToday())
 
 
+                        //todayExerciseDone is initially false already
+                        //now set record
+                        //date = (new Date()).getDate()
+
+                        // for (i = 0; i < res.userDetails.state.record.length; i++) {
+                        //     //if an instance for record is true
+                        //     if (res.userDetails.state.record[i]) {
+                        //         dispatch(setExerciseToday())
+                        //         dispatch(setExerciseRecord())
+                        //         dispatch(setExerciseToday())
+                        //     }
+                        //     else {
+                        //         dispatch(setExerciseRecord())
+                        //     }
+                        // }
+
+                        //if today exercise is true then update the state todayExerciseDone
+                        if (res.userDetails.state.todayExerciseDone && !store.getState().todayExerciseDone) {
+                            dispatch(setExerciseToday())
+                        }
+
+                        console.log("After update after login the state is, ", store.getState())
+                        navigation.replace("Home")
+                        setLoader(false);
+
+                    })
+                    .catch(err => { 
+                        console.log("Error in loading state in login screen", err) 
+                    })
 
 
-
-                            console.log("After update after login the state is, ", store.getState())
-                            navigation.navigate("Home")
-
-                        })
-                        .catch(err => { console.log("Error in loading state in login screen", err) })
-
-                }, 3000)
             })
             .catch((err) => {
                 setLoader(false);
-                alert(err)
+                alert("Connection Lost! Try Again")
+                console.log(err," Error In Login Screen catch")
                 // Alert.alert("Error", "Something went wrong")
             })
-
     }
 
 
@@ -193,12 +192,12 @@ export default function LoginScreen({ navigation }) {
                     value={inputList.password}
                     onFocus={() => { handleErrorMessage(null, "password") }}
                 />
-                <TouchableOpacity onPress={() => { navigation.navigate("ForgetPasswordEnterCode") }}>
+                <TouchableOpacity onPress={() => { navigation.replace("ForgetPasswordEnterCode") }}>
                     <Text >Forgot password?</Text>
                 </TouchableOpacity>
                 <MyButton title="Login" onPress={validation} />
 
-                <TouchableOpacity onPress={() => { navigation.navigate("Registration") }}>
+                <TouchableOpacity onPress={() => { navigation.replace("Registration") }}>
                     <Text style={styles.forgetPasswordText}  >Don't have an account? Register!</Text>
                 </TouchableOpacity>
             </View>

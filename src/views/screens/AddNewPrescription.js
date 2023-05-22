@@ -190,7 +190,7 @@ export default function AddNewPrescription({ navigation, route }) {
                     }}
                 >
                 </FlatList>
-                <Fab onPress={() => { navigation.navigate("AddOralMedicine", { "title": title, "id": id }) }}></Fab>
+                <Fab onPress={() => { navigation.replace("AddOralMedicine", { "title": title, "id": id }) }}></Fab>
             </View>
         )
     }
@@ -201,7 +201,7 @@ export default function AddNewPrescription({ navigation, route }) {
 
                 {(!fastInsulinMedication || fastInsulinMedication[0] === undefined) ? null :
                     (
-                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "fastInsulinID": fastInsulinMedication[0]._id }) }}>
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddInsulinMedicine", { "title": title, "id": id, "fastInsulinID": fastInsulinMedication[0]._id }) }}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     <Text style={styles.titleText}>Date: {(fastInsulinMedication[0].createdAt).slice(0, 10)} </Text>
@@ -238,7 +238,7 @@ export default function AddNewPrescription({ navigation, route }) {
 
                 {(!longInsulinMedication || longInsulinMedication[0] === undefined) ? null :
                     (
-                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id, "longInsulinID": longInsulinMedication[0]._id }) }}>
+                        <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddInsulinMedicine", { "title": title, "id": id, "longInsulinID": longInsulinMedication[0]._id }) }}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 }}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     <Text style={styles.titleText}>Date: {(longInsulinMedication[0].createdAt).slice(0, 10)} </Text>
@@ -273,7 +273,7 @@ export default function AddNewPrescription({ navigation, route }) {
                 }
 
                 <Fab isDisabled={fastInsulinMedication.length >= 1 && longInsulinMedication.length >= 1 ? true : false}
-                    onPress={() => { navigation.navigate("AddInsulinMedicine", { "title": title, "id": id }) }}></Fab>
+                    onPress={() => { navigation.replace("AddInsulinMedicine", { "title": title, "id": id }) }}></Fab>
             </View>
         )
     }
