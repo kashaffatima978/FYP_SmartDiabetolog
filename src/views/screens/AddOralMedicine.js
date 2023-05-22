@@ -90,7 +90,9 @@ export default AddOralMedicine = function ({ navigation, route }) {
                                 },
                             })
                                 .then((response) => {
-                                    console.log(response.text)
+                                    console.log("This is the response from medication ocr detection ",response.data)
+                                    data = response.data;
+                                    setName(data.toString())
                                 })
                                 .catch((err) => { console.log('error in sending medication image:', err) })
                         }

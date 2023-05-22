@@ -31,7 +31,7 @@ export default AskQuestion = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding question", data);
                 setLoader(false)
-                navigation.navigate("Dashboard")
+                navigation.replace("Dashboard")
             })
             .catch((err) => { 
                 setLoader(false);

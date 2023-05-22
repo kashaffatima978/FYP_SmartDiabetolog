@@ -244,10 +244,10 @@ export default DietChartMain = function ({ navigation }) {
             <MealCard title={breakfast[0]} image={breakfast[5]} calories={breakfast[1]} carbs={breakfast[2]} sugar={breakfast[3]} time={breakfast[4]} />
             :
             <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
-              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Cover backgroundColor="white" source={{ uri: "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
               <Card.Content>
                 <Title>{breakfastFromAddMeal.name}</Title>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, backgroundColor: "#e9ecef" }}>
                   <Text style={styles.smallText}>Calories: {breakfastFromAddMeal.calories} kcl</Text>
                 </View>
               </Card.Content>
@@ -271,10 +271,10 @@ export default DietChartMain = function ({ navigation }) {
             <MealCard title={lunch[0]} image={lunch[5]} calories={lunch[1]} carbs={lunch[2]} sugar={lunch[3]} time={lunch[4]} />
             :
             <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
-              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Cover backgroundColor="white" source={{ uri: "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
               <Card.Content>
                 <Title>{lunchFromAddMeal.name}</Title>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 , backgroundColor: "#e9ecef" }}>
                   <Text style={styles.smallText}>Calories: {lunchFromAddMeal.calories} kcl</Text>
                 </View>
               </Card.Content>
@@ -304,10 +304,10 @@ export default DietChartMain = function ({ navigation }) {
             <MealCard title={dinner[0]} image={dinner[5]} calories={dinner[1]} carbs={dinner[2]} sugar={dinner[3]} time={dinner[4]} />
             :
             <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
-              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Cover backgroundColor="white" source={{ uri: "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
               <Card.Content>
                 <Title>{dinnerFromAddMeal.name}</Title>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 , backgroundColor: "#e9ecef" }}>
                   <Text style={styles.smallText}>Calories: {dinnerFromAddMeal.calories} kcl</Text>
                 </View>
               </Card.Content>
@@ -340,10 +340,10 @@ export default DietChartMain = function ({ navigation }) {
             <MealCard title={snack1[0]} image={snack1[5]} calories={snack1[1]} carbs={snack1[2]} sugar={snack1[3]} time={snack1[4]} />
             :
             <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
-              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Cover backgroundColor="white" source={{ uri: "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
               <Card.Content>
                 <Title>{snack1FromAddMeal.name}</Title>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 , backgroundColor: "#e9ecef" }}>
                   <Text style={styles.smallText}>Calories: {snack1FromAddMeal.calories} kcl</Text>
                 </View>
               </Card.Content>
@@ -362,10 +362,10 @@ export default DietChartMain = function ({ navigation }) {
             <MealCard title={snack2[0]} image={snack2[5]} calories={snack2[1]} carbs={snack2[2]} sugar={snack2[3]} time={snack2[4]} />
             :
             <Card style={{ height: 330, width: '90%', alignSelf: 'center', margin: 5 }}>
-              <Card.Cover source={{ uri: "https://i.pinimg.com/originals/9c/9a/7f/9c9a7f16e8a680625a193869f54032c8.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
+              <Card.Cover backgroundColor="white" source={{ uri: "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png" }} resizeMode={'contain'} style={{ width: '100%', height: 150, borderRadius: 0 }} />
               <Card.Content>
                 <Title>{snack2FromAddMeal.name}</Title>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, backgroundColor: "#e9ecef"  }}>
                   <Text style={styles.smallText}>Calories: {snack2FromAddMeal.calories} kcl</Text>
                 </View>
               </Card.Content>

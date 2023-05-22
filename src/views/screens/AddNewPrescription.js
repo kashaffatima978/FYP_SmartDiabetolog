@@ -287,7 +287,7 @@ export default function AddNewPrescription({ navigation, route }) {
             <Heading name={title} />
             <TouchableOpacity
                 onPress={deletePrescription}
-                activeOpacity={0.5} style={[styles.touchOpacity, { width: "50%", }]}>
+                activeOpacity={0.5} style={[styles.touchOpacity, { width: "20%", alignSelf: "flex-end", marginRight: "5%", marginTop: 10}]}>
                 <Text style={styles.textButton}>delete</Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', marginTop: 5, width: "100%" }}>

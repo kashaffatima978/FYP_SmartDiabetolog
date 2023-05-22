@@ -10,6 +10,8 @@ import {
 } from "../connectionToDB/dashboard"
 import { MyButton } from "../components/button";
 import { setShoulders } from "../../redux/reduxActions";
+import { Searchbar } from 'react-native-paper';
+
 
 
 
@@ -45,8 +47,13 @@ export default function Dashboard({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <View style={{ marginHorizontal: "5%", marginVertical: "2%" }}>
-                <TextInput placeholder="search" value={search} onChangeText={text=>{
+            <View style={{margin: 10}}>
+
+            <Searchbar
+                placeholder="Search"
+                iconColor={"#6A6DB0"}
+                mode ='view'
+                onChangeText={text=>{
                     setSearch(text);
                     console.log("search=",text)
                     
@@ -54,14 +61,16 @@ export default function Dashboard({ navigation }) {
                         console.log(newArray)
                         setQuestions(newArray)
                  
-                }
-                    }></TextInput>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                }}
+                value={search}
+            />
+
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 15 }}>
                     <View>
                         <Text style={{ color: "black", fontSize: 20 }}>Search Results</Text>
                         <Text style={{ color: "black" }}>{!questions?0:questions.length} results</Text>
                     </View>
-                    <TouchableOpacity onPress={() => { navigation.navigate("AskQuestion") }}
+                    <TouchableOpacity onPress={() => { navigation.replace("AskQuestion") }}
                         activeOpacity={0.5} style={styles.touchOpacity}>
                         <Text style={styles.text}>Ask Question</Text>
                     </TouchableOpacity>
@@ -76,18 +85,14 @@ export default function Dashboard({ navigation }) {
                     return (
 
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.navigate("ViewQuestionDetails",{"id":item._id}) }}>
-                            <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10,height:"100%",marginVertical:"3%" }}>
-                                <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
-                                    {/* <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text> */}
-                                    {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
-                                </View>
-
-
-                                <View style={{ margin: 10 }}>
-                                    <Card.Content style={{ flexDirection: "row",justifyContent:"center",alignItems:"center",padding:"1%", }}>
-                                        <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Title: </Paragraph>
-                                        <Paragraph style={{textAlign:"justify"}}>{item.title}</Paragraph>
+                            <Card style={{ backgroundColor: '#E2E4FF', width: '90%', marginBottom: 10,height:"80%",marginVertical:"5%", alignSelf: "center" }}>
+                            
+                                <View style={{padding: 10}}>
+                                    <Text style={{height: 75, fontSize: 18, color: 'black', padding: 10, borderBottomWidth:1, borderBottomColor: 'grey'}}><Text style={{fontWeight: 'bold'}}>Question: </Text> {item.title}</Text>
+                                    <Card.Content style={{ flexDirection: "row",padding:"1%", height: 50 }}>
+                                        <Paragraph style={{ width: '80%', fontSize: 15,marginTop: 5}}>{item.detail}</Paragraph>
                                     </Card.Content>
+
                                 </View>
                             </Card>
                         </TouchableOpacity>
@@ -104,7 +109,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
-        flexDirection: "column"
+        width: '100%'
+        // flexDirection: "column"
     },
     textView: {
         flex: 0.1,
@@ -113,19 +119,19 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     text: {
-        fontSize: 25,
+        fontSize: 20,
         color: "white",
         fontWeight: "bold"
     },
     flatlist: {
-        flex: 0.9,
+        flex: 0.7,
         backgroundColor: "white"
     },
     flatlistItemContainer: {
         flexDirection: "column",
-        alignItems: "flex-start",
+        // alignItems: "flex-start",
         backgroundColor: "white",
-        marginHorizontal: "5%",
+        // marginHorizontal: "5%",
         height: 200
     },
     hdlContainer: {
@@ -186,9 +192,9 @@ const styles = StyleSheet.create({
     }, touchOpacity: {
         backgroundColor: "#6A6DB0",
         width: "40%",
-        height: 40,
-        borderRadius: 10,
-        marginTop: 20,
+        height: 45,
+        borderRadius: 15,
+        marginTop: 10,
         padding: 10,
         alignSelf: "center"
 

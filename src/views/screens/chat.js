@@ -117,7 +117,7 @@
 
 
 import React, { useState, useEffect, useCallback, useNavigation } from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { io } from 'socket.io-client';
 import { ObjectId } from 'bson';
 import axios from 'axios';
@@ -205,12 +205,37 @@ const Chat = () => {
         // setMessages(previousMessages => GiftedChat.append(previousMessages, message));
     }, []);
 
+  
+    const renderBubble = (props) => {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: '#6A6DB0', // Change the background color for outgoing messages
+              },
+              left: {
+                backgroundColor: 'lightgrey', // Change the background color for incoming messages
+              },
+            }}
+            textStyle={{
+              right: {
+                color: '#FFFFFF', // Change the text color for outgoing messages
+              },
+              left: {
+                color: 'black', // Change the text color for incoming messages
+              },
+            }}
+          />
+        );
+      };
     return (
-        <GiftedChat
+        <GiftedChat 
             messages={messages}
             onSend={messages => onSend(messages)}
             user={{ "_id": id, "name": name }}
-            textProps={{ style: { color: 'black', backgroundolor: "grey" } }}
+            textProps={{ style: { color: 'black' } }}
+            renderBubble={renderBubble}
         >
 
         </GiftedChat>

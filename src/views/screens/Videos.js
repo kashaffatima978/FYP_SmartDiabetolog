@@ -39,9 +39,9 @@ const Videos = ({ navigation }) => {
 
 
   const renderItem = ({ item }) => (
-    <>
+    <View style={{backgroundColor: 'white', padding: 10, margin: 10, borderRadius: 5}}>
         <VidPlayer vidId={item}/>
-    </>
+    </View>
    
   );
 

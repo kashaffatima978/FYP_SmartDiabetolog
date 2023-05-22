@@ -30,7 +30,7 @@ export default AddAnswer = function ({ navigation, route }) {
             .then((data) => {
                 setLoader(false)
                 console.log("adding answer", data);
-                navigation.navigate("ViewQuestionDetails",{"id":route.params.id})
+                navigation.replace("ViewQuestionDetails",{"id":route.params.id})
             })
             .catch((err) => { 
                 setLoader(false);

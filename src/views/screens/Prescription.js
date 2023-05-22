@@ -61,20 +61,18 @@ export default function Prescription({ navigation }) {
                     return (
 
                         <TouchableOpacity style={styles.flatlistItemContainer} onPress={() => { navigation.replace("AddNewPrescription", { "id": item._id, "title": item.title }) }}>
-                            <Card style={[{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10 },
-                            { borderWidth: 2, borderColor: currentPrescriptionid.id === item._id ? "red" : "white" }]}>
+                            <Card style={[{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 10, marginTop: 10, borderRadius: 5 },
+                            { borderWidth: 2, borderColor: currentPrescriptionid.id === item._id ? "grey" : "white" }]}>
                                 <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 15, justifyContent: 'space-between' }}>
                                     <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text>
                                     {/* <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
                                 </View>
 
 
-                                <View style={{ margin: 10 }}>
+                                <View style={{ marginTop: 10 , marginBottom: 20}}>
                                     <Card.Content style={{ flexDirection: "row" }}>
-                                        <Paragraph style={[styles.para, { fontWeight: "bold" }]}>Title: </Paragraph>
-                                        <Paragraph>{item.title}</Paragraph>
-
-
+                                        {/* <Paragraph style={[styles.para]}>Title: </Paragraph> */}
+                                        <Paragraph style={{fontWeight: "bold", fontSize: 18}}>{item.title}</Paragraph>
                                     </Card.Content>
                                 </View>
                             </Card>

@@ -22,8 +22,8 @@ export default function VidPlayer(props){
             <YoutubePlayer
             videoId={props.vidId}
             ref={playerRef}
-            height={230}
-            width={400}
+            height={210}
+            width={350}
             />
         </View>
         <View style={styles.cardTextContainer}>
@@ -52,7 +52,8 @@ const styles = {
     cardTextContainer: {
       flex: 1,
       padding: 10,
-      marginBottom: 40,
+      marginBottom: 20,
+      paddingTop:0
     },
     cardTitle: {
       fontSize: 18,
