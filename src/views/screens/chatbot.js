@@ -4,39 +4,28 @@ import colors from "../../files/Colors";
 import generalStyles from "../../files/generalStyle";
 import Card from "../components/cards";
 import { Heading } from "../components/Heading";
+import Dashboard from "./dashboard";
+import Chat from "./chat";
 
 
-// import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // import ViewBloodSugar from "./ViewBloodSugar";
 // import ViewBloodPressure from "./ViewBloodPressure";
 // import ViewCholesterol from "./ViewCholesterol";
 
-// const Tab = createMaterialTopTabNavigator();
-
+const Tab = createMaterialTopTabNavigator();
 
 export default function Chatbot({navigation}){
     return(
+        <>
+        <Heading name="Community" />
 
-        <View style={styles.container}>
-            <Heading name="ChatBot"/>
-
-            <ScrollView style={styles.scroll}>
-                <TouchableOpacity onPress={()=>{
-                    navigation.navigate("Dashboard")
-                }
-                    }>
-                    <Card style={styles.card} title="Dashboard" imageSource={require("../../../assets/Images/bloogsugar.jpg")} />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={()=>{
-                    navigation.navigate("Chat")
-                }}>
-                    <Card style={styles.card} title="Live Chat" imageSource={require("../../../assets/Images/bloodPressure.jpg")}/>
-                </TouchableOpacity>
-
-            </ScrollView>
-
-        </View>
+         <Tab.Navigator>
+            <Tab.Screen name="Chat" component={Chat} />
+            <Tab.Screen name="Dashboard" component={Dashboard} />
+        </Tab.Navigator >
+        </>
+       
 
     )
 

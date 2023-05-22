@@ -89,7 +89,15 @@ export default function LoginScreen({ navigation }) {
                             //storing whole state and record state in AsycStorage
                             await storeStateInAsync(res.userDetails.state)
 
-
+                            //saving name in Async for Heading pages
+                            try {
+                                await AsyncStorage.setItem(
+                                  '@UsersName',
+                                  res.userDetails.name,
+                                );
+                              } catch (error) {
+                                console.log('error in saving user Name on login page line 99', error)
+                              }
 
                             //now state storing
                             //initialstate = {record:[],authenticated: false, mode: "Light", neck:false 

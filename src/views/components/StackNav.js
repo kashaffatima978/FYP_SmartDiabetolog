@@ -93,8 +93,8 @@ export default function StackNav() {
               <Stack.Screen name="Homiii" component={HomeScreen} />
               <Stack.Screen name="Alarm" component={Alarm} />
               <Stack.Screen name="Chatbot" component={Chatbot} />
-              <Stack.Screen name="Chat" component={Chat} />
-              <Stack.Screen name="Dashboard" component={Dashboard} />
+              {/* <Stack.Screen name="Chat" component={Chat} />
+              <Stack.Screen name="Dashboard" component={Dashboard} /> */}
               <Stack.Screen name="AskQuestion" component={AskQuestion} />
               <Stack.Screen name="AddAnswer" component={AddAnswer} />
               <Stack.Screen name="ViewQuestionDetails" component={ViewQuestionDetails} />
@@ -152,8 +152,8 @@ export default function StackNav() {
               <Stack.Screen name="Homiii" component={HomeScreen} />
               <Stack.Screen name="Alarm" component={Alarm} />
               <Stack.Screen name="Chatbot" component={Chatbot} />
-              <Stack.Screen name="Chat" component={Chat} />
-              <Stack.Screen name="Dashboard" component={Dashboard} />
+              {/* <Stack.Screen name="Chat" component={Chat} />
+              <Stack.Screen name="Dashboard" component={Dashboard} /> */}
               <Stack.Screen name="AskQuestion" component={AskQuestion} />
               <Stack.Screen name="AddAnswer" component={AddAnswer} />
               <Stack.Screen name="ViewQuestionDetails" component={ViewQuestionDetails} />

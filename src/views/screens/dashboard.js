@@ -45,7 +45,6 @@ export default function Dashboard({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <Loader visible={loader}></Loader>
-            <Heading name="Dashboard" />
             <View style={{ marginHorizontal: "5%", marginVertical: "2%" }}>
                 <TextInput placeholder="search" value={search} onChangeText={text=>{
                     setSearch(text);
