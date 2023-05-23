@@ -72,6 +72,7 @@ export default AddAllergicReactions = function ({ navigation, route }) {
         .then((response) => {
             console.log("When active agent got is ", response.data)
             const agentsGot = response.data
+            
             console.log(agentsGot, typeof (agentsGot))       
             //now add allergic Reaction in DB
             addAllergicReaction(name, symtoms, type, description,agentsGot)

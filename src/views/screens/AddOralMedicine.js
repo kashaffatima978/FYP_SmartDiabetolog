@@ -90,9 +90,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
                                 },
                             })
                                 .then((response) => {
-                                    console.log("This is the response from medication ocr detection ",response.data)
-                                    data = response.data;
-                                    setName(data.toString())
+                                    console.log(response.text)
                                 })
                                 .catch((err) => { console.log('error in sending medication image:', err) })
                         }
@@ -150,7 +148,7 @@ export default AddOralMedicine = function ({ navigation, route }) {
             //first get medications stored in Async to check the active agents
             getAllergiesFromAsync("medication")
                 .then(allergies => {
-
+                    console.log('//////////////////////////////////////////////',allergies)
                     array = (allergies.map(val => val.active_agent)).flat()
                     console.log("@@@@@@@@@@@@@@@@@@@Set active agents are", array)
                     setMedicationAllergies(() => (array))
@@ -224,12 +222,12 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     .then((data) => {
                         console.log("adding oral medication", data);
                         setLoader(false)
-                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
                     })
                     .catch((err) => {
                         console.log("Error in add in Prescription", err)
                         setLoader(false)
-                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
+                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
                         alert("Connection Lost! Try Again")
                     })
 

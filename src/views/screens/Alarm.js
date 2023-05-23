@@ -9,19 +9,11 @@ const Alarm = ({ visible, name,time,dosage }) => {
             {
                 <View style={styles.loader} >
 
-
-
-                  
-
                         <Text style={styles.title}>Reminder</Text>
                         <Text style={styles.time}>{time}</Text>
                         <Text style={styles.message}>Take the medication</Text>
                         <Text style={styles.dismiss}>{name}</Text>
                         <Text style={styles.dismiss}>{dosage}</Text>
-
-                   
-
-
                 </View>
             }
 
