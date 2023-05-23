@@ -110,6 +110,8 @@ export default function HomeScreen({ navigation, prop }) {
                     const bs = await getTrackerInstanceInAsync("bloodsugar")
                     console.log(bs)
                     console.log(bs.concentration)
+                    ////
+                    setBloodSugar(bs.concentration)
                     setBloodSugarInstance(() => bs)
 
                     const bp = await getTrackerInstanceInAsync("bloodpressure")

@@ -31,7 +31,7 @@ export default AskQuestion = function ({ navigation, route }) {
             .then((data) => {
                 console.log("adding question", data);
                 setLoader(false)
-                navigation.replace("Dashboard")
+                navigation.replace("Chatbot")
             })
             .catch((err) => { 
                 setLoader(false);
@@ -52,7 +52,7 @@ export default AskQuestion = function ({ navigation, route }) {
                         <Icon name="heartbeat" size={25} style={styles.icon} />
                         <View style={{ width: "85%" }}>
                             <Text style={styles.label}>Title</Text>
-                            <TextInput value={title} onChangeText={text => { setTitle(text) }} style={styles.input} placeholder={`Enter Title`} placeholderTextColor={"gray"} />
+                            <TextInput multiline value={title} onChangeText={text => { setTitle(text) }} style={styles.input} placeholder={`Enter Title`} placeholderTextColor={"gray"} />
                         </View>
                     </View>
 
@@ -60,7 +60,7 @@ export default AskQuestion = function ({ navigation, route }) {
                         <Icon name="heartbeat" size={25} style={styles.icon} />
                         <View style={{ width: "85%" }}>
                             <Text style={styles.label}>Detail</Text>
-                            <TextInput value={detail} onChangeText={text => { setDetail(text) }} style={styles.input} placeholder="Enter Detail" placeholderTextColor={"gray"} />
+                            <TextInput multiline value={detail} onChangeText={text => { setDetail(text) }} style={styles.input} placeholder="Enter Detail" placeholderTextColor={"gray"} />
                         </View>
                     </View>
 

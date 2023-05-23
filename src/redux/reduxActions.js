@@ -125,7 +125,7 @@ export const setExerciseRecord = () => {
 
 //reducer function which tells what happened and what to do now
 //[true,false,true,true,true,false,true,true,true,false,true,true,true,true]
-export const initialstate = {record:[],authenticated: false, mode: "Light", neck:false ,back:false,arms:false,shoulders:false,waist:false,legs:false,chest:false,cardio:false,todayExerciseDone:false,todayBreakfastDone:false,todayLunchDone:false, todayDinnerDone:false, todaySnackOneDone:false, todaySnackTwoDone:false }
+export const initialstate = {record:[],authenticated: false, mode: "Light", neck:true ,back:true,arms:true,shoulders:true,waist:true,legs:true,chest:true,cardio:true,todayExerciseDone:false,todayBreakfastDone:false,todayLunchDone:false, todayDinnerDone:false, todaySnackOneDone:false, todaySnackTwoDone:false }
 
 const reducerFunction = (state = initialstate, action) => {
     if (action.type === "Authenticate")
