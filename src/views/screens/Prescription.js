@@ -7,6 +7,7 @@ import Fab from '../components/Fab';
 import { addPrescription, viewPrescriptions } from "../connectionToDB/prescription"
 import { getAllergiesFromAsync } from "../connectionToDB/AsyncStorage"
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { FAB } from 'react-native-paper';
 
 
 export default function Prescription({ navigation }) {
@@ -95,11 +96,22 @@ export default function Prescription({ navigation }) {
 
             }} />
 
-            <TouchableOpacity style={{ height: "5%", backgroundColor: "#6A6DD0", width: "10%", marginLeft: "2%",alignItems:"center",justifyContent:"center" }} onPress={() => {
+            {/* <TouchableOpacity style={{ height: "5%", backgroundColor: "#6A6DD0", width: "10%", marginLeft: "2%",alignItems:"center",justifyContent:"center" }} onPress={() => {
                 navigation.replace("Home")
             }}>
                 <Icon name="long-arrow-left" style={styles.iconStyle}></Icon>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+
+            <FAB
+                style={styles.fab}
+                small
+                icon="arrow-left"
+                color='white'
+                // disabled={props.isDisabled}
+                onPress={() => {
+                    navigation.replace("Home")
+                }}
+            />
 
 
         </SafeAreaView>
@@ -107,6 +119,13 @@ export default function Prescription({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        left: 0,
+        bottom: 0,
+        backgroundColor: '#6A6DB0'
+      },
     container: {
         flex: 1,
         backgroundColor: "white",

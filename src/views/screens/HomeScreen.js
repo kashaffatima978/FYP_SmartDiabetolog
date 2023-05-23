@@ -188,7 +188,7 @@ export default function HomeScreen({ navigation, prop }) {
 
     const intervalId = setInterval(async () => {
         setAlarmShown(true)
-        console.log("here in interval")
+        // console.log("here in interval")
         //calling for alarm
         arrayInAsync = [
             { "time": "3:38", "name": "med1", "type": "oral", "dosage": "10" },

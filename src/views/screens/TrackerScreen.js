@@ -5,6 +5,7 @@ import generalStyles from "../../files/generalStyle";
 import Card from "../components/cards";
 import { Heading } from "../components/Heading";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { FAB } from 'react-native-paper';
 
 // import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 // import ViewBloodSugar from "./ViewBloodSugar";
@@ -48,13 +49,23 @@ export default function TrackerScreen({navigation}){
                     <Card style={styles.card} title="Cholesterol" imageSource={require("../../../assets/Images/cholestrol.jpg")}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{height:"5%",backgroundColor:"#6A6DD0",width:"10%",marginLeft:"2%",alignItems:"center",justifyContent:"center" }} onPress={()=>{
+                {/* <TouchableOpacity style={{height:"5%",backgroundColor:"#6A6DD0",width:"10%",marginLeft:"2%",alignItems:"center",justifyContent:"center" }} onPress={()=>{
                     navigation.replace("Home")
                 }}>
                     <Icon name="long-arrow-left" style={styles.iconStyle}></Icon>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 
             </ScrollView>
+            <FAB
+                style={styles.fab}
+                small
+                icon="arrow-left"
+                color='white'
+                // disabled={props.isDisabled}
+                onPress={() => {
+                    navigation.replace("Home")
+                }}
+            />
 
         </View>
 
@@ -63,6 +74,13 @@ export default function TrackerScreen({navigation}){
 }
 
 const styles=StyleSheet.create({
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        left: 0,
+        bottom: 0,
+        backgroundColor: '#6A6DB0'
+      },
     container:{
         flex:1,
         backgroundColor: "white"

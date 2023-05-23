@@ -224,12 +224,12 @@ export default AddOralMedicine = function ({ navigation, route }) {
                     .then((data) => {
                         console.log("adding oral medication", data);
                         setLoader(false)
-                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
+                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
                     })
                     .catch((err) => {
                         console.log("Error in add in Prescription", err)
                         setLoader(false)
-                        navigation.replace("AddNewPrescription", { "title": title, "id": id });
+                        navigation.navigate("AddNewPrescription", { "title": title, "id": id });
                         alert("Connection Lost! Try Again")
                     })
 
