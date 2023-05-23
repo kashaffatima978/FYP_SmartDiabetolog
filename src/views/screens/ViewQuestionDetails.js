@@ -93,7 +93,7 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
             <View style={{ height: 100 }}>
                 <Text style={{ fontSize: 30, textAlign: "center", color: 'black', }}>
                     Answers </Text>
-                <TouchableOpacity style={styles.addAnswerButton} onPress={() => { navigation.navigate("AddAnswer", { "id": route.params.id }) }}>
+                <TouchableOpacity style={styles.addAnswerButton} onPress={() => { navigation.replace("AddAnswer", { "id": route.params.id }) }}>
                     <Text style={{ color: "white", fontWeight: "bold" }}>Add Answer</Text>
                 </TouchableOpacity>
             </View>

@@ -10,6 +10,7 @@ import { IP } from "../../files/information"
 import { storeStateInAsync, getStateFromAsync, getRecordStateFromAsync } from "../connectionToDB/AsyncStorage"
 import { useDispatch } from "react-redux/es/exports";
 import { setAuthentication } from "../../redux/reduxActions";
+import Loader from "../components/loader";
 
 export default function MainExercisePage({ navigation }) {
     dispatch=useDispatch()
@@ -23,9 +24,11 @@ export default function MainExercisePage({ navigation }) {
     const [exercises, setExersises] = useState([])
     const [states, setStates] = useState({})
     const [record, setRecord] = useState([])
+    const [loader,setLoader]=useState(false)
 
     useEffect(() => {
         if (mount === 0) {
+            setLoader(true)
             // setStates(async () => { (await getStateFromAsync()) })
             // setRecord(async () => { (await getRecordStateFromAsync()) })
             // setMount(old => { old++ })
@@ -54,10 +57,12 @@ export default function MainExercisePage({ navigation }) {
                                     console.log(new Date().getDay())
                                     console.log("1st exercise is ", JSON.parse(response.data.res)[0])
                                     setMount(old => { old++ })
+                                    setLoader(false)
                                 })
                                 .catch((err) => {
                                     console.log(err)
                                     alert("Connection Lost! Try again")
+                                    setLoader(false)
                                     navigation.replace("Home")
                                 })
 
@@ -68,12 +73,14 @@ export default function MainExercisePage({ navigation }) {
                         .catch(err => { 
                             console.log("error in Main Exercise in useEffect getRecordStateFromAsync",err)
                             alert("Connection Lost! Try again")
+                            setLoader(false)
                             navigation.replace("Home")
                          })
                 })
                 .catch(err => { 
-                    console.log("error in Main Exercise in useEffect getStateFromAsync")
+                    console.log("error in Main Exercise in useEffect getStateFromAsync",err)
                     alert("Connection Lost! Try again")
+                    setLoader(false)
                     navigation.replace("Home")
                  })
 
@@ -85,6 +92,7 @@ export default function MainExercisePage({ navigation }) {
 
     return (
         <SafeAreaView >
+            <Loader visible={loader}></Loader>
             <Heading name="Exercise plan" />
             <View style={styles.infoView}>
 
