@@ -68,7 +68,9 @@ export default function getCalories(weight, pounds, gender, heightfeet,heightInc
             break;
     }
     calories = Math.round(calories)
-    
+    if(calories===NaN){
+        calories =1200;
+    }
 
 
     console.log("**************************************************************8", calories)

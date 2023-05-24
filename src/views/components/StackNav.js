@@ -139,7 +139,7 @@ export default function StackNav() {
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Registration" component={Registeration} />
               <Stack.Screen name="Tracker" component={TrackerScreen} />
-            
+              {/* <Stack.Screen name="Profile" component={Profile} /> */}
               
 
             </>
@@ -198,6 +198,7 @@ export default function StackNav() {
               <Stack.Screen name="EnterCode" component={EnterCode} />
               <Stack.Screen name="Retinopathy" component={Retinopathy} />
               <Stack.Screen name="Tracker" component={TrackerScreen} />
+              {/* <Stack.Screen name="Profile" component={Profile} /> */}
             </>
           )
       }

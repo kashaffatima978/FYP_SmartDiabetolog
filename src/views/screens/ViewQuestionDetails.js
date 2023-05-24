@@ -71,27 +71,14 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
     return (
         <ScrollView >
             <Loader visible={loader}></Loader>
-            <Heading name="Question Details" />
+            <Heading name="Question Detail" />
 
 
-            <Text style={styles.title}>
-                {title}
-                {/* Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" */}
-            </Text>
-            <Text style={styles.detail}>
-                {/* Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" Android Studio Error "Android Gradle plugin requires Java 11 to run.
-                    You are currently using Java 1.8" */}
-                {detail}
-            </Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.detail}>{detail}</Text>
 
             <View style={{ height: 100 }}>
-                <Text style={{ fontSize: 30, textAlign: "center", color: 'black', }}>
+                <Text style={{ fontSize: 30, textAlign: "center", color: 'black',marginBottom: 20 }}>
                     Answers </Text>
                 <TouchableOpacity style={styles.addAnswerButton} onPress={() => { navigation.replace("AddAnswer", { "id": route.params.id }) }}>
                     <Text style={{ color: "white", fontWeight: "bold" }}>Add Answer</Text>
@@ -105,14 +92,13 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
                         return(
                             <TouchableOpacity style={styles.flatlistItemContainer} key={index}>
                             <Card style={{ backgroundColor: '#E2E4FF', width: '100%', marginBottom: 2 }}>
-                                <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
-                                    {/* <Text style={styles.titleText}>Date: {(item.createdAt).slice(0, 10)}</Text>
-                                        <Text style={styles.titleText}>Time: {item.creationTime}</Text> */}
+                                <View style={{ backgroundColor: '#6A6DB0', flexDirection: 'row', padding: 10, justifyContent: 'center', }}>
+                                    <Text style={{color: 'white', fontSize: 18}}>Answer {index+1}</Text>
                                 </View>
 
                                 <View style={{ margin: 1 }}>
-                                    <Card.Content style={{ flexDirection: "row" }}>
-                                        <Paragraph>{item.answer}</Paragraph>
+                                    <Card.Content style={{height: 100}}>
+                                        <Paragraph style={{fontSize: 15, padding: 5, color: 'black'}}>{item.answer}</Paragraph>
                                     </Card.Content>
                                 </View>
                             </Card>
@@ -131,22 +117,25 @@ export default ViewQuestionDetails = function ({ navigation, route }) {
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 18,
+        fontSize: 20,
         color: "black",
         fontWeight: "bold",
         marginHorizontal: "2%",
-        textAlign: "justify",
-        borderBottomWidth: 1,
-        height: 150
+        textAlign: "center",
+        // borderBottomWidth: 1,
+        // height: 150,
+        marginTop: 10
     },
     detail: {
-        fontSize: 14,
+        fontSize: 16,
         color: "black",
         marginHorizontal: "2%",
         marginVertical: "3%",
-        textAlign: "justify",
+        textAlign: "center",
         borderBottomWidth: 1,
-        height: 200
+        borderBottomColor: 'grey',
+        marginVertical: "3%",
+        height: 150
     },
     label: {
         color: "black"
@@ -245,6 +234,8 @@ const styles = StyleSheet.create({
         height: 40,
         width: "25%",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        borderRadius: 10,
+        // marginTop: "8%"
     }
 });

@@ -49,13 +49,14 @@ export default function HomeScreen({ navigation, prop }) {
     const [bloodPressureInstance, setBloodPressureInstance] = useState({})
     const [cholesterolInstance, setCholesterolInstance] = useState({})
     const [totalCalories, setTotalCalories] = useState(1200)
+    const [bloodSugarHeading, setBloodSugarHeading ]= useState(120)
 
     const ip = `http://${IP}`
 
 
 
     const AnimatedCircularProgress = Animated.createAnimatedComponent(CircularProgress);
-    const animatedProgress = new Animated.Value((bloodSugar / 500) * 100);
+    const animatedProgress = new Animated.Value(((bloodSugar / 500) * 100));
 
     // useEffect(() => {
     //     Animated.timing(animatedProgress, {
@@ -71,7 +72,7 @@ export default function HomeScreen({ navigation, prop }) {
     const [date, setDate] = useState(new Date().getDate());
     useEffect(() => {
 
-
+        console.log(' 74')
         Animated.timing(animatedProgress, {
             toValue: 1,
             duration: 5000,
@@ -79,6 +80,8 @@ export default function HomeScreen({ navigation, prop }) {
 
         }).start();
 
+
+        console.log('83')
         //for loading profile info and oral medications for alarm
         if (mount === 0) {
             setMount(old => (old += 5))
@@ -90,7 +93,7 @@ export default function HomeScreen({ navigation, prop }) {
                     //relating calories with dietchart
                     
 
-
+                    console.log('95')
                     //get calories for making diet chart
                     cal = getCalories(res.userDetails.weight, false, res.userDetails.gender, res.userDetails.heightFeet, res.userDetails.heighInches, res.userDetails.age, res.userDetails.acitivitLevel);
                     
@@ -98,20 +101,23 @@ export default function HomeScreen({ navigation, prop }) {
 
                     //setName
                     setName(res.userDetails.name)
+                    console.log('103')
 
+                    if (res.userDetails.weight === undefined || res.userDetails.age === undefined || res.userDetails.heightFeet === undefined) { 
+                        navigation.navigate('WeightScreen')
+                    }
+                    
                     //also get oral medications for alarm
                     getAllergiesFromAsync("oralMedications")
                         .then(ress => { console.log("Oral medications for alarms in HomeScreen= ", ress); setMedicationForAlarm(() => ress) })
                         .catch(err => { console.log("Error in getAllergiesFromAsync in HomeScreen while getting oralMedications ", err) })
-                    if (res.userDetails.weight === undefined || res.userDetails.age === undefined || res.userDetails.heightFeet === undefined) {
-                        navigation.navigate('WeightScreen')
-                    }
-
+                    
+                        console.log('109')
                     const bs = await getTrackerInstanceInAsync("bloodsugar")
                     console.log(bs)
                     console.log(bs.concentration)
                     ////
-                    setBloodSugar(bs.concentration)
+                    setBloodSugarHeading(bs.concentration)
                     setBloodSugarInstance(() => bs)
 
                     const bp = await getTrackerInstanceInAsync("bloodpressure")
@@ -123,54 +129,56 @@ export default function HomeScreen({ navigation, prop }) {
                     console.log(ch)
                     console.log(ch.ldl)
                     setCholesterolInstance(() => ch)
+                    console.log('126')
 
                     if(bs.dataUnit=='mmol/L'){
                         range = bs.concentration;
                         age = res.userDetails.age;
+                        console.log('131')
 
                         if((age<6) && (range < 6)){
                             //low
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if((age <6) && (range > 300)){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
                         else if((age >=6 && age <= 19) && range <70){
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if((age >=6 && age <= 19)&& range > 300){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
                         else if(age > 20 && range <70  ){
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if(age > 20 && range > 400  ){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
                     }
                     else{
-
+                        console.log('154')
                         range = parseInt(bs.concentration*18) ;
                         age = res.userDetails.age;
 
                         if((age<6) && (range < 6)){
                             //low
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if((age <6) && (range > 300)){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
                         else if((age >=6 && age <= 19) && range <70){
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if((age >=6 && age <= 19)&& range > 300){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
                         else if(age > 20 && range <70  ){
-                            setTotalCalories(totalCalories+100)
+                            setTotalCalories((old)=>(old+100))
                         }
                         else if(age > 20 && range > 400  ){
-                            setTotalCalories(totalCalories-100)
+                            setTotalCalories((old)=>(old-100))
                         }
 
                     }
@@ -351,7 +359,7 @@ export default function HomeScreen({ navigation, prop }) {
                         lineCap="round"
                     >
                         {() => (
-                            ((bloodSugar >= 80) && (bloodSugar < 130)) ?
+                            ((bloodSugar >= 80) && (bloodSugar < 180)) ?
                                 <Image
                                     source={require('../../../assets/Images/normal.png')}
                                     resizeMode="center"
@@ -366,7 +374,7 @@ export default function HomeScreen({ navigation, prop }) {
 
                         )}
                     </AnimatedCircularProgress>
-                    <Text style={styles.text}>Blood sugar: {bloodSugar} mg/dl</Text>
+                    <Text style={styles.text}>Blood sugar: {bloodSugarHeading} mg/dl</Text>
                 </View>
                 <View style={{ marginTop: 16, padding: 20 }}>
                     <Text style={[styles.text, { alignSelf: "flex-start", fontSize: 16, fontWeight: "bold" }]}>Daily Inputs</Text>

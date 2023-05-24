@@ -7,7 +7,9 @@ import {  store } from "../../redux/reduxActions";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { setNeck,setArms,setLegs,setWaist,setCardio,setChest,setBack,setShoulders } from "../../redux/reduxActions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {storeUserState } from "../connectionToDB/authentication"
+import {storeUserState } from "../connectionToDB/authentication";
+import { Heading } from "../components/Heading";
+
 
 
 export default ExerciseSetting = ({navigation}) => {
@@ -33,19 +35,20 @@ export default ExerciseSetting = ({navigation}) => {
       })
 
     return (
-        <SafeAreaView >
-            <View style={styles.view}>
-                <Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>
+        <SafeAreaView style={{flex:1}}>
+            {/* <View style={styles.view}> */}
+                {/* <Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>
                     Exercise Plan Settings
-                </Text>
-            </View>
+                </Text> */}
+                <Heading name={"Exercise Plan Settings"}/>
+            {/* </View> */}
             <ScrollView style={styles.scroll}>
 
                 <View style={styles.container}>
                     <Text style={styles.text}>Neck Routine {isNeckEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isNeckEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isNeckEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setNeck())}}
                         value={isNeckEnabled}
                     />
@@ -55,7 +58,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Arms Routine {isArmsEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isArmsEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isArmsEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setArms())}}
                         value={isArmsEnabled}
                     />
@@ -65,7 +68,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Legs Routine {isLegsEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isLegsEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isLegsEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setLegs())}}
                         value={isLegsEnabled}
                     />
@@ -75,7 +78,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Shoulders Routine {isShouldersEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isShouldersEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isShouldersEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setShoulders())}}
                         value={isShouldersEnabled}
                     />
@@ -85,7 +88,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Chest Routine {isChestEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isChestEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isChestEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setChest())}}
                         value={isChestEnabled}
                     />
@@ -95,7 +98,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Cardio Routine {isCardioEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isCardioEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isCardioEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setCardio())}}
                         value={isCardioEnabled}
                     />
@@ -105,7 +108,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Back Routine {isBackEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isBackEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isBackEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setBack())}}
                         value={isBackEnabled}
                     />
@@ -115,7 +118,7 @@ export default ExerciseSetting = ({navigation}) => {
                     <Text style={styles.text}>Waist Routine {isWaistEnabled?"ON":"OFF"}</Text>
                     <Switch
                         trackColor={{ false: 'black', true: 'gray' }}
-                        thumbColor={isWaistEnabled ? '#282A71' : '#f4f3f4'}
+                        thumbColor={isWaistEnabled ? '#6A6DB0' : '#f4f3f4'}
                         onValueChange={()=>{dispatch(setWaist())}}
                         value={isWaistEnabled}
                     />
@@ -137,8 +140,8 @@ export default ExerciseSetting = ({navigation}) => {
 
                     navigation.replace("MainExercisePage")
                 }}
-                style={{alignSelf:"flex-end",marginRight:"4%",margin:"2%",backgroundColor:"#282A71",width:"20%",height:30,alignItems:"center",justifyContent:"center"}}>
-                    <Text style={{fontWeight:"bold"}}>OK</Text>
+                style={styles.saveButtonContainer}>
+                    <Text style={styles.saveButtonText}>OK</Text>
                 </TouchableOpacity>
 
 
@@ -149,7 +152,8 @@ export default ExerciseSetting = ({navigation}) => {
 
 const styles = StyleSheet.create({
     scroll: {
-        height: "85%"
+        height: "85%",
+        backgroundColor: 'lavender'
     },
 
     view: {
@@ -161,15 +165,37 @@ const styles = StyleSheet.create({
     text:{
         color:"black",
         fontWeight:"bold",
-        fontSize:20
+        fontSize:20,
     },
     container:{
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",
         margin:"2%",
-        borderWidth:3,
-        borderColor:"gray",
-        padding:"3%"
-    }
+        // borderWidth:3,
+        // borderColor:"gray",
+        padding:"5%",
+        // borderRadius: 10
+        elevation: 5
+    },
+    saveButtonContainer: {
+        backgroundColor: "#6A6DB0",
+        width: 80,
+        height: 50,
+        borderRadius: 25,
+        marginTop: 40,
+        padding: 10,
+        alignSelf: "flex-end",
+        bottom: 25,
+        right: 0,
+        marginRight: 10
+      },
+      saveButtonText: {
+        fontSize: 17,
+        color: "white",
+        textAlign: "center",
+        textAlignVertical: "center",
+        fontWeight: "bold"
+        // paddingLeft: 8,
+      },
 })

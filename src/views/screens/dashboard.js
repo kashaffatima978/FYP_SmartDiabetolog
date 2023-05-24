@@ -70,7 +70,7 @@ export default function Dashboard({ navigation }) {
                         <Text style={{ color: "black", fontSize: 20 }}>Search Results</Text>
                         <Text style={{ color: "black" }}>{!questions?0:questions.length} results</Text>
                     </View>
-                    <TouchableOpacity onPress={() => { navigation.replace("AskQuestion") }}
+                    <TouchableOpacity onPress={() => { navigation.navigate("AskQuestion") }}
                         activeOpacity={0.5} style={styles.touchOpacity}>
                         <Text style={styles.text}>Ask Question</Text>
                     </TouchableOpacity>

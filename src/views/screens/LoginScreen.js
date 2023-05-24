@@ -146,8 +146,12 @@ export default function LoginScreen({ navigation }) {
                         }
 
                         console.log("After update after login the state is, ", store.getState())
+                        
+                
                         navigation.replace("Home")
-                        setLoader(false);
+                            setLoader(false);
+                        
+                        
 
                     })
                     .catch(err => { 

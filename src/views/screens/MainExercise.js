@@ -18,7 +18,8 @@ export default function MainExercisePage({ navigation }) {
     days = [...Array(31).keys()]
     month = (new Date()).getMonth()
     date = new Date()
-    const [today, setToday] = useState(new Date().getDay())
+    // new Date().getDay()
+    const [today, setToday] = useState(2)
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [mount, setMount] = useState(0);
     const [exercises, setExersises] = useState([])
@@ -123,7 +124,7 @@ export default function MainExercisePage({ navigation }) {
                                         {date.getDate() > val + 1 ?
                                             (!store.getState() ?
                                                 <Text>SKIPP</Text> :
-                                                <Text>{record[val] ? "DONE" : "SKIP"}</Text>)
+                                                <Text style={{fontWeight: "bold", color: 'white'}}>{record[val] ? " DONE" : " SKIP"}</Text>)
                                             :
                                             null
                                         }
@@ -169,7 +170,8 @@ export default function MainExercisePage({ navigation }) {
 
 const styles = StyleSheet.create({
     scroll: {
-        height: "85%"
+        height: "85%",
+        backgroundColor: 'white'
     },
 
     infoView: {
@@ -190,12 +192,15 @@ const styles = StyleSheet.create({
 
     button: {
         flex: 1,
-        borderWidth: 5,
+        // borderWidth: 5,
         margin: "2%",
         alignItems: "center",
         justifyContent: "center",
-        borderColor: colors.l7blue,
-        backgroundColor: "#6A6DB0"
+        // borderColor: colors.l7blue,
+        backgroundColor: "#6A6DB0",
+        height: 100,
+        elevation:5,
+        borderRadius: 15
     },
     iconStyle: {
         fontSize: 20,
