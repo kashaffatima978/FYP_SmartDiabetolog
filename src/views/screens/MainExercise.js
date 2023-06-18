@@ -19,7 +19,7 @@ export default function MainExercisePage({ navigation }) {
     month = (new Date()).getMonth()
     date = new Date()
     // new Date().getDay()
-    const [today, setToday] = useState(2)
+    const [today, setToday] = useState(new Date().getDay())
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [mount, setMount] = useState(0);
     const [exercises, setExersises] = useState([])
@@ -114,7 +114,7 @@ export default function MainExercisePage({ navigation }) {
             </View>
             <ScrollView style={styles.scroll}>
                 {
-                    (month === 0 || month === 2 || month === 4 || month === 6 || month === 7 || month === 9 || month === 11) ?
+                    (month === 0 || month === 2 || month === 4 ||month === 5 || month === 6 || month === 7 || month === 9 || month === 11) ?
                         days.map((val, index) => {
                             return (
                                 <TouchableOpacity key={index} disabled={date.getDate() != val + 1 ? true : false} style={[styles.button, { backgroundColor: date.getDate() > val + 1 ? "#8E91BD" : "#6A6DB0" }]}
